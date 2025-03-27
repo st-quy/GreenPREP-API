@@ -31,7 +31,7 @@ const getTopicWithRelations = async (req, res) => {
                   where: skillFilter,
                 },
                 {
-                  model: Part, // Include Part details in Question
+                  model: Part,
                 },
               ],
             },
