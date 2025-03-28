@@ -17,7 +17,7 @@ const getAllClasses = async (req, res) => {
 
 const createClass = async (req, res) => {
   try {
-    const newClass = await ClassService.createClass(req.body);
+    const newClass = await ClassService.createClass(req);
 
     if (!newClass) {
       return res.status(400).json({ message: "Failed to create class" });
@@ -32,10 +32,7 @@ const createClass = async (req, res) => {
 
 const updateClass = async (req, res) => {
   try {
-    const updatedClass = await ClassService.update(
-      req.params.classId,
-      req.body
-    );
+    const updatedClass = await ClassService.update(req.params.classId, req);
 
     if (!updatedClass) {
       return res.status(404).json({ message: "Class not found" });

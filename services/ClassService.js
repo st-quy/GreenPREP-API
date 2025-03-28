@@ -9,9 +9,9 @@ async function findAll() {
   }
 }
 
-async function createClass(data) {
+async function createClass(req) {
   try {
-    const { className } = data;
+    const { className } = req.body;
 
     const newClass = await Class.create({ className });
     return {
@@ -45,9 +45,9 @@ async function getDetaiById(id) {
   }
 }
 
-async function updateClass(id, data) {
+async function updateClass(id, req) {
   try {
-    const { className } = data;
+    const { className } = req.body;
 
     if (!className) {
       throw new Error("Class name is required");
