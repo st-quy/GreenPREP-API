@@ -1,5 +1,6 @@
 const bcrypt = require("bcrypt");
 const { User } = require("../models");
+
 const jwtUtils = require("../helpers/jwt");
 
 // Logic for user registration

@@ -13,6 +13,14 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.DATE,
       defaultValue: DataTypes.NOW,
     },
+    SessionID: {
+      type: DataTypes.UUID,
+      allowNull: false,
+      references: {
+        model: "Session",
+        key: "ID",
+      },
+    },
     UserID: {
       type: DataTypes.UUID,
       allowNull: true,
