@@ -22,10 +22,5 @@ module.exports = (sequelize, DataTypes) => {
     },
   });
 
-  // Class.associate = function (models) {
-  //   Class.hasMany(models.Session, { foreignKey: "ClassID" });
-  //   Class.hasMany(models.User, { foreignKey: "ClassID" });
-  // };
-
   return Class;
 };

@@ -32,7 +32,7 @@ const createClass = async (req, res) => {
 
 const updateClass = async (req, res) => {
   try {
-    const updatedClass = await ClassService.update(req.params.classId, req);
+    const updatedClass = await ClassService.updateClass(req);
 
     if (!updatedClass) {
       return res.status(404).json({ message: "Class not found" });
@@ -47,7 +47,9 @@ const updateClass = async (req, res) => {
 
 const getClassById = async (req, res) => {
   try {
-    const classDetail = await ClassService.getDetaiById(req.params.classId);
+    const classDetail = await ClassService.getClassDetaiById(
+      req.params.classId
+    );
 
     if (!classDetail) {
       return res.status(404).json({ message: "Class not found" });
@@ -62,7 +64,7 @@ const getClassById = async (req, res) => {
 
 const deleteClass = async (req, res) => {
   try {
-    const deletedClass = await ClassService.delete(req.params.classId);
+    const deletedClass = await ClassService.remove(req.params.classId);
 
     if (!deletedClass) {
       return res.status(404).json({ message: "Class not found" });

@@ -3,7 +3,11 @@ const { Class } = require("../models");
 async function findAll() {
   try {
     const classes = await Class.findAll();
-    return classes;
+    return {
+      status: 200,
+      message: "Classes fetched successfully",
+      data: classes,
+    };
   } catch (error) {
     throw new Error(`Error fetching classes: ${error.message}`);
   }
@@ -24,7 +28,7 @@ async function createClass(req) {
   }
 }
 
-async function getDetaiById(id) {
+async function getClassDetaiById(id) {
   try {
     const classDetail = await Class.findOne({
       where: { id },
@@ -45,15 +49,18 @@ async function getDetaiById(id) {
   }
 }
 
-async function updateClass(id, req) {
+async function updateClass(req) {
   try {
     const { className } = req.body;
+    const { classId } = req.params;
 
     if (!className) {
       throw new Error("Class name is required");
     }
 
-    const [updatedRows] = await Class.update(className, { where: { id } });
+    const [updatedRows] = await Class.update(className, {
+      where: { id: classId },
+    });
     if (updatedRows === 0) {
       throw new Error(`Class with id ${id} not found or no changes made`);
     }
@@ -83,6 +90,6 @@ module.exports = {
   findAll,
   createClass,
   updateClass,
-  getDetaiById,
+  getClassDetaiById,
   remove,
 };
