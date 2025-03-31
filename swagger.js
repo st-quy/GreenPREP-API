@@ -12,9 +12,11 @@ const swaggerDefinition = {
   },
   servers: [
     {
-      url: 'http://localhost:3010',
-      description: 'Development server',
-    },
+      url: process.env.NODE_ENV === 'production' 
+        ? `${process.env.DEPLOY_URL}/api`
+        : 'http://localhost:3010/api',
+      description: process.env.NODE_ENV === 'production' ? 'Production server' : 'Development server',
+    }
   ],
   components: {
     securitySchemes: {
