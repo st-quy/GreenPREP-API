@@ -21,7 +21,41 @@ const loginUser = async (req, res) => {
   }
 };
 
+const getUserById = async (req, res) => {
+  try {
+    const result = await userService.getUserById(req.params.userId);
+    return res.status(200).json(result);
+  } catch (error) {
+    console.error("Error fetching user:", error);
+    return res.status(404).json({ message: error.message });
+  }
+};
+
+const updateUser = async (req, res) => {
+  try {
+    const result = await userService.updateUser(req.params.userId, req.body);
+    return res.status(result.status).json(result);
+  } catch (error) {
+    console.error("Error updating user:", error);
+    return res.status(400).json({ message: error.message });
+  }
+};
+
+const changePassword = async (req, res) => {
+  try {
+    const { oldPassword, newPassword } = req.body;
+    const result = await userService.changePassword(req.params.userId, oldPassword, newPassword);
+    return res.status(result.status).json(result);
+  } catch (error) {
+    console.error("Error changing password:", error);
+    return res.status(400).json({ message: error.message });
+  }
+};
+
 module.exports = {
   registerUser,
   loginUser,
+  getUserById,
+  updateUser,
+  changePassword,
 };

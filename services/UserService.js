@@ -85,7 +85,64 @@ async function loginUser(email, password) {
   }
 }
 
+async function getUserById(userId) {
+  try {
+    const user = await User.findOne({ where: { ID: userId } });
+    if (!user) {
+      throw new Error("User not found");
+    }
+    return user;
+  } catch (error) {
+    throw new Error(`Error fetching user: ${error.message}`);
+  }
+}
+
+async function updateUser(userId, data) {
+  try {
+    const user = await User.findOne({ where: { ID: userId } });
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    await user.update(data);
+    return {
+      status: 200,
+      message: "User updated successfully",
+      data: user,
+    };
+  } catch (error) {
+    throw new Error(`Error updating user: ${error.message}`);
+  }
+}
+
+async function changePassword(userId, oldPassword, newPassword) {
+  try {
+    const user = await User.findOne({ where: { ID: userId } });
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    const isPasswordValid = await bcrypt.compare(oldPassword, user.password);
+    if (!isPasswordValid) {
+      throw new Error("Invalid old password");
+    }
+
+    const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+    await user.update({ password: hashedNewPassword });
+
+    return {
+      status: 200,
+      message: "Password changed successfully",
+    };
+  } catch (error) {
+    throw new Error(`Error changing password: ${error.message}`);
+  }
+}
+
 module.exports = {
   registerUser,
   loginUser,
+  getUserById,
+  updateUser,
+  changePassword,
 };

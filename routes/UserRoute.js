@@ -3,7 +3,7 @@ const express = require("express");
 const router = express.Router();
 const multer = require("multer");
 const { allowAnonymous, authorize } = require("../middleware/AuthMiddleware");
-const { registerUser, loginUser } = require("../controller/UserController");
+const { registerUser, loginUser, getUserById, updateUser, changePassword } = require("../controller/UserController");
 const storage = multer.memoryStorage();
 /**
  * @swagger
@@ -146,5 +146,92 @@ router.post("/register", allowAnonymous, registerUser);
  *         description: Internal server error
  */
 router.post("/login", allowAnonymous, loginUser);
+
+/**
+ * @swagger
+ * /user/{userId}:
+ *   get:
+ *     summary: Get user by ID
+ *     tags: [User]
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the user
+ *     responses:
+ *       200:
+ *         description: User retrieved successfully
+ *       404:
+ *         description: User not found
+ */
+router.get("/:userId", authorize, getUserById);
+
+/**
+ * @swagger
+ * /user/{userId}:
+ *   put:
+ *     summary: Update user information
+ *     tags: [User]
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the user
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               phone:
+ *                 type: string
+ *               address:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: User updated successfully
+ *       404:
+ *         description: User not found
+ */
+router.put("/:userId", authorize, updateUser);
+
+/**
+ * @swagger
+ * /user/{userId}/change-password:
+ *   post:
+ *     summary: Change user password
+ *     tags: [User]
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the user
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               oldPassword:
+ *                 type: string
+ *               newPassword:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Password changed successfully
+ *       400:
+ *         description: Invalid old password
+ */
+router.post("/:userId/change-password", authorize, changePassword);
 
 module.exports = router;
