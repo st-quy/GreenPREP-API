@@ -45,10 +45,15 @@ async function removeSession(req, res) {
   }
 }
 
-async function generateSessionKey(req, res) {
+function generateSessionKey(req, res) {
   try {
-    const sessionKey = SessionsService.generateKey();
-    return res.status(200).json({ sessionKey });
+    const characters =
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    let key = "";
+    for (let i = 0; i < 10; i++) {
+      key += characters.charAt(Math.floor(Math.random() * characters.length));
+    }
+    return res.status(200).json({ key });
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }

@@ -61,6 +61,27 @@ const {
 
 /**
  * @swagger
+ * /sessions/generate-key:
+ *   get:
+ *     summary: Generate a session key
+ *     tags: [Session]
+ *     responses:
+ *       200:
+ *         description: Session key generated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 sessionKey:
+ *                   type: string
+ *       500:
+ *         description: Internal server error
+ */
+router.get("/generate-key", generateSessionKey);
+
+/**
+ * @swagger
  * /sessions:
  *   get:
  *     summary: Get all sessions by class
@@ -201,26 +222,5 @@ router.get("/:sessionId", getSessionDetailById);
  *         description: Internal server error
  */
 router.delete("/:sessionId", removeSession);
-
-/**
- * @swagger
- * /sessions/generate-key:
- *   get:
- *     summary: Generate a session key
- *     tags: [Session]
- *     responses:
- *       200:
- *         description: Session key generated successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 sessionKey:
- *                   type: string
- *       500:
- *         description: Internal server error
- */
-// router.get("/generate-key", generateSessionKey);
 
 module.exports = router;

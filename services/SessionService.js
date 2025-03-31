@@ -142,22 +142,10 @@ async function removeSession(req) {
   }
 }
 
-function generateKey() {
-  const characters =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  let sessionKey = "";
-  for (let i = 0; i < 10; i++) {
-    const randomIndex = Math.floor(Math.random() * characters.length);
-    sessionKey += characters[randomIndex];
-  }
-  return sessionKey;
-}
-
 module.exports = {
   getSessionByClass,
   createSession,
   updateSession,
   getSessionDetailById,
   removeSession,
-  generateKey,
 };
