@@ -1,13 +1,13 @@
-const { Session } = require("../models");
+const { Session, SessionParticipant, Class } = require("../models");
 
 async function getSessionByClass(req) {
   try {
     const { sessionName, status, page = 1, limit = 10 } = req.body;
-    const { id } = req.params;
+    const { classId } = req.query;
 
     const offset = (page - 1) * limit;
     const whereClause = {
-      ClassID: id,
+      ClassID: classId,
     };
 
     if (sessionName) {
@@ -40,7 +40,7 @@ async function getSessionByClass(req) {
 async function createSession(req) {
   try {
     const { sessionName, sessionKey, startTime, endTime, examSet } = req.body;
-    const { classId } = req.params;
+    const { classId } = req.query;
 
     const sessionData = {
       sessionName,
@@ -62,12 +62,12 @@ async function createSession(req) {
 
 async function updateSession(req) {
   try {
-    const { id } = req.params;
+    const { sessionId } = req.params;
     const { sessionName, sessionKey, startTime, endTime, examSet } = req.body;
 
     const session = await Session.update(
       { sessionName, sessionKey, startTime, endTime, examSet },
-      { where: { ID: id } }
+      { where: { ID: sessionId } }
     );
     if (!session) {
       return {
@@ -78,18 +78,29 @@ async function updateSession(req) {
 
     return {
       status: 200,
-      data: updatedSession,
+      data: session,
     };
   } catch (error) {
     throw new Error(`Error updating session: ${error.message}`);
   }
 }
 
-async function getSessionDetailById(id) {
+async function getSessionDetailById(req) {
   try {
+    const { sessionId } = req.params;
+
     const session = await Session.findOne({
-      where: { ID: id },
-      include: ["SesionParticipant"],
+      where: { ID: sessionId },
+      include: [
+        {
+          model: SessionParticipant,
+          as: "SessionParticipants",
+        },
+        {
+          model: Class,
+          as: "Class",
+        },
+      ],
     });
 
     if (!session) {
@@ -108,10 +119,11 @@ async function getSessionDetailById(id) {
   }
 }
 
-async function removeSession(id) {
+async function removeSession(req) {
   try {
+    const { sessionId } = req.params;
     const deletedCount = await Session.destroy({
-      where: { ID: id },
+      where: { ID: sessionId },
     });
 
     if (deletedCount === 0) {
@@ -130,7 +142,7 @@ async function removeSession(id) {
   }
 }
 
-function generateSessionKey() {
+function generateKey() {
   const characters =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
   let sessionKey = "";
@@ -138,10 +150,7 @@ function generateSessionKey() {
     const randomIndex = Math.floor(Math.random() * characters.length);
     sessionKey += characters[randomIndex];
   }
-  return {
-    status: 200,
-    data: sessionKey,
-  };
+  return sessionKey;
 }
 
 module.exports = {
@@ -150,5 +159,5 @@ module.exports = {
   updateSession,
   getSessionDetailById,
   removeSession,
-  generateSessionKey,
+  generateKey,
 };

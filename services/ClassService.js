@@ -28,11 +28,13 @@ async function createClass(req) {
   }
 }
 
-async function getClassDetaiById(id) {
+async function getClassDetaiById(req) {
   try {
+    const { classId } = req.params;
+
     const classDetail = await Class.findOne({
-      where: { id },
-      include: ["Session"],
+      where: { ID: classId },
+      include: ["Sessions"],
     });
 
     if (!classDetail) {
@@ -58,11 +60,14 @@ async function updateClass(req) {
       throw new Error("Class name is required");
     }
 
-    const [updatedRows] = await Class.update(className, {
-      where: { id: classId },
-    });
+    const [updatedRows] = await Class.update(
+      { className },
+      {
+        where: { ID: classId },
+      }
+    );
     if (updatedRows === 0) {
-      throw new Error(`Class with id ${id} not found or no changes made`);
+      throw new Error(`Class with id ${classId} not found or no changes made`);
     }
     return {
       status: 200,
@@ -74,13 +79,14 @@ async function updateClass(req) {
   }
 }
 
-async function remove(id) {
+async function remove(req) {
   try {
-    const deletedRows = await Class.destroy({ where: { id } });
+    const { classId } = req.params;
+    const deletedRows = await Class.destroy({ where: { ID: classId } });
     if (deletedRows === 0) {
-      throw new Error(`Class with id ${id} not found`);
+      throw new Error(`Class with id ${classId} not found`);
     }
-    return `Class with id ${id} deleted successfully`;
+    return `Class with id ${classId} deleted successfully`;
   } catch (error) {
     throw new Error(`Error deleting class: ${error.message}`);
   }

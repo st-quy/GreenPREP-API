@@ -65,6 +65,13 @@ const {
  *   get:
  *     summary: Get all sessions by class
  *     tags: [Session]
+ *     parameters:
+ *       - in: query
+ *         name: classId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The ID of the class to filter sessions
  *     responses:
  *       200:
  *         description: List of sessions
@@ -74,6 +81,8 @@ const {
  *               type: array
  *               items:
  *                 $ref: '#/components/schemas/Session'
+ *       400:
+ *         description: Missing or invalid classId
  *       500:
  *         description: Internal server error
  */
@@ -85,6 +94,13 @@ router.get("/", getAllSessionsByClass);
  *   post:
  *     summary: Create a new session
  *     tags: [Session]
+ *     parameters:
+ *       - in: query
+ *         name: classId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The ID of the class to filter sessions
  *     requestBody:
  *       required: true
  *       content:
@@ -105,13 +121,13 @@ router.post("/", createSession);
 
 /**
  * @swagger
- * /sessions/{classId}:
+ * /sessions/{sessionId}:
  *   put:
  *     summary: Update a session by class ID
  *     tags: [Session]
  *     parameters:
  *       - in: path
- *         name: classId
+ *         name: sessionId
  *         schema:
  *           type: string
  *         required: true
@@ -134,13 +150,13 @@ router.post("/", createSession);
  *       500:
  *         description: Internal server error
  */
-router.put("/:classId", updateSession);
+router.put("/:sessionId", updateSession);
 
 /**
  * @swagger
- * /sessions/{classId}:
+ * /sessions/{sessionId}:
  *   get:
- *     summary: Get session details by class ID
+ *     summary: Get session details by sessionId
  *     tags: [Session]
  *     parameters:
  *       - in: path
@@ -161,17 +177,17 @@ router.put("/:classId", updateSession);
  *       500:
  *         description: Internal server error
  */
-router.get("/:classId", getSessionDetailById);
+router.get("/:sessionId", getSessionDetailById);
 
 /**
  * @swagger
- * /sessions/{classId}:
+ * /sessions/{sessionId}:
  *   delete:
- *     summary: Remove a session by class ID
+ *     summary: Remove a session by session ID
  *     tags: [Session]
  *     parameters:
  *       - in: path
- *         name: classId
+ *         name: sessionId
  *         schema:
  *           type: string
  *         required: true
@@ -184,7 +200,7 @@ router.get("/:classId", getSessionDetailById);
  *       500:
  *         description: Internal server error
  */
-router.delete("/:classId", removeSession);
+router.delete("/:sessionId", removeSession);
 
 /**
  * @swagger
@@ -205,6 +221,6 @@ router.delete("/:classId", removeSession);
  *       500:
  *         description: Internal server error
  */
-router.get("/generate-key", generateSessionKey);
+// router.get("/generate-key", generateSessionKey);
 
 module.exports = router;

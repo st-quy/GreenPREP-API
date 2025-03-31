@@ -5,11 +5,13 @@ const router = express.Router();
 const userRoutes = require("./UserRoute");
 const topicRoutes = require("./TopicRoute"); // Add this line
 const ClassRoutes = require("./ClassRoute"); // Add this line
+const SessionRoutes = require("./SessionRoute"); // Add this line
 
 // Defining routes
 router.use("/users", userRoutes);
 router.use("/topics", topicRoutes); // Add this line
 router.use("/classes", ClassRoutes); // Add this line
+router.use("/sessions", SessionRoutes); // Add this line
 
 router.use;
 

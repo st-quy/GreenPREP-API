@@ -49,8 +49,12 @@ db.StudentAnswer.belongsTo(db.Question, { foreignKey: "QuestionID" });
 
 db.Class.hasMany(db.Session, { foreignKey: "ClassID" });
 
-db.Session.belongsTo(db.Class, { foreignKey: "ClassID" });
-db.Session.hasMany(db.SessionParticipant, { foreignKey: "SessionID" });
+db.Session.belongsTo(db.Class, { foreignKey: "ClassID", as: "Class" });
+// db.Session.hasMany(db.SessionParticipant, { foreignKey: "SessionID" });
+db.Session.hasMany(db.SessionParticipant, {
+  foreignKey: "SessionID",
+  as: "SessionParticipants",
+});
 
 db.SessionParticipant.belongsTo(db.Session, { foreignKey: "SessionID" });
 db.SessionParticipant.belongsTo(db.User, { foreignKey: "UserID" });

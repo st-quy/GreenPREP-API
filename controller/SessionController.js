@@ -29,9 +29,7 @@ async function updateSession(req, res) {
 
 async function getSessionDetailById(req, res) {
   try {
-    const sessionDetail = await SessionsService.getSessionDetailById(
-      req.params.id
-    );
+    const sessionDetail = await SessionsService.getSessionDetailById(req);
     return res.status(sessionDetail.status).json(sessionDetail);
   } catch (error) {
     return res.status(500).json({ error: error.message });
@@ -40,7 +38,7 @@ async function getSessionDetailById(req, res) {
 
 async function removeSession(req, res) {
   try {
-    const result = await SessionsService.removeSession(req.params.id);
+    const result = await SessionsService.removeSession(req);
     return res.status(result.status).json(result);
   } catch (error) {
     return res.status(500).json({ error: error.message });
@@ -49,8 +47,8 @@ async function removeSession(req, res) {
 
 async function generateSessionKey(req, res) {
   try {
-    const sessionKey = SessionsService.generateSessionKey();
-    return res.status(sessionKey.status).json(sessionKey);
+    const sessionKey = SessionsService.generateKey();
+    return res.status(200).json({ sessionKey });
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }

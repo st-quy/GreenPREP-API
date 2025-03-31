@@ -47,9 +47,7 @@ const updateClass = async (req, res) => {
 
 const getClassById = async (req, res) => {
   try {
-    const classDetail = await ClassService.getClassDetaiById(
-      req.params.classId
-    );
+    const classDetail = await ClassService.getClassDetaiById(req);
 
     if (!classDetail) {
       return res.status(404).json({ message: "Class not found" });
@@ -64,7 +62,7 @@ const getClassById = async (req, res) => {
 
 const deleteClass = async (req, res) => {
   try {
-    const deletedClass = await ClassService.remove(req.params.classId);
+    const deletedClass = await ClassService.remove(req);
 
     if (!deletedClass) {
       return res.status(404).json({ message: "Class not found" });

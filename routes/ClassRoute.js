@@ -1,5 +1,7 @@
 const express = require("express");
 const router = express.Router();
+const { allowAnonymous, authorize } = require("../middleware/AuthMiddleware");
+
 const {
   getAllClasses,
   createClass,
