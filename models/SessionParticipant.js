@@ -5,10 +5,6 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
     },
-    studentName: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
     GrammarVocab: {
       type: DataTypes.INTEGER,
       allowNull: true,

@@ -1,3 +1,5 @@
+const { SESSION_REQUEST_STATUS } = require("../helpers/constants");
+
 module.exports = (sequelize, DataTypes) => {
   const SessionRequest = sequelize.define("SessionRequest", {
     ID: {
@@ -6,8 +8,9 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true,
     },
     status: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: false,
+      type: DataTypes.STRING,
+      allowNull: false,
+      defaultValue: SESSION_REQUEST_STATUS.PENDING,
     },
     requestDate: {
       type: DataTypes.DATE,

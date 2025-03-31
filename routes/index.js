@@ -12,8 +12,8 @@ router.use("/users", userRoutes);
 router.use("/topics", topicRoutes); // Add this line
 router.use("/classes", ClassRoutes); // Add this line
 router.use("/sessions", SessionRoutes); // Add this line
-
-router.use;
+router.use("/session-requests", require("./SessionRequestRoute"));
+router.use("/session-participants", require("./SessionParticipantRoute"));
 
 // Add more routes here as needed
 // router.use("/another-route", anotherRoute);

@@ -3,5 +3,5 @@ node_modules/
 config.js
 etc/secrets/config.json
 etc/secrets/firebase.json
-.package-lock.json
+package-lock.json
 config/default.json
