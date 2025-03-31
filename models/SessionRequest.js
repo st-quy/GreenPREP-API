@@ -31,10 +31,5 @@ module.exports = (sequelize, DataTypes) => {
     },
   });
 
-  // SessionRequest.associate = function (models) {
-  //   SessionRequest.belongsTo(models.User, { foreignKey: "StudentID" });
-  //   SessionRequest.belongsTo(models.Session, { foreignKey: "SessionID" });
-  // };
-
   return SessionRequest;
 };

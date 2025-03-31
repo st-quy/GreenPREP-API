@@ -65,10 +65,5 @@ module.exports = (sequelize, DataTypes) => {
     },
   });
 
-  // SessionParticipant.associate = function (models) {
-  //   SessionParticipant.belongsTo(models.Session, { foreignKey: "SessionID" });
-  //   SessionParticipant.belongsTo(models.User, { foreignKey: "UserID" });
-  // };
-
   return SessionParticipant;
 };

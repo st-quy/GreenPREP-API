@@ -4,7 +4,7 @@ module.exports = {
   up: async (queryInterface, Sequelize) => {
     const { v4: uuidv4 } = require("uuid");
 
-    return queryInterface.bulkInsert("Class", [
+    return queryInterface.bulkInsert("Classes", [
       {
         ID: uuidv4(),
         className: "CL0701",
@@ -63,6 +63,6 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    return queryInterface.bulkDelete("Class", null, {});
+    return queryInterface.bulkDelete("Classes", null, {});
   },
 };
