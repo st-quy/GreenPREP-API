@@ -12,43 +12,55 @@ const storage = multer.memoryStorage();
  *     User:
  *       type: object
  *       required:
+ *         - lastName
+ *         - firstName
  *         - email
  *         - password
- *         - name
- *         - phone
- *         - address
- *         - role
  *       properties:
+ *         lastName:
+ *           type: string
+ *           description: The user's last name
+ *         firstName:
+ *           type: string
+ *           description: The user's first name
  *         email:
  *           type: string
  *           description: The user's email
  *         password:
  *           type: string
  *           description: The user's password
- *         name:
- *           type: string
- *           description: The user's name
  *         phone:
  *           type: string
- *           description: The user's phone number
- *         address:
+ *           description: The user's phone number (optional)
+ *         studentCode:
  *           type: string
- *           description: The user's address
- *         role:
+ *           description: The student's code (optional)
+ *         teacherCode:
  *           type: string
- *           description: The user's role
+ *           description: The teacher's code (optional)
+ *         roleIDs:
+ *           type: array
+ *           items:
+ *             type: string
+ *           description: The roles assigned to the user
+ *         class:
+ *           type: string
+ *           description: The user's class (optional)
  *       example:
- *         email: test@example.com
+ *         lastName: Doe
+ *         firstName: John
+ *         email: john.doe@example.com
  *         password: password123
- *         name: Test User
  *         phone: 1234567890
- *         address: 123 Test St
- *         role: user
+ *         studentCode: SC12345
+ *         teacherCode: TC67890
+ *         roleIDs: ["student"]
+ *         class: Class A
  */
 
 /**
  * @swagger
- * /user/register:
+ * /users/register:
  *   post:
  *     summary: Register a new user
  *     tags: [User]
@@ -66,17 +78,30 @@ const storage = multer.memoryStorage();
  *             schema:
  *               type: object
  *               properties:
+ *                 status:
+ *                   type: integer
  *                 message:
  *                   type: string
- *                 user:
- *                   $ref: '#/components/schemas/User'
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: string
+ *                     email:
+ *                       type: string
+ *                     studentCode:
+ *                       type: string
+ *                     teacherCode:
+ *                       type: string
+ *       400:
+ *         description: Bad request
  *       500:
  *         description: Internal server error
  */
 router.post("/register", allowAnonymous, registerUser);
 /**
  * @swagger
- * /user/login:
+ * /users/login:
  *   post:
  *     summary: Login a user
  *     tags: [User]
@@ -89,8 +114,13 @@ router.post("/register", allowAnonymous, registerUser);
  *             properties:
  *               email:
  *                 type: string
+ *                 description: The user's email
  *               password:
  *                 type: string
+ *                 description: The user's password
+ *             required:
+ *               - email
+ *               - password
  *     responses:
  *       200:
  *         description: User logged in successfully
@@ -99,12 +129,21 @@ router.post("/register", allowAnonymous, registerUser);
  *             schema:
  *               type: object
  *               properties:
- *                 accessToken:
+ *                 status:
+ *                   type: integer
+ *                 message:
  *                   type: string
- *                 refreshToken:
- *                   type: string
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     access_token:
+ *                       type: string
+ *                     refresh_token:
+ *                       type: string
  *       400:
  *         description: Invalid email or password
+ *       500:
+ *         description: Internal server error
  */
 router.post("/login", allowAnonymous, loginUser);
 
