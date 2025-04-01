@@ -74,6 +74,32 @@ const SessionParticipantController = require("../controller/SessionParticipantCo
 
 /**
  * @swagger
+ * /session-participants/user/{userId}:
+ *   get:
+ *     summary: Get all exam history by participant
+ *     tags: [SessionParticipants]
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The ID of the user to retrieve participants for
+ *     responses:
+ *       200:
+ *         description: Participants retrieved successfully
+ *       404:
+ *         description: No participants found for the given user
+ *       500:
+ *         description: Internal server error
+ */
+router.get(
+  "/user/:userId",
+  SessionParticipantController.getParticipantsByUserId
+);
+
+/**
+ * @swagger
  * /session-participants/{sessionId}:
  *   get:
  *     summary: Get all participants for a session
@@ -97,28 +123,5 @@ const SessionParticipantController = require("../controller/SessionParticipantCo
  *         $ref: '#/components/responses/ErrorResponse'
  */
 router.get("/:sessionId", SessionParticipantController.getAllParticipants);
-
-/**
- * @swagger
- * /participants/{userId}:
- *   get:
- *     summary: Get all exam history by participant
- *     tags: [SessionParticipants]
- *     parameters:
- *       - in: path
- *         name: userId
- *         schema:
- *           type: string
- *         required: true
- *         description: The ID of the user to retrieve participants for
- *     responses:
- *       200:
- *         description: Participants retrieved successfully
- *       404:
- *         description: No participants found for the given user
- *       500:
- *         description: Internal server error
- */
-router.get("/:userId", SessionParticipantController.getParticipantsByUserId);
 
 module.exports = router;
