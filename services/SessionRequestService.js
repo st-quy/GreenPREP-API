@@ -90,7 +90,7 @@ async function createSessionRequest(req) {
     }
 
     const sessionRequest = await SessionRequest.create({
-      UserID: studentId,
+      UserID: UserID,
       SessionID: sessionId,
     });
 
