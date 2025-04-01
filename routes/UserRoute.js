@@ -149,7 +149,7 @@ router.post("/login", allowAnonymous, loginUser);
 
 /**
  * @swagger
- * /user/{userId}:
+ * /users/{userId}:
  *   get:
  *     summary: Get user by ID
  *     tags: [User]
@@ -170,7 +170,7 @@ router.get("/:userId", authorize, getUserById);
 
 /**
  * @swagger
- * /user/{userId}:
+ * /users/{userId}:
  *   put:
  *     summary: Update user information
  *     tags: [User]
@@ -204,7 +204,7 @@ router.put("/:userId", authorize, updateUser);
 
 /**
  * @swagger
- * /user/{userId}/change-password:
+ * /users/{userId}/change-password:
  *   post:
  *     summary: Change user password
  *     tags: [User]
@@ -236,7 +236,7 @@ router.post("/:userId/change-password", authorize, changePassword);
 
 /**
  * @swagger
- * /user/forgot-password:
+ * /users/forgot-password:
  *   post:
  *     summary: Request a password reset link
  *     tags: [Auth]
@@ -274,7 +274,7 @@ router.post("/forgot-password", forgotPassword);
 
 /**
  * @swagger
- * /user/reset-password:
+ * /users/reset-password:
  *   post:
  *     summary: Reset password using token
  *     tags: [Auth]
@@ -315,7 +315,7 @@ router.post("/reset-password", resetPassword);
 
 /**
  * @swagger
- * /user/logout/{userId}:
+ * /users/logout/{userId}:
  *   post:
  *     summary: Logout user
  *     tags: [User]

@@ -3,6 +3,7 @@ const { User } = require("../models");
 const jwtUtils = require("../helpers/jwt");
 const crypto = require("crypto");
 const nodemailer = require("nodemailer");
+const jwt = require("jsonwebtoken");
 
 // Logic for user registration
 async function registerUser(data) {
@@ -155,13 +156,13 @@ async function sendResetPasswordEmail(email) {
     if (!user) {
       throw new Error("User with this email does not exist");
     }
-
+    
     const resetToken = jwt.sign({ userId: user.ID }, process.env.JWT_SECRET, { expiresIn: "15m" });
 
     const resetLink = `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}`;
 
     const mailOptions = {
-      from: EMAIL_USER,
+      from: process.env.EMAIL_USER,
       to: user.email,
       subject: "🔑 Reset Your Password",
       html: `
