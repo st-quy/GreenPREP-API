@@ -3,7 +3,7 @@ const express = require("express");
 const router = express.Router();
 const multer = require("multer");
 const { allowAnonymous, authorize } = require("../middleware/AuthMiddleware");
-const { registerUser, loginUser, getUserById, updateUser, changePassword } = require("../controller/UserController");
+const { registerUser, loginUser, getUserById, updateUser, changePassword, forgotPassword } = require("../controller/UserController");
 const storage = multer.memoryStorage();
 /**
  * @swagger
@@ -233,5 +233,29 @@ router.put("/:userId", authorize, updateUser);
  *         description: Invalid old password
  */
 router.post("/:userId/change-password", authorize, changePassword);
+
+/**
+ * @swagger
+ * /auth/forgot-password:
+ *   post:
+ *     summary: Request a password reset
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 example: "test@example.com"
+ *     responses:
+ *       200:
+ *         description: New password sent to email
+ *       400:
+ *         description: Error occurred
+ */
+router.post("/forgot-password", forgotPassword);
 
 module.exports = router;
