@@ -156,32 +156,47 @@ async function sendResetPasswordEmail(email) {
       throw new Error("User with this email does not exist");
     }
 
-    const newPassword = crypto.randomBytes(4).toString("hex");
+    const resetToken = jwt.sign({ userId: user.ID }, process.env.JWT_SECRET, { expiresIn: "15m" });
 
-    const hashedPassword = await bcrypt.hash(newPassword, 10);
-    user.password = hashedPassword;
-    await user.save();
+    const resetLink = `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}`;
 
     const mailOptions = {
-      from: process.env.EMAIL_USER,
+      from: EMAIL_USER,
       to: user.email,
-      subject: "🔑 Password Reset Request",
+      subject: "🔑 Reset Your Password",
       html: `
         <div style="font-family: Arial, sans-serif; padding: 20px; border: 1px solid #ddd;">
-          <h2 style="color: #333;">🔑 Password Reset</h2>
-          <p>Hello <strong>${user.name}</strong>,</p>
-          <p>Your new password is: <strong style="color: #d9534f;">${newPassword}</strong></p>
-          <p>Please log in and change your password immediately.</p>
-          <p style="color: #777; font-size: 12px;">If you didn't request this, please ignore this email.</p>
+          <h2 style="color: #333;">🔑 Reset Your Password</h2>
+          <p>Hello <strong>${user.firstName} ${user.lastName}</strong>,</p>
+          <p>Click the link below to reset your password:</p>
+          <a href="${resetLink}" style="display: inline-block; padding: 10px 15px; background-color: #28a745; color: #fff; text-decoration: none; border-radius: 5px;">
+            Reset Password
+          </a>
+          <p style="color: #777; font-size: 12px;">This link will expire in 15 minutes.</p>
         </div>
       `,
     };
 
     await transporter.sendMail(mailOptions);
 
-    return { status: 200, message: "New password sent to your email" };
+    return { status: 200, message: "Password reset link sent to your email" };
   } catch (error) {
-    throw new Error(`Error sending reset password email: ${error.message}`);
+    throw new Error(`Error sending reset email: ${error.message}`);
+  }
+}
+
+async function resetPassword(token, newPassword) {
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findByPk(decoded.userId);
+    if (!user) throw new Error("Invalid or expired token");
+
+    user.password = await bcrypt.hash(newPassword, 10);
+    await user.save();
+
+    return { status: 200, message: "Password has been updated successfully" };
+  } catch (error) {
+    throw new Error(`Reset password failed: ${error.message}`);
   }
 }
 
@@ -209,5 +224,6 @@ module.exports = {
   updateUser,
   changePassword,
   sendResetPasswordEmail,
+  resetPassword,
   logoutUser,
 };

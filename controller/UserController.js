@@ -63,6 +63,16 @@ const forgotPassword = async (req, res) => {
   }
 };
 
+async function resetPassword(req, res) {
+  try {
+    const { token, newPassword } = req.body;
+    const response = await userService.resetPassword(token, newPassword);
+    return res.status(response.status).json(response);
+  } catch (error) {
+    return res.status(400).json({ message: error.message });
+  }
+}
+
 const logoutUser = async (req, res) => {
   try {
     const userId = req.params.userId; 
@@ -81,5 +91,6 @@ module.exports = {
   updateUser,
   changePassword,
   forgotPassword,
+  resetPassword,
   logoutUser,
 };

@@ -3,7 +3,7 @@ const express = require("express");
 const router = express.Router();
 const multer = require("multer");
 const { allowAnonymous, authorize } = require("../middleware/AuthMiddleware");
-const { registerUser, loginUser, getUserById, updateUser, changePassword, forgotPassword, logoutUser } = require("../controller/UserController");
+const { registerUser, loginUser, getUserById, updateUser, changePassword, forgotPassword, logoutUser, resetPassword } = require("../controller/UserController");
 const storage = multer.memoryStorage();
 /**
  * @swagger
@@ -238,8 +238,9 @@ router.post("/:userId/change-password", authorize, changePassword);
  * @swagger
  * /user/forgot-password:
  *   post:
- *     summary: Request a password reset
+ *     summary: Request a password reset link
  *     tags: [Auth]
+ *     description: Sends a password reset link to the user's email.
  *     requestBody:
  *       required: true
  *       content:
@@ -252,11 +253,65 @@ router.post("/:userId/change-password", authorize, changePassword);
  *                 example: "test@example.com"
  *     responses:
  *       200:
- *         description: New password sent to email
+ *         description: Password reset link sent successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: integer
+ *                   example: 200
+ *                 message:
+ *                   type: string
+ *                   example: "Password reset link sent to your email"
  *       400:
- *         description: Error occurred
+ *         description: Invalid request or email not found
+ *       500:
+ *         description: Internal server error
  */
 router.post("/forgot-password", forgotPassword);
+
+/**
+ * @swagger
+ * /user/reset-password:
+ *   post:
+ *     summary: Reset password using token
+ *     tags: [Auth]
+ *     description: Allows users to reset their password using a valid token.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               token:
+ *                 type: string
+ *                 example: "eyJhbGciOiJIUzI1..."
+ *               newPassword:
+ *                 type: string
+ *                 example: "NewSecurePassword123!"
+ *     responses:
+ *       200:
+ *         description: Password reset successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: integer
+ *                   example: 200
+ *                 message:
+ *                   type: string
+ *                   example: "Password has been updated successfully"
+ *       400:
+ *         description: Invalid token or password format
+ *       500:
+ *         description: Internal server error
+ */
+router.post("/reset-password", resetPassword);
 
 /**
  * @swagger
