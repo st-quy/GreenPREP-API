@@ -45,11 +45,17 @@ const getParticipantsByUserId = async (userId) => {
     where: { UserID: userId },
   });
 
+  console.log("object", userId);
+
   if (!participants.length) {
     return { status: 404, message: "No participants found for the given user" };
   }
 
-  return { status: 200, message: "Participants retrieved successfully", data: participants };
+  return {
+    status: 200,
+    message: "Participants retrieved successfully",
+    data: participants,
+  };
 };
 
 module.exports = {

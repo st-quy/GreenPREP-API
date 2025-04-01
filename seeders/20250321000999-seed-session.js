@@ -4,6 +4,13 @@ module.exports = {
   up: async (queryInterface, Sequelize) => {
     const { v4: uuidv4 } = require("uuid");
 
+    const id1 = uuidv4();
+    const id2 = uuidv4();
+    const id3 = uuidv4();
+    const id4 = uuidv4();
+    const id5 = uuidv4();
+    const id6 = uuidv4();
+
     // Fetch existing Class IDs from the database
     const classes = await queryInterface.sequelize.query(
       `SELECT "ID" FROM "Classes";`
@@ -13,7 +20,7 @@ module.exports = {
 
     return queryInterface.bulkInsert("Sessions", [
       {
-        ID: uuidv4(),
+        ID: id1,
         sessionName: "Session 1",
         sessionKey: "S1-KEY",
         startTime: new Date(),
@@ -25,7 +32,7 @@ module.exports = {
         updatedAt: new Date(),
       },
       {
-        ID: uuidv4(),
+        ID: id2,
         sessionName: "Session 2",
         sessionKey: "S2-KEY",
         startTime: new Date(),
@@ -37,7 +44,7 @@ module.exports = {
         updatedAt: new Date(),
       },
       {
-        ID: uuidv4(),
+        ID: id3,
         sessionName: "Session 3",
         sessionKey: "S3-KEY",
         startTime: new Date(),
@@ -49,7 +56,7 @@ module.exports = {
         updatedAt: new Date(),
       },
       {
-        ID: uuidv4(),
+        ID: id4,
         sessionName: "Session 4",
         sessionKey: "S4-KEY",
         startTime: new Date(),
@@ -61,7 +68,7 @@ module.exports = {
         updatedAt: new Date(),
       },
       {
-        ID: uuidv4(),
+        ID: id5,
         sessionName: "Session 5",
         sessionKey: "S5-KEY",
         startTime: new Date(),
@@ -73,7 +80,7 @@ module.exports = {
         updatedAt: new Date(),
       },
       {
-        ID: uuidv4(),
+        ID: id6,
         sessionName: "Session 6",
         sessionKey: "S6-KEY",
         startTime: new Date(),

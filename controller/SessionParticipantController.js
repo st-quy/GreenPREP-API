@@ -13,11 +13,15 @@ async function getAllParticipants(req, res) {
 const getParticipantsByUserId = async (req, res) => {
   try {
     const { userId } = req.params;
-    const result = await SessionParticipantService.getParticipantsByUserId(userId);
+    const result = await SessionParticipantService.getParticipantsByUserId(
+      userId
+    );
     return res.status(result.status).json(result);
   } catch (error) {
     console.error("Error fetching participants by User:", error.stack);
-    return res.status(500).json({ status: 500, message: "Internal server error" });
+    return res
+      .status(500)
+      .json({ status: 500, message: "Internal server error" });
   }
 };
 
