@@ -98,7 +98,7 @@ async function getSessionDetailById(req) {
         },
         {
           model: Class,
-          as: "Class",
+          as: "Classes",
         },
       ],
     });
