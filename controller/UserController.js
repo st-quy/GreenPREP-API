@@ -63,11 +63,23 @@ const forgotPassword = async (req, res) => {
   }
 };
 
+const logoutUser = async (req, res) => {
+  try {
+    const userId = req.params.userId; 
+    const result = await userService.logoutUser(userId);
+    return res.status(result.status).json(result);
+  } catch (error) {
+    console.error("Error during logout:", error);
+    return res.status(400).json({ message: error.message });
+  }
+};
+
 module.exports = {
   registerUser,
   loginUser,
   getUserById,
   updateUser,
   changePassword,
-  forgotPassword
+  forgotPassword,
+  logoutUser,
 };

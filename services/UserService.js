@@ -185,11 +185,29 @@ async function sendResetPasswordEmail(email) {
   }
 }
 
+async function logoutUser(userId) {
+  try {
+    const user = await User.findByPk(userId);
+    if (!user) {
+      throw new Error("User không tồn tại");
+    }
+
+    user.refresh_token = null;
+    user.refresh_token_expires = null;
+    await user.save();
+
+    return { status: 200, message: "Logout thành công" };
+  } catch (error) {
+    throw new Error(`Logout thất bại: ${error.message}`);
+  }
+}
+
 module.exports = {
   registerUser,
   loginUser,
   getUserById,
   updateUser,
   changePassword,
-  sendResetPasswordEmail
+  sendResetPasswordEmail,
+  logoutUser,
 };

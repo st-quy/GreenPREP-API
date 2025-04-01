@@ -3,7 +3,7 @@ const express = require("express");
 const router = express.Router();
 const multer = require("multer");
 const { allowAnonymous, authorize } = require("../middleware/AuthMiddleware");
-const { registerUser, loginUser, getUserById, updateUser, changePassword, forgotPassword } = require("../controller/UserController");
+const { registerUser, loginUser, getUserById, updateUser, changePassword, forgotPassword, logoutUser } = require("../controller/UserController");
 const storage = multer.memoryStorage();
 /**
  * @swagger
@@ -236,7 +236,7 @@ router.post("/:userId/change-password", authorize, changePassword);
 
 /**
  * @swagger
- * /auth/forgot-password:
+ * /user/forgot-password:
  *   post:
  *     summary: Request a password reset
  *     tags: [Auth]
@@ -257,5 +257,26 @@ router.post("/:userId/change-password", authorize, changePassword);
  *         description: Error occurred
  */
 router.post("/forgot-password", forgotPassword);
+
+/**
+ * @swagger
+ * /user/logout/{userId}:
+ *   post:
+ *     summary: Logout user
+ *     tags: [User]
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the user
+ *     responses:
+ *       200:
+ *         description: User logged out successfully
+ *       400:
+ *         description: Error occurred
+ */
+router.post("/logout/:userId", authorize, logoutUser);
 
 module.exports = router;

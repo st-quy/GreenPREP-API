@@ -40,7 +40,20 @@ async function getAllParticipants(req) {
   }
 }
 
+const getParticipantsByUserId = async (userId) => {
+  const participants = await SessionParticipant.findAll({
+    where: { UserID: userId },
+  });
+
+  if (!participants.length) {
+    return { status: 404, message: "No participants found for the given user" };
+  }
+
+  return { status: 200, message: "Participants retrieved successfully", data: participants };
+};
+
 module.exports = {
   addParticipant,
   getAllParticipants,
+  getParticipantsByUserId,
 };

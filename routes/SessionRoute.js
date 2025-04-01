@@ -9,7 +9,6 @@ const {
   removeSession,
   generateSessionKey,
 } = require("../controller/SessionController");
-const { getParticipantsByUserId } = require("../services/SessionParticipant");
 /**
  * @swagger
  * components:
@@ -223,28 +222,5 @@ router.get("/:sessionId", getSessionDetailById);
  *         description: Internal server error
  */
 router.delete("/:sessionId", removeSession);
-
-/**
- * @swagger
- * /participants/{userId}:
- *   get:
- *     summary: Retrieve participants by user ID
- *     tags: [Participant]
- *     parameters:
- *       - in: path
- *         name: userId
- *         schema:
- *           type: string
- *         required: true
- *         description: The ID of the user to retrieve participants for
- *     responses:
- *       200:
- *         description: Participants retrieved successfully
- *       404:
- *         description: No participants found for the given user
- *       500:
- *         description: Internal server error
- */
-router.get("/:userId", getParticipantsByUserId);
 
 module.exports = router;

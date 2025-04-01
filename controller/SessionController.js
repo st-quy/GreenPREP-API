@@ -59,23 +59,11 @@ function generateSessionKey(req, res) {
   }
 }
 
-const getParticipantsByUserId = async (req, res) => {
-  try {
-    const { userId } = req.params;
-    const result = await participantService.getParticipantsByUserId(userId);
-    return res.status(result.status).json(result);
-  } catch (error) {
-    console.error("Error fetching participants by User:", error.stack);
-    return res.status(500).json({ status: 500, message: "Internal server error" });
-  }
-};
-
 module.exports = {
   getAllSessionsByClass,
   createSession,
   updateSession,
   getSessionDetailById,
   removeSession,
-  generateSessionKey,
-  getParticipantsByUserId,
+  generateSessionKey
 };
