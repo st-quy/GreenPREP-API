@@ -8,7 +8,7 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true,
     },
     status: {
-      type: DataTypes.STRING,
+      type: DataTypes.ENUM(["pending", "approved", "rejected"]),
       allowNull: false,
       defaultValue: SESSION_REQUEST_STATUS.PENDING,
     },
@@ -20,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.UUID,
       allowNull: false,
       references: {
-        model: "Session",
+        model: "Sessions",
         key: "ID",
       },
     },
@@ -28,7 +28,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.UUID,
       allowNull: true,
       references: {
-        model: "User",
+        model: "Users",
         key: "ID",
       },
     },

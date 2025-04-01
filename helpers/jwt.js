@@ -5,9 +5,10 @@ const EMAIL_SECRET = process.env.EMAIL_SECRET;
 
 async function generateJwtAccess(user) {
   const payload = {
-    userId: user.user_id,
-    role: user.role,
-    name: user.name,
+    userId: user.ID,
+    role: user.roleIDs,
+    lastName: user.lastName,
+    firstName: user.firstName,
     email: user.email,
   };
   return jwt.sign(payload, JWT_SECRET, { expiresIn: "1d" });

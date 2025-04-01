@@ -8,7 +8,7 @@ const jwt = require("jsonwebtoken");
 // Logic for user registration
 async function registerUser(data) {
   try {
-    const { email, password, studentCode, teacherCode } = data;
+    const { email, password, studentCode, teacherCode, phone } = data;
 
     // Validate email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -36,6 +36,13 @@ async function registerUser(data) {
       });
       if (existingTeacherCode) {
         throw new Error("Teacher code already exists");
+      }
+    }
+
+    if (phone) {
+      const phoneRegex = /^\d{10}$/;
+      if (!phoneRegex.test(phone)) {
+        throw new Error(`Invalid phone format: ${phone}`);
       }
     }
 

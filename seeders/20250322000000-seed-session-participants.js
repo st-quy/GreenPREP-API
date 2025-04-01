@@ -1,5 +1,4 @@
 "use strict";
-const { v4: uuidv4 } = require("uuid");
 
 module.exports = {
   async up(queryInterface, Sequelize) {
@@ -14,11 +13,17 @@ module.exports = {
     const sessionIds = sessions[0].map((session) => session.ID);
     const userIds = users[0].map((user) => user.ID);
 
+    const { v4: uuidv4 } = require("uuid");
+    const id1 = uuidv4();
+    const id2 = uuidv4();
+    const id3 = uuidv4();
+    const id4 = uuidv4();
+    const id5 = uuidv4();
+
     // Seed dữ liệu mẫu
     const participants = [
       {
-        ID: uuidv4(),
-        studentName: "John Doe",
+        ID: id1,
         GrammarVocab: 85,
         Reading: 90,
         Listening: 88,
@@ -34,8 +39,7 @@ module.exports = {
         updatedAt: new Date(),
       },
       {
-        ID: uuidv4(),
-        studentName: "Jane Smith",
+        ID: id2,
         GrammarVocab: 70,
         Reading: 75,
         Listening: 78,
@@ -51,8 +55,7 @@ module.exports = {
         updatedAt: new Date(),
       },
       {
-        ID: uuidv4(),
-        studentName: "Alice Johnson",
+        ID: id3,
         GrammarVocab: 95,
         Reading: 92,
         Listening: 89,
@@ -68,8 +71,7 @@ module.exports = {
         updatedAt: new Date(),
       },
       {
-        ID: uuidv4(),
-        studentName: "Bob Brown",
+        ID: id4,
         GrammarVocab: 60,
         Reading: 65,
         Listening: 70,
@@ -85,8 +87,7 @@ module.exports = {
         updatedAt: new Date(),
       },
       {
-        ID: uuidv4(),
-        studentName: "Charlie Davis",
+        ID: id5,
         GrammarVocab: 50,
         Reading: 55,
         Listening: 60,

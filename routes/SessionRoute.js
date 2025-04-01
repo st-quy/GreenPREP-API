@@ -181,7 +181,7 @@ router.put("/:sessionId", updateSession);
  *     tags: [Session]
  *     parameters:
  *       - in: path
- *         name: classId
+ *         name: sessionId
  *         schema:
  *           type: string
  *         required: true

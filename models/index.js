@@ -18,7 +18,10 @@ db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
 // Models
+db.Session = require("./Session")(sequelize, DataTypes);
 db.User = require("./User")(sequelize, DataTypes);
+db.SessionRequest = require("./SessionRequest")(sequelize, DataTypes);
+db.SessionParticipant = require("./SessionParticipant")(sequelize, DataTypes);
 db.Role = require("./Role")(sequelize, DataTypes);
 db.UserRole = require("./UserRole")(sequelize, DataTypes);
 db.Topic = require("./Topic")(sequelize, DataTypes);
@@ -27,9 +30,6 @@ db.Question = require("./Question")(sequelize, DataTypes);
 db.StudentAnswer = require("./StudentAnswer")(sequelize, DataTypes);
 db.Skill = require("./Skill")(sequelize, DataTypes);
 db.Class = require("./Class")(sequelize, DataTypes);
-db.Session = require("./Session")(sequelize, DataTypes);
-db.SessionParticipant = require("./SessionParticipant")(sequelize, DataTypes);
-db.SessionRequest = require("./SessionRequest")(sequelize, DataTypes);
 
 // Relationships
 db.User.belongsToMany(db.Role, { through: db.UserRole, foreignKey: "UserID" });
@@ -49,7 +49,7 @@ db.StudentAnswer.belongsTo(db.Question, { foreignKey: "QuestionID" });
 
 db.Class.hasMany(db.Session, { foreignKey: "ClassID" });
 
-db.Session.belongsTo(db.Class, { foreignKey: "ClassID", as: "Class" });
+db.Session.belongsTo(db.Class, { foreignKey: "ClassID", as: "Classes" });
 // db.Session.hasMany(db.SessionParticipant, { foreignKey: "SessionID" });
 db.Session.hasMany(db.SessionParticipant, {
   foreignKey: "SessionID",

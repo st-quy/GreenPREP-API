@@ -3,7 +3,16 @@ const express = require("express");
 const router = express.Router();
 const multer = require("multer");
 const { allowAnonymous, authorize } = require("../middleware/AuthMiddleware");
-const { registerUser, loginUser, getUserById, updateUser, changePassword, forgotPassword, logoutUser, resetPassword } = require("../controller/UserController");
+const {
+  registerUser,
+  loginUser,
+  getUserById,
+  updateUser,
+  changePassword,
+  forgotPassword,
+  logoutUser,
+  resetPassword,
+} = require("../controller/UserController");
 const storage = multer.memoryStorage();
 /**
  * @swagger
