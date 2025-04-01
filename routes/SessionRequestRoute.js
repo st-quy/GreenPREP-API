@@ -91,13 +91,9 @@ const {
  *           schema:
  *             type: object
  *             properties:
- *               status:
+ *               sessionKey:
  *                 type: string
- *                 enum:
- *                   - pending
- *                   - approved
- *                   - rejected
- *               SessionID:
+ *               sessionId:
  *                 type: string
  *               UserID:
  *                 type: string
