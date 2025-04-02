@@ -46,9 +46,6 @@ const SessionParticipantController = require("../controller/SessionParticipantCo
  *           type: string
  *           format: uuid
  *           description: Identifier of the associated session
- *         isApproved:
- *           type: boolean
- *           description: Approval status of the participant
  *         approvedAt:
  *           type: string
  *           format: date-time

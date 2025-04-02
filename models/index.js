@@ -17,6 +17,13 @@ const db = {};
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
+/**
+ * @callback Modeling
+ * @param {import('sequelize').Sequelize} sequelize
+ * @param {import('sequelize').DataTypes} DataTypes
+ * @returns {import('sequelize').ModelDefined}
+ */
+
 // Models
 db.Session = require("./Session")(sequelize, DataTypes);
 db.User = require("./User")(sequelize, DataTypes);
@@ -60,5 +67,6 @@ db.SessionParticipant.belongsTo(db.Session, { foreignKey: "SessionID" });
 db.SessionParticipant.belongsTo(db.User, { foreignKey: "UserID" });
 
 db.SessionRequest.belongsTo(db.Session, { foreignKey: "SessionID" });
+db.SessionRequest.belongsTo(db.User, { foreignKey: "UserID" });
 
 module.exports = db;
