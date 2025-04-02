@@ -34,14 +34,15 @@ function authorize(allowedRoles = []) {
         // Attach the decoded user information to the request object
         req.user = decoded;
 
-        // Role-based authorization check
+        // Role-based authorization check - only check if allowedRoles has items
         if (allowedRoles.length > 0 && !allowedRoles.includes(decoded.role)) {
           return res
             .status(403)
             .json({ message: "Forbidden: Insufficient permissions" });
         }
 
-        next(); // Proceed to the next middleware or route handler
+        // Always proceed if we get here (user is authenticated)
+        next();
       } catch (err) {
         console.error("JWT verification error:", err.message);
         return res.status(401).json({ message: "Invalid or expired token" });
