@@ -1,4 +1,4 @@
-const { SessionParticipant } = require("../models");
+const { SessionParticipant, Session, User } = require("../models");
 
 async function addParticipant(sessionId, userId) {
   try {
@@ -35,7 +35,7 @@ async function getAllParticipants(req) {
       data: participants,
     };
   } catch (error) {
-    console.error("Error getting participants:", error);
+    console.error("Error getting participants:", error.message);
     throw error;
   }
 }
@@ -43,7 +43,17 @@ async function getAllParticipants(req) {
 const getParticipantsByUserId = async (userId) => {
   const participants = await SessionParticipant.findAll({
     where: { UserID: userId },
-    include: ['Session', 'User'],
+    include: [
+      {
+        model: Session,
+        as: "Session",
+      },
+      {
+        model: User,
+        as: "User",
+        attributes: { exclude: ["password"] },
+      },
+    ],
   });
 
   if (!participants.length) {

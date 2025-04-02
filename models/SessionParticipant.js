@@ -41,11 +41,11 @@ module.exports = (sequelize, DataTypes) => {
         key: "ID",
       },
     },
-    isApproved: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: false,
-      allowNull: false,
-    },
+    // isApproved: {
+    //   type: DataTypes.BOOLEAN,
+    //   defaultValue: false,
+    //   allowNull: false,
+    // },
     approvedAt: {
       type: DataTypes.DATE,
       allowNull: true,
