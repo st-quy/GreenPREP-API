@@ -283,7 +283,7 @@ router.post("/forgot-password", forgotPassword);
 
 /**
  * @swagger
- * /users//reset-password:
+ * /users/reset-password:
  *   post:
  *     summary: Reset password using token
  *     tags: [Auth]

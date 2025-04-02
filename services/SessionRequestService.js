@@ -65,7 +65,7 @@ async function getSessionRequestByStudentId(req) {
  */
 async function createSessionRequest(req) {
   try {
-    const { studentId, sessionId, sessionKey } = req.body;
+    const { UserID, sessionId, sessionKey } = req.body;
 
     const session = await Session.findOne({ where: { ID: sessionId } });
     if (!session) {
@@ -80,7 +80,7 @@ async function createSessionRequest(req) {
       [SESSION_REQUEST_STATUS.APPROVED, SESSION_REQUEST_STATUS.PENDING].map(
         (status) =>
           SessionRequest.findOne({
-            where: { UserID: studentId, SessionID: sessionId, status },
+            where: { UserID: UserID, SessionID: sessionId, status },
           })
       )
     );
@@ -90,7 +90,7 @@ async function createSessionRequest(req) {
     }
 
     const sessionRequest = await SessionRequest.create({
-      UserID: studentId,
+      UserID: UserID,
       SessionID: sessionId,
     });
 

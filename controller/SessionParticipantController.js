@@ -13,6 +13,7 @@ async function getAllParticipants(req, res) {
 const getParticipantsByUserId = async (req, res) => {
   try {
     const { userId } = req.params;
+
     const result = await SessionParticipantService.getParticipantsByUserId(
       userId
     );
