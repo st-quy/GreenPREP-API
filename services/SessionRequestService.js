@@ -18,6 +18,7 @@ async function getAllSessionRequests(req) {
     }
     const sessionRequests = await SessionRequest.findAll({
       where: whereClause,
+      include: ["User"],
     });
     return {
       status: 200,

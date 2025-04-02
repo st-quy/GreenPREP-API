@@ -1,3 +1,4 @@
+/**@type {import('./index').Modeling} */
 module.exports = (sequelize, DataTypes) => {
   const SessionParticipant = sequelize.define("SessionParticipant", {
     ID: {
@@ -40,11 +41,6 @@ module.exports = (sequelize, DataTypes) => {
         model: "Sessions",
         key: "ID",
       },
-    },
-    isApproved: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: false,
-      allowNull: false,
     },
     approvedAt: {
       type: DataTypes.DATE,

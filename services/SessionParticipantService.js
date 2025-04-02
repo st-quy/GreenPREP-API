@@ -1,10 +1,9 @@
-const { SessionParticipant } = require("../models");
+const { SessionParticipant, Session, User } = require("../models");
 
 async function addParticipant(sessionId, userId) {
   try {
     const participant = await SessionParticipant.create({
       SessionID: sessionId,
-      isApproved: true,
       UserID: userId,
     });
     return {
@@ -35,7 +34,7 @@ async function getAllParticipants(req) {
       data: participants,
     };
   } catch (error) {
-    console.error("Error getting participants:", error);
+    console.error("Error getting participants:", error.message);
     throw error;
   }
 }
@@ -43,9 +42,18 @@ async function getAllParticipants(req) {
 const getParticipantsByUserId = async (userId) => {
   const participants = await SessionParticipant.findAll({
     where: { UserID: userId },
+    include: [
+      {
+        model: Session,
+        as: "Session",
+      },
+      {
+        model: User,
+        as: "User",
+        attributes: { exclude: ["password"] },
+      },
+    ],
   });
-
-  console.log("object", userId);
 
   if (!participants.length) {
     return { status: 404, message: "No participants found for the given user" };
