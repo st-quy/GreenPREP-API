@@ -8,6 +8,7 @@ const {
   getSessionDetailById,
   removeSession,
   generateSessionKey,
+  getAllSessions,
 } = require("../controller/SessionController");
 /**
  * @swagger
@@ -58,6 +59,26 @@ const {
  *         status: NOT_STARTED
  *         ClassID: 123e4567-e89b-12d3-a456-426614174000
  */
+
+/**
+ * @swagger
+ * /sessions/all:
+ *   get:
+ *     summary: Get all sessions
+ *     tags: [Session]
+ *     responses:
+ *       200:
+ *         description: List of all sessions
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Session'
+ *       500:
+ *         description: Internal server error
+ */
+router.get("/all", getAllSessions);
 
 /**
  * @swagger
