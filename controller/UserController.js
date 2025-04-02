@@ -44,7 +44,11 @@ const updateUser = async (req, res) => {
 const changePassword = async (req, res) => {
   try {
     const { oldPassword, newPassword } = req.body;
-    const result = await userService.changePassword(req.params.userId, oldPassword, newPassword);
+    const result = await userService.changePassword(
+      req.params.userId,
+      oldPassword,
+      newPassword
+    );
     return res.status(result.status).json(result);
   } catch (error) {
     console.error("Error changing password:", error);
@@ -75,7 +79,7 @@ async function resetPassword(req, res) {
 
 const logoutUser = async (req, res) => {
   try {
-    const userId = req.params.userId; 
+    const userId = req.params.userId;
     const result = await userService.logoutUser(userId);
     return res.status(result.status).json(result);
   } catch (error) {
