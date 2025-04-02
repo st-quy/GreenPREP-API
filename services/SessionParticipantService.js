@@ -43,9 +43,8 @@ async function getAllParticipants(req) {
 const getParticipantsByUserId = async (userId) => {
   const participants = await SessionParticipant.findAll({
     where: { UserID: userId },
+    include: ['Session', 'User'],
   });
-
-  console.log("object", userId);
 
   if (!participants.length) {
     return { status: 404, message: "No participants found for the given user" };
