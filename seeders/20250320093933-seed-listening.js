@@ -357,127 +357,126 @@ module.exports = {
           },
         ],
         partID: partIds["PART 2: Information Matching (4 questions)"],
-        type: "matching",
+        type: "dropdown-list",
         audioKeys:
           "https://res.cloudinary.com/dlhcg0tcz/video/upload/v1742953612/greenprep/Part%202/1.mp3",
       },
       {
-        content: "Building design can influence people's behavior.",
+        content:
+          "15. Listen to two people discussing music. Read the opinions below and decide whose opinion matches the statements: the man, the woman, or both the man and the woman.",
         groupContent: {
-          title: "Building design can influence people's behavior.",
+          title:
+            "15. Listen to two people discussing music. Read the opinions below and decide whose opinion matches the statements: the man, the woman, or both the man and the woman.",
           audioKey: "",
         },
-        options: ["Man", "Woman", "Both"],
-        correctAnswer: "Both",
-        partID: partIds["PART 3: Opinion Matching (4 questions)"],
-        type: "multiple-choice",
-        audioKeys:
-          "https://res.cloudinary.com/dlhcg0tcz/video/upload/v1742953612/greenprep/Part%203/1.mp3",
-      },
-      {
-        content: "Creating community can take time.",
-        groupContent: {
-          title: "Creating community can take time.",
-          audioKey: "",
-        },
-        options: ["Man", "Woman", "Both"],
-        correctAnswer: "Woman",
-        partID: partIds["PART 3: Opinion Matching (4 questions)"],
-        type: "multiple-choice",
-        audioKeys:
-          "https://res.cloudinary.com/dlhcg0tcz/video/upload/v1742953612/greenprep/Part%203/1.mp3",
-      },
-      {
-        content: "Work communities and social communities are the same.",
-        groupContent: {
-          title: "Work communities and social communities are the same.",
-          audioKey: "",
-        },
-        options: ["Man", "Woman", "Both"],
-        correctAnswer: "Man",
-        partID: partIds["PART 3: Opinion Matching (4 questions)"],
-        type: "multiple-choice",
-        audioKeys:
-          "https://res.cloudinary.com/dlhcg0tcz/video/upload/v1742953612/greenprep/Part%203/1.mp3",
-      },
-      {
-        content: "Technology has changed how community forms.",
-        groupContent: {
-          title: "Technology has changed how community forms.",
-          audioKey: "",
-        },
-        options: ["Man", "Woman", "Both"],
-        correctAnswer: "Both",
-        partID: partIds["PART 3: Opinion Matching (4 questions)"],
-        type: "multiple-choice",
-        audioKeys:
-          "https://res.cloudinary.com/dlhcg0tcz/video/upload/v1742953612/greenprep/Part%203/1.mp3",
-      },
-      {
-        content: "How does the speaker recommend saving money effectively?",
-        options: [
-          "Saving a large amount only on a daily basis.",
-          "Organizing their resources more effectively.",
-          "Use credit cards to manage expenses.",
+        leftItems: [
+          "1. Building design can influence people's behavior.",
+          "2. Creating community can take time.",
+          "3. Work communities and social communities are the same.",
+          "4. Technology has changed how community forms.",
         ],
-        correctAnswer: "Organizing their resources more effectively.",
-        partID: partIds["PART 4: Inference (2 talks - 4 questions)"],
-        type: "multiple-choice",
+        rightItems: ["Man", "Woman", "Both"],
+        correctAnswers: [
+          {
+            left: "1. Building design can influence people's behavior.",
+            right: "Both",
+          },
+          {
+            left: "2. Creating community can take time.",
+            right: "Woman",
+          },
+          {
+            left: "3. Work communities and social communities are the same.",
+            right: "Man",
+          },
+          {
+            left: "4. Technology has changed how community forms..",
+            right: "Both",
+          },
+        ],
+        partID: partIds["PART 3: Opinion Matching (4 questions)"],
+        type: "dropdown-list",
         audioKeys:
-          "https://res.cloudinary.com/dlhcg0tcz/video/upload/v1742953612/greenprep/Part%204/1.mp3",
+          "https://res.cloudinary.com/dlhcg0tcz/video/upload/v1742953612/greenprep/Part%203/1.mp3",
       },
       {
+        content:
+          "16. Monologue 1: Listen to an expert giving a talk about managing financial spending",
         groupContent: {
           title:
             "16. Monologue 1: Listen to an expert giving a talk about managing financial spending",
           audioKey: "",
+          listContent: [
+            {
+              ID: 1,
+              content:
+                "How does the speaker recommend saving money effectively?",
+              options: [
+                "Saving a large amount only on a daily basis.",
+                "Organizing their resources more effectively.",
+                "Use credit cards to manage expenses.",
+              ],
+              type: "multiple-choice",
+              correctAnswer: "Organizing their resources more effectively.",
+              partID: partIds["PART 4: Inference (2 talks - 4 questions)"],
+            },
+            {
+              ID: 2,
+              content:
+                "Who does the speaker believe can save money most successfully?",
+              options: [
+                "Get advice from people that have experience.",
+                "Keep all your savings in a single account.",
+                "Avoid making any long-term financial plans.",
+              ],
+              type: "multiple-choice",
+              correctAnswer: "Get advice from people that have experience.",
+              partID: partIds["PART 4: Inference (2 talks - 4 questions)"],
+            },
+          ],
         },
-        content:
-          "Who does the speaker believe can save money most successfully?",
-        options: [
-          "Get advice from people that have experience.",
-          "Keep all your savings in a single account.",
-          "Avoid making any long-term financial plans.",
-        ],
-        correctAnswer: "Get advice from people that have experience.",
         partID: partIds["PART 4: Inference (2 talks - 4 questions)"],
         type: "multiple-choice",
         audioKeys:
           "https://res.cloudinary.com/dlhcg0tcz/video/upload/v1742953612/greenprep/Part%204/1.mp3",
       },
       {
+        content:
+          "17. Monologue 2: Listen to an person sharing their opinion about security cameras",
         groupContent: {
           title:
             "17. Monologue 2: Listen to an person sharing their opinion about security cameras",
           audioKey: "",
+          listContent: [
+            {
+              ID: 1,
+              content:
+                "What is the speaker’s opinion about security cameras at work?",
+              options: [
+                "People are unnecessarily worried about them.",
+                "Most people don't even realize cameras are present.",
+                "Cameras should be placed to ensure complete coverage.",
+              ],
+              type: "multiple-choice",
+              correctAnswer: "People are unnecessarily worried about them.",
+              partID: partIds["PART 4: Inference (2 talks - 4 questions)"],
+            },
+            {
+              ID: 2,
+              content:
+                "How does the speaker suggest people should feel about security cameras at work?",
+              options: [
+                "People often find them intimidating and invasive",
+                "Many believe they are only useful after incidents have occurred.",
+                "People should feel reassured about their presence.",
+              ],
+              type: "multiple-choice",
+              correctAnswer:
+                "People should feel reassured about their presence.",
+              partID: partIds["PART 4: Inference (2 talks - 4 questions)"],
+            },
+          ],
         },
-        content:
-          "What is the speaker’s opinion about security cameras at work?",
-        options: [
-          "People are unnecessarily worried about them.",
-          "Most people don't even realize cameras are present.",
-          "Cameras should be placed to ensure complete coverage.",
-        ],
-        correctAnswer: "People are unnecessarily worried about them.",
-        partID: partIds["PART 4: Inference (2 talks - 4 questions)"],
-        type: "multiple-choice",
-        audioKeys:
-          "https://res.cloudinary.com/dlhcg0tcz/video/upload/v1742953612/greenprep/Part%204/2.mp3",
-      },
-      {
-        groupContent: {
-          title:
-            "17. Monologue 2: Listen to an person sharing their opinion about security cameras",
-          audioKey: "",
-        },
-        content:
-          "How does the speaker suggest people should feel about security cameras at work?",
-        options: [
-          "People often find them intimidating and invasive",
-          "Many believe they are only useful after incidents have occurred.",
-          "People should feel reassured about their presence.",
-        ],
-        correctAnswer: "People should feel reassured about their presence.",
         partID: partIds["PART 4: Inference (2 talks - 4 questions)"],
         type: "multiple-choice",
         audioKeys:
@@ -518,7 +517,9 @@ module.exports = {
     await queryInterface.bulkDelete("Questions", {
       PartID: Sequelize.col("ID"),
     });
-    await queryInterface.bulkDelete("Parts", { Content: "PART 1: GRAMMAR" });
+    await queryInterface.bulkDelete("Parts", {
+      Content: "PART 1: Information recognition (13 questions)",
+    });
     await queryInterface.bulkDelete("Topics", { Name: "Practice Test 2" }, {});
   },
 };

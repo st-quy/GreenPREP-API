@@ -40,10 +40,5 @@ module.exports = (sequelize, DataTypes) => {
     },
   });
 
-  // Session.associate = function (models) {
-  //   Session.belongsTo(models.Class, { foreignKey: "ClassID" });
-  //   Session.hasMany(models.SessionParticipant, { foreignKey: "SessionID" });
-  // };
-
   return Session;
 };
