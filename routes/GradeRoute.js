@@ -8,7 +8,7 @@ const {
 
 /**
  * @swagger
- * /participants:
+ * /grades/participants:
  *   get:
  *     summary: Get participant exams by session
  *     tags: [Grade]
