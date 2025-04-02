@@ -1,5 +1,6 @@
 const { SESSION_REQUEST_STATUS } = require("../helpers/constants");
 
+/**@type {import('./index').Modeling} */
 module.exports = (sequelize, DataTypes) => {
   const SessionRequest = sequelize.define("SessionRequest", {
     ID: {

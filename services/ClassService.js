@@ -28,7 +28,7 @@ async function createClass(req) {
   }
 }
 
-async function getClassDetaiById(req) {
+async function getClassDetailById(req) {
   try {
     const { classId } = req.params;
 
@@ -96,6 +96,6 @@ module.exports = {
   findAll,
   createClass,
   updateClass,
-  getClassDetaiById,
+  getClassDetailById,
   remove,
 };

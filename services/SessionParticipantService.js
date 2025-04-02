@@ -4,7 +4,6 @@ async function addParticipant(sessionId, userId) {
   try {
     const participant = await SessionParticipant.create({
       SessionID: sessionId,
-      isApproved: true,
       UserID: userId,
     });
     return {

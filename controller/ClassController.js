@@ -47,7 +47,7 @@ const updateClass = async (req, res) => {
 
 const getClassById = async (req, res) => {
   try {
-    const classDetail = await ClassService.getClassDetaiById(req);
+    const classDetail = await ClassService.getClassDetailById(req);
 
     if (!classDetail) {
       return res.status(404).json({ message: "Class not found" });
