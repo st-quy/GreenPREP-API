@@ -49,6 +49,8 @@ async function registerUser(data) {
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = await User.create({
       ...data,
+      phone: data.phone ? String(data.phone) : null,
+      teacherCode: data.teacherCode ? String(teacherCode) : null,
       password: hashedPassword,
     });
     await newUser.save();
@@ -163,8 +165,10 @@ async function sendResetPasswordEmail(email) {
     if (!user) {
       throw new Error("User with this email does not exist");
     }
-    
-    const resetToken = jwt.sign({ userId: user.ID }, process.env.JWT_SECRET, { expiresIn: "15m" });
+
+    const resetToken = jwt.sign({ userId: user.ID }, process.env.JWT_SECRET, {
+      expiresIn: "15m",
+    });
 
     const resetLink = `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}`;
 
