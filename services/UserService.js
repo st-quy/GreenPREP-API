@@ -116,6 +116,21 @@ async function updateUser(userId, data) {
       throw new Error("User not found");
     }
 
+    if (data.phone) {
+      const phoneRegex = /^\d{10}$/;
+      if (!phoneRegex.test(data.phone)) {
+        throw new Error(`Invalid phone format: ${data.phone}`);
+      }
+
+      const existingPhone = await User.findOne({
+        where: { phone: data.phone },
+      });
+
+      if (existingPhone && existingPhone.ID !== userId) {
+        throw new Error("Phone number already exists");
+      }
+    }
+
     await user.update(data);
     return {
       status: 200,
@@ -123,6 +138,7 @@ async function updateUser(userId, data) {
       data: user,
     };
   } catch (error) {
+    console.log(error);
     throw new Error(`Error updating user: ${error.message}`);
   }
 }
