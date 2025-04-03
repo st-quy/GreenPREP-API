@@ -1,5 +1,14 @@
 const SessionsService = require("../services/SessionService");
 
+async function getAllSessions(req, res) {
+  try {
+    const sessions = await SessionsService.getAllSessions(req);
+    return res.status(sessions.status).json(sessions);
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+}
+
 async function getAllSessionsByClass(req, res) {
   try {
     const sessions = await SessionsService.getSessionByClass(req);
@@ -60,10 +69,11 @@ function generateSessionKey(req, res) {
 }
 
 module.exports = {
+  getAllSessions,
   getAllSessionsByClass,
   createSession,
   updateSession,
   getSessionDetailById,
   removeSession,
-  generateSessionKey
+  generateSessionKey,
 };

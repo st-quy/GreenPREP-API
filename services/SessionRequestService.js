@@ -77,7 +77,7 @@ async function createSessionRequest(req) {
       throw new Error("Invalid session key");
     }
 
-    const isExisted = await Promise.any(
+    const checks = await Promise.all(
       [SESSION_REQUEST_STATUS.APPROVED, SESSION_REQUEST_STATUS.PENDING].map(
         (status) =>
           SessionRequest.findOne({
@@ -86,7 +86,7 @@ async function createSessionRequest(req) {
       )
     );
 
-    if (isExisted) {
+    if (checks.filter(Boolean).length > 0) {
       throw new Error("Session request already exists");
     }
 

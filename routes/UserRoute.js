@@ -175,7 +175,7 @@ router.post("/login", allowAnonymous, loginUser);
  *       404:
  *         description: User not found
  */
-router.get("/:userId", authorize(), getUserById);
+router.get("/:userId", getUserById);
 
 /**
  * @swagger
@@ -209,7 +209,7 @@ router.get("/:userId", authorize(), getUserById);
  *       404:
  *         description: User not found
  */
-router.put("/:userId", authorize(), updateUser);
+router.put("/:userId", updateUser);
 
 /**
  * @swagger
@@ -241,7 +241,7 @@ router.put("/:userId", authorize(), updateUser);
  *       400:
  *         description: Invalid old password
  */
-router.post("/:userId/change-password", authorize(), changePassword);
+router.post("/:userId/change-password", changePassword);
 
 /**
  * @swagger
@@ -341,6 +341,6 @@ router.post("/reset-password", resetPassword);
  *       400:
  *         description: Error occurred
  */
-router.post("/logout/:userId", authorize(), logoutUser);
+router.post("/logout/:userId", logoutUser);
 
 module.exports = router;

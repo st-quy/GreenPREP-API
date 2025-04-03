@@ -14,6 +14,8 @@ router.use("/classes", ClassRoutes); // Add this line
 router.use("/sessions", SessionRoutes); // Add this line
 router.use("/session-requests", require("./SessionRequestRoute"));
 router.use("/session-participants", require("./SessionParticipantRoute"));
+router.use("/send-email", require("./SendMailRouter"));
+router.use("/grades", require("./GradeRoute"));
 
 // Add more routes here as needed
 // router.use("/another-route", anotherRoute);
