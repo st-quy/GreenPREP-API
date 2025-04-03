@@ -1,5 +1,24 @@
 const { Session, SessionParticipant, Class } = require("../models");
 
+async function getAllSessions(req) {
+  try {
+    const sessions = await Session.findAll({
+      include: [
+        {
+          model: Class,
+          as: "Classes",
+        },
+      ],
+    });
+    return {
+      status: 200,
+      data: sessions,
+    };
+  } catch (error) {
+    throw new Error(`Error fetching all sessions: ${error.message}`);
+  }
+}
+
 async function getSessionByClass(req) {
   try {
     const { sessionName, status, page = 1, limit = 10 } = req.body;
@@ -143,6 +162,7 @@ async function removeSession(req) {
 }
 
 module.exports = {
+  getAllSessions,
   getSessionByClass,
   createSession,
   updateSession,
