@@ -4,6 +4,7 @@ const jwtUtils = require("../helpers/jwt");
 const crypto = require("crypto");
 const nodemailer = require("nodemailer");
 const jwt = require("jsonwebtoken");
+const { Op } = require("sequelize");
 
 // Logic for user registration
 async function registerUser(data) {
@@ -245,6 +246,51 @@ async function logoutUser(userId) {
   }
 }
 
+async function getAllUsersByRoleTeacher(req) {
+  try {
+    const { page = 1, limit = 10, search = "", status } = req.body;
+
+    const offset = (page - 1) * limit;
+
+    const whereClause = {
+      roleIDs: {
+        [Op.contains]: ["teacher"],
+      },
+      [Op.or]: [
+        { lastName: { [Op.iLike]: `%${search}%` } },
+        { firstName: { [Op.iLike]: `%${search}%` } },
+        { teacherCode: { [Op.iLike]: `%${search}%` } },
+      ],
+    };
+
+    if (status !== undefined) {
+      whereClause.status = status;
+    }
+
+    const { rows: teachers, count: total } = await User.findAndCountAll({
+      where: whereClause,
+      offset,
+      limit,
+    });
+
+    return {
+      status: 200,
+      message: "Teachers fetched successfully",
+      data: {
+        teachers,
+        pagination: {
+          total,
+          page,
+          limit,
+          totalPages: Math.ceil(total / limit),
+        },
+      },
+    };
+  } catch (error) {
+    throw new Error(`Error fetching teachers: ${error.message}`);
+  }
+}
+
 module.exports = {
   registerUser,
   loginUser,
@@ -254,4 +300,5 @@ module.exports = {
   sendResetPasswordEmail,
   resetPassword,
   logoutUser,
+  getAllUsersByRoleTeacher,
 };

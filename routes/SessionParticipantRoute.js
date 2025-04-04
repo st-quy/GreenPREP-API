@@ -121,4 +121,29 @@ router.get(
  */
 router.get("/:sessionId", SessionParticipantController.getAllParticipants);
 
+/**
+ * @swagger
+ * /session-participants/group-by-user:
+ *   get:
+ *     summary: Get all session participants grouped by user
+ *     tags: [SessionParticipants]
+ *     responses:
+ *       200:
+ *         description: Session participants grouped by user retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               additionalProperties:
+ *                 type: array
+ *                 items:
+ *                   $ref: '#/components/schemas/SessionParticipant'
+ *       500:
+ *         $ref: '#/components/responses/ErrorResponse'
+ */
+router.get(
+  "/group-by-user",
+  SessionParticipantController.getAllSessionParticipantsGroupedByUser
+);
+
 module.exports = router;

@@ -26,7 +26,24 @@ const getParticipantsByUserId = async (req, res) => {
   }
 };
 
+const getAllSessionParticipantsGroupedByUser = async (req, res) => {
+  try {
+    const result =
+      await SessionParticipantService.getAllParticipantsGroupedByUser();
+    return res.status(result.status).json(result);
+  } catch (error) {
+    console.error(
+      "Error fetching participants grouped by User ID:",
+      error.stack
+    );
+    return res
+      .status(500)
+      .json({ status: 500, message: "Internal server error" });
+  }
+};
+
 module.exports = {
   getAllParticipants,
   getParticipantsByUserId,
+  getAllSessionParticipantsGroupedByUser,
 };

@@ -12,6 +12,7 @@ const {
   forgotPassword,
   logoutUser,
   resetPassword,
+  getAllUsersByRoleTeacher,
 } = require("../controller/UserController");
 const storage = multer.memoryStorage();
 /**
@@ -66,6 +67,89 @@ const storage = multer.memoryStorage();
  *         roleIDs: ["student"]
  *         class: Class A
  */
+
+/**
+ * @swagger
+ * /users/teachers:
+ *   post:
+ *     summary: Get all users with the role of teacher
+ *     tags: [User]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               page:
+ *                 type: integer
+ *                 example: 1
+ *                 description: The page number for pagination
+ *               limit:
+ *                 type: integer
+ *                 example: 10
+ *                 description: The number of items per page
+ *               search:
+ *                 type: string
+ *                 example: "John"
+ *                 description: Search term for filtering teachers by name or teacher code
+ *               status:
+ *                 type: boolean
+ *                 example: true
+ *                 description: Filter teachers by status
+ *     responses:
+ *       200:
+ *         description: List of users with the role of teacher retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: integer
+ *                   example: 200
+ *                 message:
+ *                   type: string
+ *                   example: "Teachers fetched successfully"
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     teachers:
+ *                       type: array
+ *                       items:
+ *                         type: object
+ *                         properties:
+ *                           id:
+ *                             type: string
+ *                           firstName:
+ *                             type: string
+ *                           lastName:
+ *                             type: string
+ *                           email:
+ *                             type: string
+ *                           roleIDs:
+ *                             type: array
+ *                             items:
+ *                               type: string
+ *                     pagination:
+ *                       type: object
+ *                       properties:
+ *                         total:
+ *                           type: integer
+ *                           example: 100
+ *                         page:
+ *                           type: integer
+ *                           example: 1
+ *                         limit:
+ *                           type: integer
+ *                           example: 10
+ *                         totalPages:
+ *                           type: integer
+ *                           example: 10
+ *       500:
+ *         description: Internal server error
+ */
+router.post("/teachers", getAllUsersByRoleTeacher);
 
 /**
  * @swagger

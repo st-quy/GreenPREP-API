@@ -88,6 +88,16 @@ const logoutUser = async (req, res) => {
   }
 };
 
+const getAllUsersByRoleTeacher = async (req, res) => {
+  try {
+    const result = await userService.getAllUsersByRoleTeacher(req);
+    return res.status(result.status).json(result);
+  } catch (error) {
+    console.error("Error fetching users with role teacher:", error);
+    return res.status(400).json({ message: error.message });
+  }
+};
+
 module.exports = {
   registerUser,
   loginUser,
@@ -97,4 +107,5 @@ module.exports = {
   forgotPassword,
   resetPassword,
   logoutUser,
+  getAllUsersByRoleTeacher,
 };

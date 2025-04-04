@@ -39,6 +39,38 @@ async function getAllParticipants(req) {
   }
 }
 
+async function getAllParticipantsGroupedByUser(req) {
+  try {
+    const participants = await SessionParticipant.findAll({
+      include: [
+        {
+          model: User,
+          as: "User",
+          attributes: { exclude: ["password"] },
+        },
+      ],
+    });
+
+    const groupedParticipants = participants.reduce((acc, participant) => {
+      const userId = participant.UserID;
+      if (!acc[userId]) {
+        acc[userId] = [];
+      }
+      acc[userId].push(participant);
+      return acc;
+    }, {});
+
+    return {
+      status: 200,
+      message: "Participants grouped by user retrieved successfully",
+      data: groupedParticipants,
+    };
+  } catch (error) {
+    console.error("Error getting participants grouped by user:", error.message);
+    throw error;
+  }
+}
+
 const getParticipantsByUserId = async (userId) => {
   const participants = await SessionParticipant.findAll({
     where: { UserID: userId },
@@ -70,4 +102,5 @@ module.exports = {
   addParticipant,
   getAllParticipants,
   getParticipantsByUserId,
+  getAllParticipantsGroupedByUser,
 };

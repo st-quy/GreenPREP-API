@@ -1,5 +1,3 @@
-// models/User.js
-
 module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define(
     "User",
@@ -49,6 +47,14 @@ module.exports = (sequelize, DataTypes) => {
       class: {
         type: DataTypes.STRING,
         allowNull: true, // Nullable
+      },
+      status: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: true,
+      },
+      address: {
+        type: DataTypes.STRING,
+        allowNull: true,
       },
     },
     {
