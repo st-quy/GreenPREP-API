@@ -34,7 +34,16 @@ async function getClassDetailById(req) {
 
     const classDetail = await Class.findOne({
       where: { ID: classId },
-      include: ["Sessions"],
+      include: [
+        {
+          association: "Sessions",
+          include: [
+            {
+              association: "SessionParticipants",
+            },
+          ],
+        },
+      ],
     });
 
     if (!classDetail) {
