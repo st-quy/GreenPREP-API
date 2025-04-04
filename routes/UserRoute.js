@@ -281,9 +281,19 @@ router.get("/:userId", getUserById);
  *           schema:
  *             type: object
  *             properties:
- *               name:
+ *               firstName:
+ *                 type: string
+ *               lastName:
+ *                 type: string
+ *               email:
  *                 type: string
  *               phone:
+ *                 type: string
+ *               studentCode:
+ *                 type: string
+ *               teacherCode:
+ *                 type: string
+ *               class:
  *                 type: string
  *               address:
  *                 type: string
