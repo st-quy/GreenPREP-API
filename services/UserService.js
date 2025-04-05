@@ -176,7 +176,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-async function sendResetPasswordEmail(email) {
+async function sendResetPasswordEmail(email, host) {
   try {
     const user = await User.findOne({ where: { email } });
     if (!user) {
@@ -187,7 +187,7 @@ async function sendResetPasswordEmail(email) {
       expiresIn: "15m",
     });
 
-    const resetLink = `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}`;
+    const resetLink = `${host}/reset-password?token=${resetToken}`;
 
     const mailOptions = {
       from: process.env.EMAIL_USER,

@@ -58,8 +58,8 @@ const changePassword = async (req, res) => {
 
 const forgotPassword = async (req, res) => {
   try {
-    const { email } = req.body;
-    const result = await userService.sendResetPasswordEmail(email);
+    const { email, host } = req.body;
+    const result = await userService.sendResetPasswordEmail(email, host);
     return res.status(result.status).json(result);
   } catch (error) {
     console.error("Forgot password error:", error);
