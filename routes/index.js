@@ -6,12 +6,14 @@ const userRoutes = require("./UserRoute");
 const topicRoutes = require("./TopicRoute"); // Add this line
 const ClassRoutes = require("./ClassRoute"); // Add this line
 const SessionRoutes = require("./SessionRoute"); // Add this line
+const StudentAnswerRoutes = require("./StudentAnswerRoute"); // Add this line
 
 // Defining routes
 router.use("/users", userRoutes);
 router.use("/topics", topicRoutes); // Add this line
 router.use("/classes", ClassRoutes); // Add this line
 router.use("/sessions", SessionRoutes); // Add this line
+router.use("/student-answers", StudentAnswerRoutes); // Add this line
 router.use("/session-requests", require("./SessionRequestRoute"));
 router.use("/session-participants", require("./SessionParticipantRoute"));
 router.use("/send-email", require("./SendMailRouter"));
