@@ -3,6 +3,7 @@ const router = express.Router();
 const { allowAnonymous, authorize } = require("../middleware/AuthMiddleware");
 
 const {
+  calculatePoints,
   getExamOfParticipantBySession, // New controller function
 } = require("../controller/GradeController");
 
@@ -56,5 +57,6 @@ const {
  *         description: Internal server error
  */
 router.get("/participants", getExamOfParticipantBySession);
+router.post("/score", calculatePoints);
 
 module.exports = router;
