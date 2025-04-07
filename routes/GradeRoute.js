@@ -59,8 +59,120 @@ const {
  *         description: Internal server error
  */
 router.get("/participants", getExamOfParticipantBySession);
-router.post("/score", calculatePoints);
-router.post("/teacher-speaking", calculatePointForSpeaking);
-router.post("/teacher-writing", calculatePointForWriting);
 
+/**
+ * @swagger
+ * /grades/score:
+ *   post:
+ *     summary: Calculate points for exam
+ *     tags: [Grade]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               StudentID:
+ *                 type: string
+ *                 description: The ID of the student
+ *               TopicID:
+ *                 type: string
+ *                 description: The ID of the topic
+ *               SessionParticipantID:
+ *                 type: string
+ *                 description: The ID of the session participant
+ *               skillName:
+ *                 type: string
+ *                 description: The name of the skill (WRITING)
+ *             required:
+ *               - StudentID
+ *               - TopicID
+ *               - SessionParticipantID
+ *               - skillName
+ *     responses:
+ *       200:
+ *         description: Points calculated successfully
+ *       400:
+ *         description: Invalid request body
+ *       500:
+ *         description: Internal server error
+ */
+router.post("/score", calculatePoints);
+
+/**
+ * @swagger
+ * /grades/teacher-speaking:
+ *   post:
+ *     summary: Calculate points for speaking exam
+ *     tags: [Grade]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               sessionParticipantID:
+ *                 type: string
+ *                 description: The ID of the session participant
+ *               speakingGrades:
+ *                 type: array
+ *                 items:
+ *                   type: object
+ *                   properties:
+ *                     studentAnswerId:
+ *                       type: string
+ *                       description: The ID of the student answer
+ *                     teacherGradedScore:
+ *                       type: number
+ *                       description: The speaking score given by teacher
+ *             required:
+ *               - SessionParticipantID
+ *               - speakingGrades
+ *     responses:
+ *       200:
+ *         description: Speaking points calculated successfully
+ *       400:
+ *         description: Invalid request body
+ *       500:
+ *         description: Internal server error
+ */
+router.post("/teacher-speaking", calculatePointForSpeaking);
+
+/**
+ * @swagger
+ * /grades/teacher-writing:
+ *   post:
+ *     summary: Calculate points for writing exam
+ *     tags: [Grade]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               sessionParticipantID:
+ *                 type: string
+ *                 description: The ID of the session participant
+ *               teacherGradedScore:
+ *                 type: number
+ *                 description: The writing score given by teacher
+ *               studentAnswerId:
+ *                 type: string
+ *                 description: The ID of the student answer
+ *             required:
+ *               - sessionParticipantID
+ *               - teacherGradedScore
+ *               - studentAnswerId
+ *     responses:
+ *       200:
+ *         description: Writing points calculated successfully
+ *       400:
+ *         description: Invalid request body
+ *       500:
+ *         description: Internal server error
+ */
+router.post("/teacher-writing", calculatePointForWriting);
 module.exports = router;
