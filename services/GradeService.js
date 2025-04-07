@@ -195,13 +195,13 @@ async function calculatePoints(req) {
 
 async function calculatePointForSpeaking(req) {
   try {
-    const { SessionParticipantID, speakingGrades } = req.body;
+    const { sessionParticipantID, speakingGrades } = req.body;
 
-    if (!SessionParticipantID || !Array.isArray(speakingGrades)) {
+    if (!sessionParticipantID || !Array.isArray(speakingGrades)) {
       return {
         status: 400,
         message:
-          "Missing or invalid required fields: SessionParticipantID or speakingGrades",
+          "Missing or invalid required fields: sessionParticipantID or speakingGrades",
       };
     }
 
@@ -245,7 +245,7 @@ async function calculatePointForSpeaking(req) {
 
     await SessionParticipant.update(
       { Speaking: totalPoints },
-      { where: { ID: SessionParticipantID } }
+      { where: { ID: sessionParticipantID } }
     );
 
     return {
@@ -262,8 +262,59 @@ async function calculatePointForSpeaking(req) {
   }
 }
 
+async function calculatePointForWriting(req) {
+  const { sessionParticipantID, studentAnswerId, teacherGradedScore } =
+    req.body;
+  try {
+    if (!sessionParticipantID || !studentAnswerId || !teacherGradedScore) {
+      return {
+        status: 400,
+        message:
+          "Missing or invalid required fields: sessionParticipantID, studentAnswerId, or teacherGradedScore",
+      };
+    }
+
+    const studentAnswer = await StudentAnswer.findOne({
+      where: { ID: studentAnswerId },
+      include: [{ model: Question, include: [Skill] }],
+    });
+
+    if (!studentAnswer) {
+      return {
+        status: 404,
+        message: "Student answer not found with the provided studentAnswerId",
+      };
+    }
+
+    if (studentAnswer.Question.Skill.Name !== "WRITING") {
+      return {
+        status: 400,
+        message: "Student answer is not a WRITING skill",
+      };
+    }
+
+    if (typeof teacherGradedScore !== "number" || teacherGradedScore < 0) {
+      return {
+        status: 400,
+        message: "Invalid teacher graded score",
+      };
+    }
+    const totalPoints = teacherGradedScore;
+    await SessionParticipant.update(
+      { Writing: totalPoints },
+      { where: { ID: sessionParticipantID } }
+    );
+  } catch (error) {
+    return {
+      status: 500,
+      message: `Internal server error: ${error.message}`,
+    };
+  }
+}
+
 module.exports = {
   getParticipantExamBySession,
   calculatePoints,
   calculatePointForSpeaking,
+  calculatePointForWriting,
 };
