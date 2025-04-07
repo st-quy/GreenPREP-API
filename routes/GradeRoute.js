@@ -4,7 +4,8 @@ const { allowAnonymous, authorize } = require("../middleware/AuthMiddleware");
 
 const {
   calculatePoints,
-  getExamOfParticipantBySession, // New controller function
+  getExamOfParticipantBySession,
+  calculatePointForSpeaking, // New controller function
 } = require("../controller/GradeController");
 
 /**
@@ -58,5 +59,6 @@ const {
  */
 router.get("/participants", getExamOfParticipantBySession);
 router.post("/score", calculatePoints);
+router.post("/teacher-speaking", calculatePointForSpeaking);
 
 module.exports = router;

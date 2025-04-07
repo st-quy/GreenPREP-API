@@ -80,15 +80,24 @@ async function getParticipantExamBySession(req) {
 
 async function calculatePoints(req) {
   try {
-    const {
-      StudentID,
-      TopicID,
-      SessionParticipantID,
-      skillName,
-      teacherGradedScore = null,
-    } = req.body;
+    const { StudentID, TopicID, SessionParticipantID, skillName } = req.body;
+
+    if (!StudentID || !TopicID || !SessionParticipantID || !skillName) {
+      return {
+        status: 400,
+        message:
+          "Missing required fields: StudentID, TopicID, SessionParticipantID, or skillName",
+      };
+    }
 
     const formattedSkillName = skillMapping[skillName.toUpperCase()] || null;
+
+    if (!formattedSkillName) {
+      return {
+        status: 400,
+        message: `Invalid skill name: ${skillName}`,
+      };
+    }
     const pointPerQuestion =
       pointsPerQuestion[formattedSkillName.toLowerCase()] || 1;
 
@@ -183,7 +192,78 @@ async function calculatePoints(req) {
     throw new Error(`Error calculating points: ${error.message}`);
   }
 }
+
+async function calculatePointForSpeaking(req) {
+  try {
+    const { SessionParticipantID, speakingGrades } = req.body;
+
+    if (!SessionParticipantID || !Array.isArray(speakingGrades)) {
+      return {
+        status: 400,
+        message:
+          "Missing or invalid required fields: SessionParticipantID or speakingGrades",
+      };
+    }
+
+    const answerIds = speakingGrades.map((grade) => grade.studentAnswerId);
+
+    const studentAnswers = await StudentAnswer.findAll({
+      where: { ID: answerIds },
+      include: [{ model: Question, include: [Skill] }],
+    });
+
+    const answerMap = new Map();
+    studentAnswers.forEach((ans) => answerMap.set(ans.ID, ans));
+
+    let totalPoints = 0;
+    const invalidAnswers = [];
+
+    for (const grade of speakingGrades) {
+      const { studentAnswerId, teacherGradedScore } = grade;
+
+      const studentAnswer = answerMap.get(studentAnswerId);
+
+      if (!studentAnswer) {
+        invalidAnswers.push(`Answer ID ${studentAnswerId} not found`);
+        continue;
+      }
+
+      if (studentAnswer.Question.Skill.Name !== "SPEAKING") {
+        invalidAnswers.push(
+          `Answer ID ${studentAnswerId} is not a SPEAKING skill`
+        );
+        continue;
+      }
+
+      if (typeof teacherGradedScore !== "number" || teacherGradedScore < 0) {
+        invalidAnswers.push(`Invalid score for answer ID ${studentAnswerId}`);
+        continue;
+      }
+
+      totalPoints += teacherGradedScore;
+    }
+
+    await SessionParticipant.update(
+      { Speaking: totalPoints },
+      { where: { ID: SessionParticipantID } }
+    );
+
+    return {
+      status: 200,
+      message: "Speaking points calculated successfully",
+      totalPoints,
+      warnings: invalidAnswers.length > 0 ? invalidAnswers : undefined,
+    };
+  } catch (error) {
+    return {
+      status: 500,
+      message: `Internal server error: ${error.message}`,
+    };
+  }
+}
+
 module.exports = {
   getParticipantExamBySession,
   calculatePoints,
+  calculatePointForSpeaking,
 };

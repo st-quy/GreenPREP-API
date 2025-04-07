@@ -26,7 +26,18 @@ const calculatePoints = async (req, res) => {
   }
 };
 
+const calculatePointForSpeaking = async (req, res) => {
+  try {
+    const data = await GradeService.calculatePointForSpeaking(req);
+    return res.status(data.status).json(data);
+  } catch (error) {
+    console.error("Error calculate point:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 module.exports = {
   calculatePoints,
   getExamOfParticipantBySession,
+  calculatePointForSpeaking,
 };
