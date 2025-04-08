@@ -39,10 +39,10 @@ async function getAllParticipants(req) {
       message: "Participants retrieved successfully",
       data: result.docs,
       pagination: {
-        currentPage: req.query.page,
-        pageSize: req.query.limit,
-        pageCount: result.pages,
-        totalItemPage: result.docs.length,
+        currentPage: parseInt(req.query.page),
+        pageSize: parseInt(req.query.limit),
+        itemsOnPage: result.docs.length,
+        totalPages: result.pages,
         totalItems: result.total,
       },
     };
