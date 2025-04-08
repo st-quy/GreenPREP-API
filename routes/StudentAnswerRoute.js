@@ -14,6 +14,8 @@ const {
  *         - studentId
  *         - topicId
  *         - questions
+ *         - skillName
+ *         - sessionParticipantId
  *       properties:
  *         studentId:
  *           type: string
@@ -23,6 +25,13 @@ const {
  *           type: string
  *           format: uuid
  *           description: ID of the topic
+ *         skillName:
+ *           type: string
+ *           description: Name of the skill
+ *         sessionParticipantId:
+ *           type: string
+ *           format: uuid
+ *           description: ID of the session participant
  *         questions:
  *           type: array
  *           description: List of answered questions
@@ -65,6 +74,8 @@ const {
  *       example:
  *         studentId: 7a5cb071-5ba0-4ecf-a4cf-b1b62e5f9798
  *         topicId: ef6b69aa-2ec2-4c65-bf48-294fd12e13fc
+ *         skillName: "GRAMMAR AND VOCABULARY"
+ *         sessionParticipantId: a8e2b9e8-bb60-44f0-bd61-6bd524cdc87d
  *         questions:
  *           - questionId: 4fc5f0df-18e1-449d-a1b9-7ac10b50b3bf
  *             answerText: "Definitely"
