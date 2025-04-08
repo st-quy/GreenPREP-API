@@ -12,7 +12,7 @@ const storeStudentAnswers = async (req, res) => {
       .json({ message: result.message, data: result.data });
   } catch (error) {
     console.error("Error saving student answers:", error);
-    res.status(500).json({ message: "Internal server error" });
+    res.status(500).json(error.message);
   }
 };
 

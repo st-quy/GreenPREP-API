@@ -130,10 +130,7 @@ async function calculateTotalPoints(
       totalPoints,
     };
   } catch (error) {
-    return {
-      status: 500,
-      message: `Internal server error: ${error.message}`,
-    };
+    throw new Error(error.message);
   }
 }
 
@@ -232,6 +229,8 @@ async function calculatePoints(req) {
       }
     });
 
+    totalPoints = parseFloat(totalPoints.toFixed(3));
+
     await calculateTotalPoints(
       sessionParticipantId,
       formattedSkillName,
@@ -253,36 +252,20 @@ async function calculatePoints(req) {
 }
 
 async function calculatePointForWritingAndSpeaking(req) {
-  const { sessionParticipantID, studentAnswerId, teacherGradedScore } =
-    req.body;
+  const { sessionParticipantID, teacherGradedScore, skillName } = req.body;
   try {
-    if (!sessionParticipantID || !studentAnswerId || !teacherGradedScore) {
+    if (!sessionParticipantID || !teacherGradedScore || !skillName) {
       return {
         status: 400,
         message:
-          "Missing or invalid required fields: sessionParticipantID, studentAnswerId, or teacherGradedScore",
+          "Missing or invalid required fields: sessionParticipantID, teacherGradedScore or skillName",
       };
     }
 
-    const studentAnswer = await StudentAnswer.findOne({
-      where: { ID: studentAnswerId },
-      include: [{ model: Question, include: [Skill] }],
-    });
-
-    if (!studentAnswer) {
-      return {
-        status: 404,
-        message: "Student answer not found with the provided studentAnswerId",
-      };
-    }
-
-    if (
-      studentAnswer.Question.Skill.Name !== "WRITING" &&
-      studentAnswer.Question.Skill.Name !== "SPEAKING"
-    ) {
+    if (skillName !== "WRITING" && skillName !== "SPEAKING") {
       return {
         status: 400,
-        message: "Student answer is not a WRITING or SPEAKING skill",
+        message: `Invalid skill name: ${skillName}`,
       };
     }
 
@@ -294,8 +277,7 @@ async function calculatePointForWritingAndSpeaking(req) {
     }
 
     const totalPoints = teacherGradedScore;
-    const formattedSkillName =
-      skillMapping[studentAnswer.Question.Skill.Name.toUpperCase()] || null;
+    const formattedSkillName = skillMapping[skillName.toUpperCase()] || null;
     await calculateTotalPoints(
       sessionParticipantID,
       formattedSkillName,
@@ -308,8 +290,6 @@ async function calculatePointForWritingAndSpeaking(req) {
     return {
       status: 200,
       message: "Writing points calculated successfully",
-      totalPoints,
-      sessionParticipant: updatedSessionParticipant,
     };
   } catch (error) {
     return {
