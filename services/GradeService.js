@@ -198,46 +198,41 @@ async function calculatePointForSpeaking(req) {
     const { sessionParticipantID, speakingGrades } = req.body;
 
     if (!sessionParticipantID || !Array.isArray(speakingGrades)) {
-      return {
-        status: 400,
-        message:
-          "Missing or invalid required fields: sessionParticipantID or speakingGrades",
-      };
+      throw new Error(
+        "Missing or invalid required fields: sessionParticipantID or speakingGrades"
+      );
     }
 
     const answerIds = speakingGrades.map((grade) => grade.studentAnswerId);
 
+    // Truy vấn tất cả câu trả lời 1 lần
     const studentAnswers = await StudentAnswer.findAll({
       where: { ID: answerIds },
       include: [{ model: Question, include: [Skill] }],
     });
 
+    // Tạo Map để tra cứu nhanh
     const answerMap = new Map();
     studentAnswers.forEach((ans) => answerMap.set(ans.ID, ans));
 
     let totalPoints = 0;
-    const invalidAnswers = [];
 
     for (const grade of speakingGrades) {
       const { studentAnswerId, teacherGradedScore } = grade;
 
       const studentAnswer = answerMap.get(studentAnswerId);
-
       if (!studentAnswer) {
-        invalidAnswers.push(`Answer ID ${studentAnswerId} not found`);
-        continue;
+        throw new Error(`Student answer with ID ${studentAnswerId} not found`);
       }
 
       if (studentAnswer.Question.Skill.Name !== "SPEAKING") {
-        invalidAnswers.push(
-          `Answer ID ${studentAnswerId} is not a SPEAKING skill`
+        throw new Error(
+          `Student answer with ID ${studentAnswerId} is not for speaking`
         );
-        continue;
       }
 
       if (typeof teacherGradedScore !== "number" || teacherGradedScore < 0) {
-        invalidAnswers.push(`Invalid score for answer ID ${studentAnswerId}`);
-        continue;
+        throw new Error(`Invalid score for studentAnswerId ${studentAnswerId}`);
       }
 
       totalPoints += teacherGradedScore;
@@ -252,12 +247,11 @@ async function calculatePointForSpeaking(req) {
       status: 200,
       message: "Speaking points calculated successfully",
       totalPoints,
-      warnings: invalidAnswers.length > 0 ? invalidAnswers : undefined,
     };
   } catch (error) {
     return {
-      status: 500,
-      message: `Internal server error: ${error.message}`,
+      status: 400,
+      message: `Error calculating speaking points: ${error.message}`,
     };
   }
 }
@@ -304,6 +298,16 @@ async function calculatePointForWriting(req) {
       { Writing: totalPoints },
       { where: { ID: sessionParticipantID } }
     );
+
+    const updatedSessionParticipant = await SessionParticipant.findOne({
+      where: { ID: sessionParticipantID },
+    });
+    return {
+      status: 200,
+      message: "Writing points calculated successfully",
+      totalPoints,
+      sessionParticipant: updatedSessionParticipant,
+    };
   } catch (error) {
     return {
       status: 500,
