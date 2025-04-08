@@ -36,7 +36,8 @@ async function getAllSessionRequests(req) {
  */
 async function getSessionRequestByStudentId(req) {
   try {
-    const { sessionId, studentId, requestId } = req.params;
+    const { sessionId, studentId } = req.params;
+    const { requestId } = req.query;
 
     const status = req.query.status;
 
