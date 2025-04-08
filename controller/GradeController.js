@@ -26,18 +26,9 @@ const calculatePoints = async (req, res) => {
   }
 };
 
-const calculatePointForSpeaking = async (req, res) => {
+const calculatePointForWritingAndSpeaking = async (req, res) => {
   try {
-    const data = await GradeService.calculatePointForSpeaking(req);
-    return res.status(data.status).json(data);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
-
-const calculatePointForWriting = async (req, res) => {
-  try {
-    const data = await GradeService.calculatePointForWriting(req);
+    const data = await GradeService.calculatePointForWritingAndSpeaking(req);
     return res.status(data.status).json(data);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -47,6 +38,5 @@ const calculatePointForWriting = async (req, res) => {
 module.exports = {
   calculatePoints,
   getExamOfParticipantBySession,
-  calculatePointForSpeaking,
-  calculatePointForWriting,
+  calculatePointForWritingAndSpeaking,
 };

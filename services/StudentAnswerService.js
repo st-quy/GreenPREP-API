@@ -33,7 +33,6 @@ const storeStudentAnswers = async (req) => {
       ignoreDuplicates: true,
     });
 
-    console.log("object", result);
     const pointData = await calculatePoints(req);
 
     return {

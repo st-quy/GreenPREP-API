@@ -4,8 +4,7 @@ const { allowAnonymous, authorize } = require("../middleware/AuthMiddleware");
 
 const {
   getExamOfParticipantBySession,
-  calculatePointForSpeaking,
-  calculatePointForWriting,
+  calculatePointForWritingAndSpeaking,
 } = require("../controller/GradeController");
 
 /**
@@ -61,47 +60,7 @@ router.get("/participants", getExamOfParticipantBySession);
 
 /**
  * @swagger
- * /grades/teacher-speaking:
- *   post:
- *     summary: Calculate points for speaking exam
- *     tags: [Grade]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               sessionParticipantID:
- *                 type: string
- *                 description: The ID of the session participant
- *               speakingGrades:
- *                 type: array
- *                 items:
- *                   type: object
- *                   properties:
- *                     studentAnswerId:
- *                       type: string
- *                       description: The ID of the student answer
- *                     teacherGradedScore:
- *                       type: number
- *                       description: The speaking score given by teacher
- *             required:
- *               - SessionParticipantID
- *               - speakingGrades
- *     responses:
- *       200:
- *         description: Speaking points calculated successfully
- *       400:
- *         description: Invalid request body
- *       500:
- *         description: Internal server error
- */
-router.post("/teacher-speaking", calculatePointForSpeaking);
-
-/**
- * @swagger
- * /grades/teacher-writing:
+ * /grades/teacher-grade:
  *   post:
  *     summary: Calculate points for writing exam
  *     tags: [Grade]
@@ -117,7 +76,7 @@ router.post("/teacher-speaking", calculatePointForSpeaking);
  *                 description: The ID of the session participant
  *               teacherGradedScore:
  *                 type: number
- *                 description: The writing score given by teacher
+ *                 description: The writing or reading score given by teacher
  *               studentAnswerId:
  *                 type: string
  *                 description: The ID of the student answer
@@ -133,5 +92,5 @@ router.post("/teacher-speaking", calculatePointForSpeaking);
  *       500:
  *         description: Internal server error
  */
-router.post("/teacher-writing", calculatePointForWriting);
+router.post("/teacher-grade", calculatePointForWritingAndSpeaking);
 module.exports = router;
