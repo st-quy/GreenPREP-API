@@ -64,6 +64,7 @@ async function storeStudentAnswers(req) {
       data: {
         savedAnswersCount: savedAnswers.length,
         pointData,
+        studentAnswers: savedAnswers,
       },
     };
   } catch (error) {

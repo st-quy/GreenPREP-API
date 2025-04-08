@@ -226,6 +226,21 @@ async function calculatePoints(req) {
             totalPoints += pointPerQuestion;
           }
         });
+      } else if (typeOfQuestion === "listening-questions-group") {
+        const studentAnswers = JSON.parse(answer.AnswerText);
+        const correctList = correctContent.groupContent.listContent;
+
+        correctList.forEach((question) => {
+          const studentAnswer = studentAnswers.find(
+            (ans) => ans.ID === question.ID
+          );
+          if (
+            studentAnswer &&
+            studentAnswer.answer === question.correctAnswer
+          ) {
+            totalPoints += pointPerQuestion;
+          }
+        });
       }
     });
 
