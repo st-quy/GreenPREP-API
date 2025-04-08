@@ -1,4 +1,5 @@
 const { SessionParticipant, Session, User } = require("../models");
+const sequelizePaginate = require("sequelize-paginate");
 
 async function addParticipant(sessionId, userId) {
   try {
@@ -24,14 +25,26 @@ async function addParticipant(sessionId, userId) {
  */
 async function getAllParticipants(req) {
   try {
+    sequelizePaginate.paginate(SessionParticipant);
     const { sessionId } = req.params;
-    const participants = await SessionParticipant.findAll({
+    const options = {
+      page: req.query.page || 1,
+      paginate: req.query.limit || 10,
       where: { SessionID: sessionId },
       include: ["User"],
-    });
+    };
+    const result = await SessionParticipant.paginate(options);
     return {
       status: 200,
-      data: participants,
+      message: "Participants retrieved successfully",
+      data: result.docs,
+      pagination: {
+        currentPage: req.query.page,
+        pageSize: req.query.limit,
+        pageCount: result.pages,
+        totalItemPage: result.docs.length,
+        totalItems: result.total,
+      },
     };
   } catch (error) {
     console.error("Error getting participants:", error.message);
