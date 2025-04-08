@@ -1,6 +1,6 @@
 const StudentAnswerService = require("../services/StudentAnswerService");
 
-const storeStudentAnswerByPart = async (req, res) => {
+const storeStudentAnswers = async (req, res) => {
   try {
     const { studentId, topicId, questions } = req.body;
     if (!studentId || !topicId || !questions || !Array.isArray(questions)) {
@@ -14,4 +14,4 @@ const storeStudentAnswerByPart = async (req, res) => {
   }
 };
 
-module.exports = { storeStudentAnswerByPart };
+module.exports = { storeStudentAnswers };

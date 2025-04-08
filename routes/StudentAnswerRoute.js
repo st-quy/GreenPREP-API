@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const {
-  storeStudentAnswerByPart,
+  storeStudentAnswers,
 } = require("../controller/StudentAnswerController");
 
 /**
@@ -146,6 +146,6 @@ const {
  *         description: Server error
  */
 
-router.post("/", storeStudentAnswerByPart);
+router.post("/", storeStudentAnswers);
 
 module.exports = router;
