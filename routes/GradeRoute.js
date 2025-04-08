@@ -3,7 +3,6 @@ const router = express.Router();
 const { allowAnonymous, authorize } = require("../middleware/AuthMiddleware");
 
 const {
-  calculatePoints,
   getExamOfParticipantBySession,
   calculatePointForSpeaking,
   calculatePointForWriting,
@@ -59,46 +58,6 @@ const {
  *         description: Internal server error
  */
 router.get("/participants", getExamOfParticipantBySession);
-
-/**
- * @swagger
- * /grades/score:
- *   post:
- *     summary: Calculate points for exam
- *     tags: [Grade]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               StudentID:
- *                 type: string
- *                 description: The ID of the student
- *               TopicID:
- *                 type: string
- *                 description: The ID of the topic
- *               SessionParticipantID:
- *                 type: string
- *                 description: The ID of the session participant
- *               skillName:
- *                 type: string
- *                 description: The name of the skill (WRITING)
- *             required:
- *               - StudentID
- *               - TopicID
- *               - SessionParticipantID
- *               - skillName
- *     responses:
- *       200:
- *         description: Points calculated successfully
- *       400:
- *         description: Invalid request body
- *       500:
- *         description: Internal server error
- */
-router.post("/score", calculatePoints);
 
 /**
  * @swagger

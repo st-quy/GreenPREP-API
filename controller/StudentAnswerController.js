@@ -7,7 +7,9 @@ const storeStudentAnswers = async (req, res) => {
       return res.status(400).json({ message: "Invalid data format" });
     }
     const result = await StudentAnswerService.storeStudentAnswers(req);
-    res.status(result.status).json(result.message);
+    res
+      .status(result.status)
+      .json({ message: result.message, data: result.data });
   } catch (error) {
     console.error("Error saving student answers:", error);
     res.status(500).json({ message: "Internal server error" });

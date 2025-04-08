@@ -1,4 +1,5 @@
 const { StudentAnswer } = require("../models");
+const { calculatePoints } = require("../services/GradeService");
 
 const storeStudentAnswers = async (req) => {
   try {
@@ -33,11 +34,14 @@ const storeStudentAnswers = async (req) => {
     });
 
     console.log("object", result);
+    const pointData = await calculatePoints(req);
 
     return {
       status: 200,
       message: "Create Student Answer Successfully",
-      data: null,
+      data: {
+        pointData,
+      },
     };
   } catch (error) {
     throw new Error(

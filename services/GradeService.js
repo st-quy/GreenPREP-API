@@ -80,13 +80,13 @@ async function getParticipantExamBySession(req) {
 
 async function calculatePoints(req) {
   try {
-    const { StudentID, TopicID, SessionParticipantID, skillName } = req.body;
+    const { studentId, topicId, sessionParticipantId, skillName } = req.body;
 
-    if (!StudentID || !TopicID || !SessionParticipantID || !skillName) {
+    if (!studentId || !topicId || !sessionParticipantId || !skillName) {
       return {
         status: 400,
         message:
-          "Missing required fields: StudentID, TopicID, SessionParticipantID, or skillName",
+          "Missing required fields: studentId, topicId, sessionParticipantId, or skillName",
       };
     }
 
@@ -102,7 +102,7 @@ async function calculatePoints(req) {
       pointsPerQuestion[formattedSkillName.toLowerCase()] || 1;
 
     const answers = await StudentAnswer.findAll({
-      where: { StudentID, TopicID },
+      where: { StudentID: studentId, TopicID: topicId },
       include: [{ model: Question, include: [Skill] }],
     });
 
@@ -175,15 +175,14 @@ async function calculatePoints(req) {
 
     await SessionParticipant.update(
       { [formattedSkillName]: totalPoints },
-      { where: { ID: SessionParticipantID, UserID: StudentID } }
+      { where: { ID: sessionParticipantId, UserID: studentId } }
     );
 
     const updatedSessionParticipant = await SessionParticipant.findOne({
-      where: { ID: SessionParticipantID, UserID: StudentID },
+      where: { ID: sessionParticipantId, UserID: studentId },
     });
 
     return {
-      status: 200,
       message: "Points calculated successfully",
       points: totalPoints,
       sessionParticipant: updatedSessionParticipant,
