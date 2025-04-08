@@ -37,9 +37,11 @@ async function getAllSessionRequests(req) {
 async function getSessionRequestByStudentId(req) {
   try {
     const { sessionId, studentId } = req.params;
+    const { requestId } = req.body;
+
     const status = req.query.status;
 
-    const whereClause = { UserID: studentId, SessionID: sessionId };
+    const whereClause = { UserID: studentId, SessionID: sessionId, ID: requestId };
     if (Object.values(SESSION_REQUEST_STATUS).includes(status)) {
       whereClause.status = status;
     }
