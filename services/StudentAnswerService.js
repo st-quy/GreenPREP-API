@@ -1,6 +1,6 @@
 const { StudentAnswer } = require("../models");
 
-const storeStudentAnswerByPart = async (req) => {
+const storeStudentAnswers = async (req) => {
   try {
     const { studentId, topicId, questions } = req.body;
 
@@ -16,9 +16,6 @@ const storeStudentAnswerByPart = async (req) => {
       })
     );
 
-    // const result = await Promise.all(
-    //   studentAnswers.map((ans) => StudentAnswer.create(ans))
-    // );
     const result = await StudentAnswer.bulkCreate(studentAnswers, {
       ignoreDuplicates: true,
     });
@@ -37,4 +34,4 @@ const storeStudentAnswerByPart = async (req) => {
   }
 };
 
-module.exports = { storeStudentAnswerByPart };
+module.exports = { storeStudentAnswers };
