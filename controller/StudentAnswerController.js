@@ -6,7 +6,7 @@ const storeStudentAnswers = async (req, res) => {
     if (!studentId || !topicId || !questions || !Array.isArray(questions)) {
       return res.status(400).json({ message: "Invalid data format" });
     }
-    const result = await StudentAnswerService.storeStudentAnswerByPart(req);
+    const result = await StudentAnswerService.storeStudentAnswer(req);
     res.status(result.status).json(result.message);
   } catch (error) {
     console.error("Error saving student answers:", error);
