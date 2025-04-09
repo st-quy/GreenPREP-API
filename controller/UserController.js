@@ -98,6 +98,17 @@ const getAllUsersByRoleTeacher = async (req, res) => {
   }
 };
 
+const deleteUserAccount = async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    const result = await userService.deleteUser(userId);
+    return res.status(result.status).json(result);
+  } catch (error) {
+    console.error("Error deleting user account:", error);
+    return res.status(400).json({ message: error.message });
+  }
+};
+
 module.exports = {
   registerUser,
   loginUser,
@@ -108,4 +119,5 @@ module.exports = {
   resetPassword,
   logoutUser,
   getAllUsersByRoleTeacher,
+  deleteUserAccount,
 };

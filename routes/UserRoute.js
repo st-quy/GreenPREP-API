@@ -13,6 +13,7 @@ const {
   logoutUser,
   resetPassword,
   getAllUsersByRoleTeacher,
+  deleteUserAccount,
 } = require("../controller/UserController");
 const storage = multer.memoryStorage();
 /**
@@ -437,4 +438,24 @@ router.post("/reset-password", resetPassword);
  */
 router.post("/logout/:userId", logoutUser);
 
+/**
+ * @swagger
+ * /users/delete/{userId}:
+ *   delete:
+ *     summary: Delete user account
+ *     tags: [User]
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the user
+ *     responses:
+ *       200:
+ *         description: User account deleted successfully
+ *       400:
+ *         description: Error occurred
+ */
+router.delete("/delete/:userId", deleteUserAccount);
 module.exports = router;
