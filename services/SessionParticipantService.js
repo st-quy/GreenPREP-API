@@ -114,17 +114,22 @@ const getParticipantsByUserId = async (userId) => {
 const publishScoresBySessionId = async (req) => {
   const { sessionId } = req.params;
   if (!sessionId) {
-    throw new Error("sessionId ID is required");
+    throw new Error("sessionId is required");
   }
-  const records = await SessionParticipant.findAll({
-    where: { sessionId: sessionId },
-  });
-  console.log("sessionId", records);
 
   const [updatedCount] = await SessionParticipant.update(
     { IsPublished: true },
-    { where: { sessionId: sessionId } }
+    { where: { SessionID: sessionId } }
   );
+
+  if (updatedCount === 0) {
+    return {
+      status: 404,
+      message: "No records updated. Possibly invalid SessionID.",
+      data: updatedCount,
+    };
+  }
+
   return {
     status: 200,
     message: "Scores published successfully.",

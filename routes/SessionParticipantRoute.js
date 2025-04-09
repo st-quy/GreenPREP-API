@@ -199,8 +199,73 @@ router.get(
   SessionParticipantController.getAllSessionParticipantsGroupedByUser
 );
 
+/**
+ * @swagger
+ * /api/session-participants/{sessionId}/publish:
+ *   put:
+ *     summary: Publish scores for all participants in a session
+ *     description: Marks all SessionParticipants in the specified session as published. Returns 404 if no records were updated.
+ *     tags:
+ *       - SessionParticipants
+ *     parameters:
+ *       - in: path
+ *         name: sessionId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         description: The ID of the session to publish scores for
+ *     responses:
+ *       200:
+ *         description: Scores published successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Scores published successfully.
+ *                 data:
+ *                   type: integer
+ *                   example: 3
+ *       404:
+ *         description: No records updated - Possibly invalid SessionID
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: No records updated. Possibly invalid SessionID.
+ *                 data:
+ *                   type: integer
+ *                   example: 0
+ *       400:
+ *         description: Bad Request - Missing sessionId
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: sessionId is required
+ *       500:
+ *         description: Internal Server Error while updating scores
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Server error while updating scores.
+ */
+
 router.put(
-  "/publish/:sessionId",
+  "/:sessionId/publish",
   SessionParticipantController.publishScoresBySessionId
 );
 module.exports = router;

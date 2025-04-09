@@ -49,7 +49,6 @@ const publishScoresBySessionId = async (req, res) => {
 
     return res.status(updatedCount.status).json({
       message: updatedCount.message,
-      data: updatedCount.data,
     });
   } catch (error) {
     return res
