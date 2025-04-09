@@ -3,7 +3,8 @@ const router = express.Router();
 const { allowAnonymous, authorize } = require("../middleware/AuthMiddleware");
 
 const {
-  getExamOfParticipantBySession, // New controller function
+  getExamOfParticipantBySession,
+  calculatePointForWritingAndSpeaking,
 } = require("../controller/GradeController");
 
 /**
@@ -57,4 +58,39 @@ const {
  */
 router.get("/participants", getExamOfParticipantBySession);
 
+/**
+ * @swagger
+ * /grades/teacher-grade:
+ *   post:
+ *     summary: Calculate points for writing exam
+ *     tags: [Grade]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               sessionParticipantID:
+ *                 type: string
+ *                 description: The ID of the session participant
+ *               teacherGradedScore:
+ *                 type: number
+ *                 description: The writing or reading score given by teacher
+ *               studentAnswerId:
+ *                 type: string
+ *                 description: The ID of the student answer
+ *             required:
+ *               - sessionParticipantID
+ *               - teacherGradedScore
+ *               - studentAnswerId
+ *     responses:
+ *       200:
+ *         description: Writing points calculated successfully
+ *       400:
+ *         description: Invalid request body
+ *       500:
+ *         description: Internal server error
+ */
+router.post("/teacher-grade", calculatePointForWritingAndSpeaking);
 module.exports = router;

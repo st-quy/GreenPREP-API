@@ -7,7 +7,7 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true,
     },
     GrammarVocab: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.FLOAT,
       allowNull: true,
     },
     GrammarVocabLevel: {
@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: true,
     },
     Reading: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.FLOAT,
       allowNull: true,
     },
     ReadingLevel: {
@@ -23,7 +23,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: true,
     },
     Listening: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.FLOAT,
       allowNull: true,
     },
     ListeningLevel: {
@@ -31,7 +31,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: true,
     },
     Speaking: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.FLOAT,
       allowNull: true,
     },
     SpeakingLevel: {
@@ -39,7 +39,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: true,
     },
     Writing: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.FLOAT,
       allowNull: true,
     },
     WritingLevel: {
@@ -47,7 +47,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: true,
     },
     Total: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.FLOAT,
       allowNull: true,
     },
     Level: {
