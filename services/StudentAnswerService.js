@@ -9,17 +9,7 @@ function validateQuestions(questions) {
     throw new Error("Questions are required and must be a non-empty array");
   }
 
-  questions.forEach(({ questionId, answerText, answerAudio }, index) => {
-    const isTextEmpty =
-      !answerText || (Array.isArray(answerText) && answerText.length === 0);
-    const isAudioEmpty = !answerAudio;
-
-    if (isTextEmpty && isAudioEmpty) {
-      throw new Error(
-        `Question at index ${index} (ID: ${questionId}) must have either AnswerText or AnswerAudio`
-      );
-    }
-
+  questions.forEach(({ questionId }, index) => {
     if (!questionId) {
       throw new Error(`Missing questionId at index ${index}`);
     }
