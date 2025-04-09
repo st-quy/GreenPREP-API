@@ -51,4 +51,30 @@ const getTopicWithRelations = async (req, res) => {
   }
 };
 
-module.exports = { getTopicWithRelations };
+const getTopicByName = async (req, res) => {
+  const { name } = req.query;
+  try {
+    const topic = await Topic.findOne({
+      where: {
+        Name: {
+          [Op.iLike]: `%${name}%`,
+        },
+      },
+    });
+
+    if (!topic) {
+      return res.status(404).json({ message: "Topic not found" });
+    }
+
+    return res.status(200).json({
+      message: "Get topic by name successfully",
+      data: topic,
+    });
+  } catch (error) {
+    console.error("Error fetching topic by name:", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+
+}
+
+module.exports = { getTopicWithRelations, getTopicByName };
