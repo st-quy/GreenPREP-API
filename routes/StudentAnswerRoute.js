@@ -65,6 +65,12 @@ const {
  *                               oneOf:
  *                                 - type: string
  *                                 - type: number
+ *                         - type: object
+ *                           properties:
+ *                             ID:
+ *                               type: number
+ *                             answer:
+ *                               type: string
  *                   - type: 'null'
  *               answerAudio:
  *                 type: string
@@ -122,6 +128,13 @@ const {
  *             answerAudio: null
  *           - questionId: 4fc5f0df-18e1-449d-a1b9-7ac10b50b3bf
  *             answerText: "Hello my name is Dang Van Sinh"
+ *             answerAudio: null
+ *           - questionId: dbd5db28-702b-4f7c-abca-b48c86424835
+ *             answerText:
+ *               - ID: 1
+ *                 answer: "Organizing their resources more effectively."
+ *               - ID: 2
+ *                 answer: "Get advice from people that have experience."
  *             answerAudio: null
  */
 

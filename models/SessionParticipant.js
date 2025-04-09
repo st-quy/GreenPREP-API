@@ -7,27 +7,47 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true,
     },
     GrammarVocab: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.FLOAT,
+      allowNull: true,
+    },
+    GrammarVocabLevel: {
+      type: DataTypes.ENUM("A1", "A2", "B1", "B2", "C1", "C2"),
       allowNull: true,
     },
     Reading: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.FLOAT,
+      allowNull: true,
+    },
+    ReadingLevel: {
+      type: DataTypes.ENUM("A1", "A2", "B1", "B2", "C1", "C2"),
       allowNull: true,
     },
     Listening: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.FLOAT,
+      allowNull: true,
+    },
+    ListeningLevel: {
+      type: DataTypes.ENUM("A1", "A2", "B1", "B2", "C1", "C2"),
       allowNull: true,
     },
     Speaking: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.FLOAT,
+      allowNull: true,
+    },
+    SpeakingLevel: {
+      type: DataTypes.ENUM("A1", "A2", "B1", "B2", "C1", "C2"),
       allowNull: true,
     },
     Writing: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.FLOAT,
+      allowNull: true,
+    },
+    WritingLevel: {
+      type: DataTypes.ENUM("A1", "A2", "B1", "B2", "C1", "C2"),
       allowNull: true,
     },
     Total: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.FLOAT,
       allowNull: true,
     },
     Level: {

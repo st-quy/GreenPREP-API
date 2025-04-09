@@ -17,22 +17,32 @@ const SessionParticipantController = require("../controller/SessionParticipantCo
  *           type: integer
  *           nullable: true
  *           description: Score for grammar and vocabulary
+ *         GrammarVocabLevel:
+ *           type: string
  *         Reading:
  *           type: integer
  *           nullable: true
  *           description: Score for reading
+ *         ReadingLevel:
+ *           type: string
  *         Listening:
  *           type: integer
  *           nullable: true
  *           description: Score for listening
+ *         ListeningLevel:
+ *           type: string
  *         Speaking:
  *           type: integer
  *           nullable: true
  *           description: Score for speaking
+ *         SpeakingLevel:
+ *           type: string
  *         Writing:
  *           type: integer
  *           nullable: true
  *           description: Score for writing
+ *         WritingLevel:
+ *           type: string
  *         Total:
  *           type: integer
  *           nullable: true
@@ -109,16 +119,59 @@ router.get(
  *           format: uuid
  *         required: true
  *         description: ID of the session to retrieve participants for
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *         description: Page number
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           default: 10
+ *         description: Number of items per page
  *     responses:
  *       200:
  *         description: A list of session participants
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/ApiResponseForSessionParticipantArray'
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: integer
+ *                   example: 200
+ *                 data:
+ *                   $ref: '#/components/schemas/ApiResponseForSessionParticipantArray'
+ *                 pagination:
+ *                   type: object
+ *                   properties:
+ *                     currentPage:
+ *                       type: integer
+ *                       example: 1
+ *                     pageSize:
+ *                       type: integer
+ *                       example: 10
+ *                     pageCount:
+ *                       type: integer
+ *                       example: 5
+ *                     totalItemPage:
+ *                       type: integer
+ *                       example: 10
+ *                     totalItems:
+ *                       type: integer
+ *                       example: 50
+ *       400:
+ *         description: Bad Request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
  *       500:
  *         $ref: '#/components/responses/ErrorResponse'
  */
+
 router.get("/:sessionId", SessionParticipantController.getAllParticipants);
 
 /**
