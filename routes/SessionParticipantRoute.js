@@ -268,4 +268,60 @@ router.put(
   "/:sessionId/publish",
   SessionParticipantController.publishScoresBySessionId
 );
+
+/**
+ * @swagger
+ * /session-participants:
+ *   get:
+ *     summary: Get published session participants by user ID
+ *     tags:
+ *       - SessionParticipants
+ *     parameters:
+ *       - in: query
+ *         name: publish
+ *         required: true
+ *         schema:
+ *           type: string
+ *           enum: [true]
+ *         description: Must be 'true' to filter published results
+ *       - in: query
+ *         name: userId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         description: The ID of the user
+ *     responses:
+ *       200:
+ *         description: List of published session participants
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Published session participants retrieved successfully.
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/SessionParticipant'
+ *       400:
+ *         description: Bad Request - Missing or invalid parameters
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: publish=true and valid userId are required
+ *       500:
+ *         description: Internal server error
+ */
+
+router.get(
+  "/",
+  SessionParticipantController.getPublishedSessionParticipantsByUserId
+);
 module.exports = router;

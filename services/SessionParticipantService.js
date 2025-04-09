@@ -137,7 +137,34 @@ const publishScoresBySessionId = async (req) => {
   };
 };
 
+const getPublishedSessionParticipantsByUserId = async (req) => {
+  const { publish, userId } = req.query;
+  if (!publish) {
+    throw new Error("Publish parameter is required");
+  }
+  if (publish !== "true") {
+    throw new Error(
+      "Publish must be 'true' to retrieve published participants"
+    );
+  }
+  if (!userId) {
+    throw new Error("UserID is required");
+  }
+  const results = await SessionParticipant.findAll({
+    where: {
+      IsPublished: publish,
+      UserID: userId,
+    },
+  });
+  return {
+    status: 200,
+    message: "Published session participants retrieved successfully.",
+    data: results,
+  };
+};
+
 module.exports = {
+  getPublishedSessionParticipantsByUserId,
   publishScoresBySessionId,
   addParticipant,
   getAllParticipants,

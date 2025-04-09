@@ -56,7 +56,23 @@ const publishScoresBySessionId = async (req, res) => {
       .json({ message: "Server error while updating scores." });
   }
 };
+
+const getPublishedSessionParticipantsByUserId = async (req, res) => {
+  try {
+    const result =
+      await SessionParticipantService.getPublishedSessionParticipantsByUserId(
+        req
+      );
+
+    return res.status(result.status).json(result);
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message || "Server error while retrieving participants.",
+    });
+  }
+};
 module.exports = {
+  getPublishedSessionParticipantsByUserId,
   publishScoresBySessionId,
   getAllParticipants,
   getParticipantsByUserId,
