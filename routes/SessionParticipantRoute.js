@@ -268,4 +268,43 @@ router.put(
   "/:sessionId/publish",
   SessionParticipantController.publishScoresBySessionId
 );
+
+/**
+ * @swagger
+ * /api/session-participants/published/user/{userId}:
+ *   get:
+ *     summary: Get published session participants by user ID
+ *     tags:
+ *       - SessionParticipants
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         description: The ID of the user
+ *     responses:
+ *       200:
+ *         description: List of published session participants
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Published session participants retrieved successfully.
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/SessionParticipant'
+ *       500:
+ *         description: Internal server error
+ */
+
+router.get(
+  "/published/user/:userId",
+  SessionParticipantController.getPublishedSessionParticipantsByUserId
+);
 module.exports = router;
