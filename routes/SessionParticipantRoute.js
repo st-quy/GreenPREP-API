@@ -146,4 +146,8 @@ router.get(
   SessionParticipantController.getAllSessionParticipantsGroupedByUser
 );
 
+router.put(
+  "/publish/:sessionId",
+  SessionParticipantController.publishScoresBySessionId
+);
 module.exports = router;

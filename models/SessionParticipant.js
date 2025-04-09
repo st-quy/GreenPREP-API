@@ -34,6 +34,11 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.ENUM("A1", "A2", "B1", "B2", "C1", "C2"),
       allowNull: true,
     },
+    IsPublished: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+    },
     SessionID: {
       type: DataTypes.UUID,
       allowNull: false,

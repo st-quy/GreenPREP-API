@@ -98,7 +98,29 @@ const getParticipantsByUserId = async (userId) => {
   };
 };
 
+const publishScoresBySessionId = async (req) => {
+  const { sessionId } = req.params;
+  if (!sessionId) {
+    throw new Error("sessionId ID is required");
+  }
+  const records = await SessionParticipant.findAll({
+    where: { sessionId: sessionId },
+  });
+  console.log("sessionId", records);
+
+  const [updatedCount] = await SessionParticipant.update(
+    { IsPublished: true },
+    { where: { sessionId: sessionId } }
+  );
+  return {
+    status: 200,
+    message: "Scores published successfully.",
+    data: updatedCount,
+  };
+};
+
 module.exports = {
+  publishScoresBySessionId,
   addParticipant,
   getAllParticipants,
   getParticipantsByUserId,

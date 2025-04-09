@@ -9,7 +9,13 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-async function sendEmail(userId, sessionName, testDetails, nextSteps, contactInfo) {
+async function sendEmail(
+  userId,
+  sessionName,
+  testDetails,
+  nextSteps,
+  contactInfo
+) {
   try {
     const user = await User.findByPk(userId);
     if (!user) {
@@ -22,7 +28,9 @@ async function sendEmail(userId, sessionName, testDetails, nextSteps, contactInf
       subject: `Test Submission Confirmation – ${sessionName}`,
       html: `
         <div style="font-family: Arial, sans-serif; padding: 20px; border: 1px solid #ddd;">
-          <h2 style="color: #333;">Hello ${user.firstName} ${user.lastName},</h2>
+          <h2 style="color: #333;">Hello ${user.firstName} ${
+        user.lastName
+      },</h2>
           <p>We are pleased to confirm the successful submission of your test for the session: <strong>${sessionName}</strong>.</p>
           <h3>Test Details:</h3>
           <p>${testDetails}</p>
