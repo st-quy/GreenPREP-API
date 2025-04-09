@@ -227,7 +227,7 @@ async function calculatePoints(req) {
         }
       } else if (typeOfQuestion === "dropdown-list") {
         const studentAnswers = JSON.parse(answer.AnswerText);
-        const correctAnswers = correctContent.correctAnswer;
+        const correctAnswers = correctContent.correctAnswers;
 
         correctAnswers.forEach((correct) => {
           const student = studentAnswers.find((s) => s.key === correct.key);
