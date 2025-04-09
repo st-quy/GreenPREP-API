@@ -138,13 +138,21 @@ const publishScoresBySessionId = async (req) => {
 };
 
 const getPublishedSessionParticipantsByUserId = async (req) => {
-  const { userId } = req.params;
+  const { publish, userId } = req.query;
+  if (!publish) {
+    throw new Error("Publish parameter is required");
+  }
+  if (publish !== "true") {
+    throw new Error(
+      "Publish must be 'true' to retrieve published participants"
+    );
+  }
   if (!userId) {
     throw new Error("UserID is required");
   }
   const results = await SessionParticipant.findAll({
     where: {
-      IsPublished: true,
+      IsPublished: publish,
       UserID: userId,
     },
   });
