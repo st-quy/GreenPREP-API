@@ -111,7 +111,34 @@ const getParticipantsByUserId = async (userId) => {
   };
 };
 
+const publishScoresBySessionId = async (req) => {
+  const { sessionId } = req.params;
+  if (!sessionId) {
+    throw new Error("sessionId is required");
+  }
+
+  const [updatedCount] = await SessionParticipant.update(
+    { IsPublished: true },
+    { where: { SessionID: sessionId } }
+  );
+
+  if (updatedCount === 0) {
+    return {
+      status: 404,
+      message: "No records updated. Possibly invalid SessionID.",
+      data: updatedCount,
+    };
+  }
+
+  return {
+    status: 200,
+    message: "Scores published successfully.",
+    data: updatedCount,
+  };
+};
+
 module.exports = {
+  publishScoresBySessionId,
   addParticipant,
   getAllParticipants,
   getParticipantsByUserId,

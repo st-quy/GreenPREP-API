@@ -5,7 +5,13 @@ const sendEmailSubmit = async (req, res) => {
     const { userId } = req.params;
     const { sessionName, testDetails, nextSteps, contactInfo } = req.body;
 
-    const result = await SendEmailService.sendEmail(userId, sessionName, testDetails, nextSteps, contactInfo);
+    const result = await SendEmailService.sendEmail(
+      userId,
+      sessionName,
+      testDetails,
+      nextSteps,
+      contactInfo
+    );
     return res.status(result.status).json(result);
   } catch (error) {
     console.error("Error sending email:", error);
@@ -14,5 +20,5 @@ const sendEmailSubmit = async (req, res) => {
 };
 
 module.exports = {
-    sendEmailSubmit,
+  sendEmailSubmit,
 };

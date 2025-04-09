@@ -42,7 +42,22 @@ const getAllSessionParticipantsGroupedByUser = async (req, res) => {
   }
 };
 
+const publishScoresBySessionId = async (req, res) => {
+  try {
+    const updatedCount =
+      await SessionParticipantService.publishScoresBySessionId(req);
+
+    return res.status(updatedCount.status).json({
+      message: updatedCount.message,
+    });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: "Server error while updating scores." });
+  }
+};
 module.exports = {
+  publishScoresBySessionId,
   getAllParticipants,
   getParticipantsByUserId,
   getAllSessionParticipantsGroupedByUser,
