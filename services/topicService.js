@@ -9,7 +9,7 @@ const getAllTopics = async () => {
       data: topics,
     };
   } catch (error) {
-    throw error;
+     throw new Error(`Error get all topic: ${error.message}`);
   }
 };
 
