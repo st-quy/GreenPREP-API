@@ -109,7 +109,6 @@ It has been reported that maintaining old buildings is expensive, and they take 
       }
     }
 
-    // Danh sách 25 câu hỏi multiple-choice
     const questions = [
       {
         content: "What time of day do you like most?",

@@ -213,7 +213,7 @@ module.exports = {
               ID: uuidv4(),
               Type: "multiple-choice",
               Content: q.content,
-              AnswerContent: JSON.stringify([
+              AnswerContent: JSON.stringify(
                 {
                   title: q.content,
                   options: [
@@ -223,7 +223,7 @@ module.exports = {
                   ],
                   correctAnswer: q.correctAnswer,
                 },
-              ]),
+              ),
               PartID: partId,
               SkillID: skillId,
               createdAt: new Date(),

@@ -1,3 +1,4 @@
+// filepath: /Users/quy.pham/Desktop/ST/GreenPREP-API/seeders/20250321000999-seed-session.js
 "use strict";
 
 module.exports = {
@@ -15,8 +16,14 @@ module.exports = {
     const classes = await queryInterface.sequelize.query(
       `SELECT "ID" FROM "Classes";`
     );
-
     const classIds = classes[0].map((c) => c.ID);
+
+    // Fetch existing Topic IDs from the database
+    const topics = await queryInterface.sequelize.query(
+      `SELECT "ID" FROM "Topics";`
+    );
+    const topicIds = topics[0].map((t) => t.ID);
+
 
     return queryInterface.bulkInsert("Sessions", [
       {
@@ -25,7 +32,7 @@ module.exports = {
         sessionKey: "S1-KEY",
         startTime: new Date(),
         endTime: new Date(new Date().getTime() + 3600000),
-        examSet: "ExamSetA",
+        examSet: topicIds[0], // Assign first topic
         status: "NOT_STARTED",
         ClassID: classIds[0], // Assign first class
         createdAt: new Date(),
@@ -37,7 +44,7 @@ module.exports = {
         sessionKey: "S2-KEY",
         startTime: new Date(),
         endTime: new Date(new Date().getTime() + 7200000),
-        examSet: "ExamSetB",
+        examSet: topicIds[0], // Assign second topic
         status: "ON_GOING",
         ClassID: classIds[1], // Assign second class
         createdAt: new Date(),
@@ -49,7 +56,7 @@ module.exports = {
         sessionKey: "S3-KEY",
         startTime: new Date(),
         endTime: new Date(new Date().getTime() + 5400000), // +1.5 hours
-        examSet: "ExamSetC",
+        examSet: topicIds[0], // Assign third topic
         status: "COMPLETE",
         ClassID: classIds[2], // Assign third class
         createdAt: new Date(),
@@ -61,7 +68,7 @@ module.exports = {
         sessionKey: "S4-KEY",
         startTime: new Date(),
         endTime: new Date(new Date().getTime() + 3600000),
-        examSet: "ExamSetA",
+        examSet: topicIds[0], // Assign first topic
         status: "NOT_STARTED",
         ClassID: classIds[0], // Assign first class
         createdAt: new Date(),
@@ -73,7 +80,7 @@ module.exports = {
         sessionKey: "S5-KEY",
         startTime: new Date(),
         endTime: new Date(new Date().getTime() + 7200000),
-        examSet: "ExamSetB",
+        examSet: topicIds[0], // Assign second topic
         status: "ON_GOING",
         ClassID: classIds[1], // Assign second class
         createdAt: new Date(),
@@ -85,7 +92,7 @@ module.exports = {
         sessionKey: "S6-KEY",
         startTime: new Date(),
         endTime: new Date(new Date().getTime() + 5400000), // +1.5 hours
-        examSet: "ExamSetC",
+        examSet: topicIds[0], // Assign third topic
         status: "COMPLETE",
         ClassID: classIds[2], // Assign third class
         createdAt: new Date(),

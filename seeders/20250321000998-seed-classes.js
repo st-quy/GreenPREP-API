@@ -13,62 +13,49 @@ module.exports = {
     const id8 = uuidv4();
     const id9 = uuidv4();
 
-    return queryInterface.bulkInsert("Classes", [
-      {
-        ID: id1,
-        className: "CL0701",
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
-      {
-        ID: id2,
-        className: "CL0702",
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
-      {
-        ID: id3,
-        className: "CL0703",
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
-      {
-        ID: id4,
-        className: "CL0704",
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
-      {
-        ID: id5,
-        className: "CL0705",
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
-      {
-        ID: id6,
-        className: "CL0706",
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
-      {
-        ID: id7,
-        className: "CL0707",
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
-      {
-        ID: id8,
-        className: "CL0708",
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
-      {
-        ID: id9,
-        className: "CL0709",
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
-    ]);
+    // Fetch existing class names
+    const existingClasses = await queryInterface.sequelize.query(
+      `SELECT "className" FROM "Classes";`
+    );
+    const existingClassNames = existingClasses[0].map((c) => c.className);
+
+    // Define new classes
+    const newClasses = [
+      { ID: id1, className: "CL0701", UserID: null },
+      { ID: id2, className: "CL0702", UserID: null },
+      { ID: id3, className: "CL0703", UserID: null },
+      { ID: id4, className: "CL0704", UserID: null },
+      { ID: id5, className: "CL0705", UserID: null },
+      { ID: id6, className: "CL0706", UserID: null },
+      { ID: id7, className: "CL0707", UserID: null },
+      { ID: id8, className: "CL0708", UserID: null },
+      { ID: id9, className: "CL0709", UserID: null },
+    ];
+
+    // Filter out duplicates
+    const filteredClasses = newClasses.filter(
+      (cls) => !existingClassNames.includes(cls.className)
+    );
+
+    // Fetch user IDs
+    const userData = await queryInterface.sequelize.query(
+      `SELECT "ID" FROM "Users";`
+    );
+    const userIds = userData[0].map((c) => c.ID);
+
+    // Assign UserID and timestamps to filtered classes
+    filteredClasses.forEach((cls) => {
+      cls.UserID = userIds[0];
+      cls.createdAt = new Date();
+      cls.updatedAt = new Date();
+    });
+
+    // Insert filtered classes
+    if (filteredClasses.length > 0) {
+      return queryInterface.bulkInsert("Classes", filteredClasses);
+    } else {
+      console.log("No new classes to insert.");
+    }
   },
 
   down: async (queryInterface, Sequelize) => {
