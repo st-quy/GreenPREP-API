@@ -13,10 +13,7 @@ async function storeStudentAnswerDraft(req) {
     const { questionId, answerText, answerAudio } = question;
 
     if (!questionId) {
-      return {
-        status: 400,
-        message: "Question must have a questionId",
-      };
+      throw new Error("Question must have a questionId");
     }
 
     const studentAnswer = {
