@@ -1,4 +1,5 @@
 const { Topic, Part, Question, Skill } = require("../models");
+const topicService = require("../services/topicService");
 const { Op } = require("sequelize");
 
 const getTopicWithRelations = async (req, res) => {
@@ -74,7 +75,16 @@ const getTopicByName = async (req, res) => {
     console.error("Error fetching topic by name:", error);
     return res.status(500).json({ message: "Internal server error" });
   }
+};
 
-}
+const getAllTopics = async (req, res) => {
+  try {
+    const topics = await topicService.getAllTopics();
+    return res.status(topics.status).json(topics);
+  } catch (error) {
+    console.error("Error fetching all topics:", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
 
-module.exports = { getTopicWithRelations, getTopicByName };
+module.exports = { getTopicWithRelations, getTopicByName, getAllTopics };
