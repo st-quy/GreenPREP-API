@@ -200,7 +200,7 @@ async function calculatePoints(req) {
         }
       } else if (typeOfQuestion === "matching") {
         const studentAnswers = JSON.parse(answer.AnswerText);
-        const correctAnswers = correctContent.correctAnswers;
+        const correctAnswers = correctContent.correctAnswer;
 
         correctAnswers.forEach((correct) => {
           const matched = studentAnswers.find(
