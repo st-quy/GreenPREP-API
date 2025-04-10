@@ -8,7 +8,7 @@ const {
  * @swagger
  * /student-answer-draft:
  *   post:
- *     summary: Store student's draft answer for a question
+ *     summary: Store student's draft answer for a studenAnswer
  *     tags:
  *       - StudentAnswerDraft
  *     requestBody:
@@ -20,7 +20,7 @@ const {
  *             required:
  *               - studentId
  *               - topicId
- *               - question
+ *               - studenAnswer
  *             properties:
  *               studentId:
  *                 type: string
@@ -30,7 +30,7 @@ const {
  *                 type: string
  *                 format: uuid
  *                 example: "ef6b69aa-2ec2-4c65-bf48-294fd12e13fc"
- *               question:
+ *               studenAnswer:
  *                 type: object
  *                 required:
  *                   - questionId
@@ -58,7 +58,7 @@ const {
  *                               properties:
  *                                 key:
  *                                   type: string
- *                                   example: "A. After he finishes, there will be time for questions."
+ *                                   example: "A. After he finishes, there will be time for studenAnswers."
  *                                 value:
  *                                   type: number
  *                                   example: 5

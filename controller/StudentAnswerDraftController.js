@@ -2,12 +2,12 @@ const StudentAnswerDraftService = require("../services/StudentAnswerDraftService
 
 const storeStudentAnswerDraft = async (req, res) => {
   try {
-    const { studentId, topicId, question } = req.body;
-    if (!studentId || !topicId || !question) {
+    const { studentId, topicId, studentAnswer } = req.body;
+    if (!studentId || !topicId || !studentAnswer) {
       return res.status(400).json({ message: "Invalid data format" });
     }
     const result = await StudentAnswerDraftService.storeStudentAnswerDraft(req);
-    
+
     res.status(result.status).json({
       message: result.message,
     });

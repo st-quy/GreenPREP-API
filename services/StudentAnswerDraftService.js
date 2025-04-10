@@ -4,19 +4,24 @@ const { StudentAnswerDraft } = require("../models");
  */
 async function storeStudentAnswerDraft(req) {
   try {
-    const { studentId, topicId, question } = req.body;
+    const { studentId, topicId, studentAnswer } = req.body;
 
-    if (!studentId || !topicId || !question || typeof question !== "object") {
+    if (
+      !studentId ||
+      !topicId ||
+      !studentAnswer ||
+      typeof studentAnswer !== "object"
+    ) {
       throw new Error("Missing or invalid studentId, topicId, or question");
     }
 
-    const { questionId, answerText, answerAudio } = question;
+    const { questionId, answerText, answerAudio } = studentAnswer;
 
     if (!questionId) {
       throw new Error("Question must have a questionId");
     }
 
-    const studentAnswer = {
+    const studentAnswerData = {
       StudentID: studentId,
       TopicID: topicId,
       QuestionID: questionId,
@@ -26,7 +31,7 @@ async function storeStudentAnswerDraft(req) {
       AnswerAudio: answerAudio || null,
     };
 
-    await StudentAnswerDraft.create(studentAnswer);
+    await StudentAnswerDraft.create(studentAnswerData);
 
     return {
       status: 200,
