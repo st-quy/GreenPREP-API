@@ -58,8 +58,8 @@ async function getSessionByClass(req) {
 
 async function createSession(req) {
   try {
-    const { sessionName, sessionKey, startTime, endTime, examSet } = req.body;
-    const { classId } = req.query;
+    const { sessionName, sessionKey, startTime, endTime, examSet, ClassID } =
+      req.body;
 
     const sessionData = {
       sessionName,
@@ -67,7 +67,7 @@ async function createSession(req) {
       startTime,
       endTime,
       examSet,
-      ClassID: classId,
+      ClassID,
     };
     const newSession = await Session.create(sessionData);
     return {
