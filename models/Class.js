@@ -10,6 +10,14 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       unique: true,
     },
+    UserID: {
+      type: DataTypes.UUID,
+      allowNull: false,
+      references: {
+        model: "Users",
+        key: "ID",
+      },
+    },
     createdAt: {
       type: DataTypes.DATE,
       allowNull: false,

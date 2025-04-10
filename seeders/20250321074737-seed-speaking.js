@@ -101,7 +101,6 @@ module.exports = {
       }
     }
 
-    // Danh sách 25 câu hỏi multiple-choice
     const questions = [
       {
         content: "Describe your journey here today.",

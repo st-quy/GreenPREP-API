@@ -31,7 +31,13 @@ const {
  *         schema:
  *           type: string
  *         required: true
- *         description: The Skill name (speaking, writting)
+ *         description: The Skill name (writing, speaking)
+ *       - in: query
+ *         name: topicId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The ID of the topic
  *     responses:
  *       200:
  *         description: List of participant exams for the session
@@ -57,7 +63,6 @@ const {
  *         description: Internal server error
  */
 router.get("/participants", getExamOfParticipantBySession);
-
 /**
  * @swagger
  * /grades/teacher-grade:

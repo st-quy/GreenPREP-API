@@ -13,7 +13,7 @@ const { skillMapping, pointsPerQuestion } = require("../helpers/constants");
 
 async function getParticipantExamBySession(req) {
   try {
-    const { sessionId, studentId, skillName } = req.query;
+    const { sessionId, studentId, topicId, skillName } = req.query;
 
     if (!sessionId) {
       throw new Error("sessionId is required");
@@ -21,6 +21,14 @@ async function getParticipantExamBySession(req) {
 
     if (!studentId) {
       throw new Error("studentId is required");
+    }
+
+    if (!topicId) {
+      throw new Error("topicId is required");
+    }
+
+    if (!skillName) {
+      throw new Error("skillName is required");
     }
 
     const sessionParticipant = await SessionParticipant.findOne({
@@ -42,6 +50,7 @@ async function getParticipantExamBySession(req) {
     const studentAnswers = await StudentAnswer.findAll({
       where: {
         StudentID: studentId,
+        TopicID: topicId,
       },
       include: [
         {
@@ -218,7 +227,7 @@ async function calculatePoints(req) {
         }
       } else if (typeOfQuestion === "dropdown-list") {
         const studentAnswers = JSON.parse(answer.AnswerText);
-        const correctAnswers = correctContent.correctAnswer;
+        const correctAnswers = correctContent.correctAnswers;
 
         correctAnswers.forEach((correct) => {
           const student = studentAnswers.find((s) => s.key === correct.key);

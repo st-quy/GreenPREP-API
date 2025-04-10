@@ -23,7 +23,11 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
     },
     examSet: {
-      type: DataTypes.STRING,
+      type: DataTypes.UUID,
+      references: {
+        model: "Topics",
+        key: "ID",
+      },
       allowNull: false,
     },
     status: {

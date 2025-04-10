@@ -20,7 +20,7 @@ function validateQuestions(questions) {
  * Main handler to store student answers and calculate points
  */
 async function storeStudentAnswers(req) {
-  const { studentId, topicId, questions } = req.body;
+  const { studentId, topicId, questions, skillName } = req.body;
 
   if (!studentId) throw new Error("Student ID is required");
   if (!topicId) throw new Error("Topic ID is required");
@@ -46,6 +46,16 @@ async function storeStudentAnswers(req) {
     });
 
     // Then calculate points based on the answers
+    if (skillName === "WRITING" || skillName === "SPEAKING") {
+      return {
+        status: 200,
+        message: "Student answers saved and points calculated successfully",
+        data: {
+          savedAnswersCount: savedAnswers.length,
+        },
+      };
+    }
+
     const pointData = await calculatePoints(req);
 
     return {
@@ -54,7 +64,6 @@ async function storeStudentAnswers(req) {
       data: {
         savedAnswersCount: savedAnswers.length,
         pointData,
-        studentAnswers: savedAnswers,
       },
     };
   } catch (error) {

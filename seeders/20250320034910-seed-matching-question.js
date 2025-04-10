@@ -94,7 +94,7 @@ module.exports = {
               "object",
               "follow",
             ],
-            correctAnswers: [
+            correctAnswer: [
               { left: "complain", right: "object" },
               { left: "copy", right: "duplicate" },
               { left: "cut", right: "slice" },
@@ -133,7 +133,7 @@ module.exports = {
               "blame",
               "bear",
             ],
-            correctAnswers: [
+            correctAnswer: [
               {
                 left: "To place in the ground, cover up or hide is to",
                 right: "bury",
@@ -181,7 +181,7 @@ module.exports = {
               "careless",
               "credible",
             ],
-            correctAnswers: [
+            correctAnswer: [
               {
                 left: "The witness's testimony was ____ and helped to build the case.",
                 right: "credible",
@@ -230,7 +230,7 @@ module.exports = {
               "disgust",
               "courage",
             ],
-            correctAnswers: [
+            correctAnswer: [
               { left: "shore", right: "coast" },
               { left: "beginner", right: "learner" },
               { left: "child", right: "toddler" },
@@ -270,7 +270,7 @@ module.exports = {
               "claim",
               "center",
             ],
-            correctAnswers: [
+            correctAnswer: [
               { left: "detention +", right: "center" },
               { left: "black +", right: "list" },
               { left: "baggage +", right: "claim" },
