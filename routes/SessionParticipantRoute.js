@@ -324,4 +324,82 @@ router.get(
   "/",
   SessionParticipantController.getPublishedSessionParticipantsByUserId
 );
+
+/**
+ * @swagger
+ * /api/session-participants/{id}/level:
+ *   put:
+ *     summary: Update CEFR level of a session participant
+ *     tags:
+ *       - SessionParticipants
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID of the session participant
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - newLevel
+ *             properties:
+ *               newLevel:
+ *                 type: string
+ *                 enum: [A1, A2, B1, B2, C1, C2]  # Adjust to match your CEFR_LEVELS
+ *                 description: New CEFR level to assign
+ *     responses:
+ *       200:
+ *         description: Level updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: integer
+ *                   example: 200
+ *                 message:
+ *                   type: string
+ *                   example: Successfully updated level to "A1".
+ *       400:
+ *         description: Invalid input
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: integer
+ *                   example: 400
+ *                 message:
+ *                   type: string
+ *                   example: "Invalid level: B9"
+ *       404:
+ *         description: Participant not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: integer
+ *                   example: 404
+ *                 message:
+ *                   type: string
+ *                   example: No participant found with ID abc-123.
+ *       500:
+ *         description: Internal server error
+ */
+
+router.put(
+  "/:id/level",
+  SessionParticipantController.updateParticipantLevelById
+);
+
 module.exports = router;

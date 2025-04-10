@@ -71,7 +71,21 @@ const getPublishedSessionParticipantsByUserId = async (req, res) => {
     });
   }
 };
+
+const updateParticipantLevelById = async (req, res) => {
+  try {
+    const result = await SessionParticipantService.updateLevelById(req);
+    return res.status(result.status).json(result);
+  } catch (error) {
+    return res.status(500).json({
+      status: 500,
+      message: "Internal server error",
+    });
+  }
+};
+
 module.exports = {
+  updateParticipantLevelById,
   getPublishedSessionParticipantsByUserId,
   publishScoresBySessionId,
   getAllParticipants,
