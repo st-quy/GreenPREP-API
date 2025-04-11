@@ -40,7 +40,7 @@ const {
  *           format: date-time
  *           description: The end time of the session
  *         examSet:
- *           type: string
+ *           type: uuid
  *           description: The exam set associated with the session
  *         status:
  *           type: string
@@ -55,7 +55,7 @@ const {
  *         sessionKey: ABC123
  *         startTime: 2023-01-01T10:00:00Z
  *         endTime: 2023-01-01T12:00:00Z
- *         examSet: ExamSet1
+ *         examSet: ef6b69aa-2ec2-4c65-bf48-294fd12e13fc
  *         status: NOT_STARTED
  *         ClassID: 123e4567-e89b-12d3-a456-426614174000
  */
