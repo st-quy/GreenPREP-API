@@ -56,7 +56,7 @@ router.get("/participants", getExamOfParticipantBySession);
  * @swagger
  * /grades/teacher-grade:
  *   post:
- *   summary: Save score for writing or speaking skill
+ *     summary: Save score for writing or speaking skill
  *     tags: [Grade]
  *     requestBody:
  *       required: true
