@@ -33,7 +33,7 @@ router.get("/detail", getTopicByName);
 router.get("/:id", getTopicWithRelations);
 /**
  * @swagger
- * /api/topics:
+ * /topics:
  *   get:
  *     summary: Get all topics with their parts and questions
  *     tags:
