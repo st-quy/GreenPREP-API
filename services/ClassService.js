@@ -15,7 +15,8 @@ async function findAll() {
             'numberOfSessions'
           ]
         ]
-      }
+      },
+      order: [['createdAt', 'DESC']] // Add sorting by createdAt in descending order
     });
     return {
       status: 200,
