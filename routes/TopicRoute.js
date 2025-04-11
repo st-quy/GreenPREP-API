@@ -29,8 +29,6 @@ const {
  *           example: 2025-04-10T04:00:53.200Z
  */
 
-router.get("/detail", getTopicByName);
-router.get("/:id", getTopicWithRelations);
 /**
  * @swagger
  * /topics:
@@ -59,5 +57,8 @@ router.get("/:id", getTopicWithRelations);
  */
 
 router.get("/", getAllTopics);
+
+router.get("/detail", getTopicByName);
+router.get("/:id", getTopicWithRelations);
 
 module.exports = router;
