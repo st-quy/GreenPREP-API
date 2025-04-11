@@ -125,7 +125,7 @@ async function getSessionDetailById(req) {
         },
         {
           model: Topic,
-          as: "Topics",
+          as: "Topic",
         },
       ],
     });

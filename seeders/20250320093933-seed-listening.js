@@ -340,20 +340,20 @@ module.exports = {
         ],
         correctAnswer: [
           {
-            left: "1. Speaker A mainly _____.",
-            right: "D. travels by bus",
+            key: "1. Speaker A mainly _____.",
+            value: "D. travels by bus",
           },
           {
-            left: "2. Speaker B usually _____.",
-            right: "A. travels by car",
+            key: "2. Speaker B usually _____.",
+            value: "A. travels by car",
           },
           {
-            left: "3. Speaker C usually _____.",
-            right: "B. walks alone",
+            key: "3. Speaker C usually _____.",
+            value: "B. walks alone",
           },
           {
-            left: "4. Speaker D primarily _____.",
-            right: "E. walks with a friend",
+            key: "4. Speaker D primarily _____.",
+            value: "E. walks with a friend",
           },
         ],
         partID: partIds["PART 2: Information Matching (4 questions)"],
@@ -378,20 +378,20 @@ module.exports = {
         rightItems: ["Man", "Woman", "Both"],
         correctAnswer: [
           {
-            left: "1. Building design can influence people's behavior.",
-            right: "Both",
+            key: "1. Building design can influence people's behavior.",
+            value: "Both",
           },
           {
-            left: "2. Creating community can take time.",
-            right: "Woman",
+            key: "2. Creating community can take time.",
+            value: "Woman",
           },
           {
-            left: "3. Work communities and social communities are the same.",
-            right: "Man",
+            key: "3. Work communities and social communities are the same.",
+            value: "Man",
           },
           {
-            left: "4. Technology has changed how community forms..",
-            right: "Both",
+            key: "4. Technology has changed how community forms..",
+            value: "Both",
           },
         ],
         partID: partIds["PART 3: Opinion Matching (4 questions)"],
