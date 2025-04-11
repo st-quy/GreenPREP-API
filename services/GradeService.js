@@ -312,9 +312,36 @@ async function calculatePoints(req) {
 }
 
 async function calculatePointForWritingAndSpeaking(req) {
-  const { sessionParticipantID, teacherGradedScore, skillName } = req.body;
+  const {
+    sessionParticipantID,
+    teacherGradedScore,
+    skillName,
+    studentAnswers,
+  } = req.body;
   try {
-    if (!sessionParticipantID || !teacherGradedScore || !skillName) {
+    if (
+      !studentAnswers ||
+      !Array.isArray(studentAnswers) ||
+      studentAnswers.length === 0
+    ) {
+      throw new Error(
+        "studentAnswers are required and must be a non-empty array"
+      );
+    }
+
+    studentAnswers.forEach(({ studentAnswerId }, index) => {
+      if (!studentAnswerId) {
+        throw new Error(`Missing studentAnswerId at index ${index}`);
+      }
+    });
+    console.log(sessionParticipantID, teacherGradedScore, skillName);
+
+    if (
+      !sessionParticipantID ||
+      typeof teacherGradedScore !== "number" ||
+      teacherGradedScore < 0 ||
+      !skillName
+    ) {
       return {
         status: 400,
         message:
@@ -335,6 +362,21 @@ async function calculatePointForWritingAndSpeaking(req) {
         message: "Invalid teacher graded score",
       };
     }
+
+    const studentAnswerData = studentAnswers.filter(
+      ({ messageContent }) =>
+        messageContent !== null &&
+        messageContent !== undefined &&
+        messageContent.trim() !== ""
+    );
+    await Promise.all(
+      studentAnswerData.map(({ studentAnswerId, messageContent }) =>
+        StudentAnswer.update(
+          { Comment: messageContent },
+          { where: { ID: studentAnswerId } }
+        )
+      )
+    );
 
     const totalPoints = teacherGradedScore;
     const formattedSkillName = skillMapping[skillName.toUpperCase()] || null;
