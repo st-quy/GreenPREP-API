@@ -63,11 +63,12 @@ const {
  *         description: Internal server error
  */
 router.get("/participants", getExamOfParticipantBySession);
+
 /**
  * @swagger
  * /grades/teacher-grade:
  *   post:
- *     summary: Calculate points for writing exam
+ *   summary: Save score for writing or speaking skill
  *     tags: [Grade]
  *     requestBody:
  *       required: true
@@ -78,24 +79,45 @@ router.get("/participants", getExamOfParticipantBySession);
  *             properties:
  *               sessionParticipantID:
  *                 type: string
- *                 description: The ID of the session participant
+ *                 description: ID of the session participant
+ *                 example: "2dad9cef-2ba8-4fff-85c7-579d8310e2b9"
  *               teacherGradedScore:
  *                 type: number
- *                 description: The writing or reading score given by teacher
- *               studentAnswerId:
+ *                 description: Score graded by teacher (can be 0 or greater)
+ *                 example: 75.5
+ *               skillName:
  *                 type: string
- *                 description: The ID of the student answer
+ *                 description: Skill being graded (WRITING or SPEAKING)
+ *                 enum: [WRITING, SPEAKING]
+ *                 example: WRITING
+ *               studentAnswers:
+ *                 type: array
+ *                 description: Array of student answers with optional comments
+ *                 items:
+ *                   type: object
+ *                   properties:
+ *                     studentAnswerId:
+ *                       type: string
+ *                       description: ID of the student answer
+ *                       example: "c1234567-89ab-4cde-f012-3456789abcde"
+ *                     messageContent:
+ *                       type: string
+ *                       description: Comment or feedback for the answer
+ *                       example: "Good vocabulary but needs better grammar."
  *             required:
  *               - sessionParticipantID
  *               - teacherGradedScore
- *               - studentAnswerId
+ *               - skillName
+ *               - studentAnswers
  *     responses:
  *       200:
- *         description: Writing points calculated successfully
+ *         description: Writing or speaking points calculated successfully
  *       400:
- *         description: Invalid request body
+ *         description: Invalid request body or missing fields
  *       500:
  *         description: Internal server error
  */
+
 router.post("/teacher-grade", calculatePointForWritingAndSpeaking);
+
 module.exports = router;

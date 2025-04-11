@@ -37,6 +37,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.TEXT,
       allowNull: true,
     },
+    Comment: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+    },
   });
 
   return StudentAnswer;
