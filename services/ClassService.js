@@ -1,8 +1,22 @@
-const { Class } = require("../models");
+const { Class, sequelize } = require("../models");
 
 async function findAll() {
   try {
-    const classes = await Class.findAll();
+    const classes = await Class.findAll({
+      include: [
+        {
+          association: "Sessions",
+        },
+      ],
+      attributes: {
+        include: [
+          [
+            sequelize.literal('(SELECT COUNT(*) FROM "Sessions" WHERE "Sessions"."ClassID" = "Classes"."ID")'),
+            'numberOfSessions'
+          ]
+        ]
+      }
+    });
     return {
       status: 200,
       message: "Classes fetched successfully",

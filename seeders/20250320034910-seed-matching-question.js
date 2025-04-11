@@ -76,7 +76,7 @@ module.exports = {
         ID: uuidv4(),
         Type: "matching",
         Content: "Match the words with their synonyms.",
-        AnswerContent: JSON.stringify([
+        AnswerContent: JSON.stringify(
           {
             title:
               "Select a word from the list that has the most similar meaning to the following words.",
@@ -102,7 +102,7 @@ module.exports = {
               { left: "disagree", right: "argue" },
             ],
           },
-        ]),
+        ),
         PartID: partId,
         SkillID: skillId,
         createdAt: new Date(),
@@ -112,7 +112,7 @@ module.exports = {
         ID: uuidv4(),
         Type: "matching",
         Content: "Complete each definition using a word from the list.",
-        AnswerContent: JSON.stringify([
+        AnswerContent: JSON.stringify(
           {
             leftItems: [
               "To place in the ground, cover up or hide is to",
@@ -150,7 +150,7 @@ module.exports = {
               },
             ],
           },
-        ]),
+        ),
         PartID: partId,
         SkillID: skillId,
         createdAt: new Date(),
@@ -160,7 +160,7 @@ module.exports = {
         ID: uuidv4(),
         Type: "matching",
         Content: "Complete each sentence using a word from the list.",
-        AnswerContent: JSON.stringify([
+        AnswerContent: JSON.stringify(
           {
             leftItems: [
               "The witness's testimony was ____ and helped to build the case.",
@@ -204,7 +204,7 @@ module.exports = {
               },
             ],
           },
-        ]),
+        ),
         PartID: partId,
         SkillID: skillId,
         createdAt: new Date(),
@@ -215,7 +215,7 @@ module.exports = {
         Type: "matching",
         Content:
           "Select a word from the list that has the most similar meaning to the following words.",
-        AnswerContent: JSON.stringify([
+        AnswerContent: JSON.stringify(
           {
             leftItems: ["shore", "beginner", "child", "competition", "hatred"],
             rightItems: [
@@ -238,7 +238,7 @@ module.exports = {
               { left: "hatred", right: "disgust" },
             ],
           },
-        ]),
+        ),
         PartID: partId,
         SkillID: skillId,
         createdAt: new Date(),
@@ -249,7 +249,7 @@ module.exports = {
         Type: "matching",
         Content:
           "Select a word from the list that is most often used with the following words.",
-        AnswerContent: JSON.stringify([
+        AnswerContent: JSON.stringify(
           {
             leftItems: [
               "detention +",
@@ -278,7 +278,7 @@ module.exports = {
               { left: "driving +", right: "license" },
             ],
           },
-        ]),
+        ),
         PartID: partId,
         SkillID: skillId,
         createdAt: new Date(),
