@@ -15,29 +15,17 @@ const {
  *     tags: [Grade]
  *     parameters:
  *       - in: query
- *         name: sessionId
+ *         name: sessionParticipantId
  *         schema:
  *           type: string
  *         required: true
- *         description: The ID of the session
- *       - in: query
- *         name: studentId
- *         schema:
- *           type: string
- *         required: true
- *         description: The ID of the student (optional)
+ *         description: The ID of the session participant
  *       - in: query
  *         name: skillName
  *         schema:
  *           type: string
  *         required: true
  *         description: The Skill name (writing, speaking)
- *       - in: query
- *         name: topicId
- *         schema:
- *           type: string
- *         required: true
- *         description: The ID of the topic
  *     responses:
  *       200:
  *         description: List of participant exams for the session
