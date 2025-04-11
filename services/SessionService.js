@@ -1,4 +1,4 @@
-const { Session, SessionParticipant, Class } = require("../models");
+const { Session, SessionParticipant, Class, Topic } = require("../models");
 
 async function getAllSessions(req) {
   try {
@@ -7,6 +7,10 @@ async function getAllSessions(req) {
         {
           model: Class,
           as: "Classes",
+        },
+        {
+          model: Topic,
+          as: "Topics",
         },
       ],
     });
@@ -118,6 +122,10 @@ async function getSessionDetailById(req) {
         {
           model: Class,
           as: "Classes",
+        },
+        {
+          model: Topic,
+          as: "Topics",
         },
       ],
     });

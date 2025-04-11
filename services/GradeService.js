@@ -13,74 +13,110 @@ const { skillMapping, pointsPerQuestion } = require("../helpers/constants");
 
 async function getParticipantExamBySession(req) {
   try {
-    const { sessionId, studentId, topicId, skillName } = req.query;
+    const { sessionParticipantId, skillName } = req.query;
 
-    if (!sessionId) {
-      throw new Error("sessionId is required");
+    if (!sessionParticipantId || !skillName) {
+      return {
+        status: 400,
+        message: "Missing required fields: sessionParticipantId or skillName",
+      };
     }
 
-    if (!studentId) {
-      throw new Error("studentId is required");
-    }
-
-    if (!topicId) {
-      throw new Error("topicId is required");
-    }
-
-    if (!skillName) {
-      throw new Error("skillName is required");
-    }
-
-    const sessionParticipant = await SessionParticipant.findOne({
-      where: {
-        SessionID: sessionId,
-        UserID: studentId,
-        approvedAt: {
-          [Op.ne]: null,
-        },
-      },
-    });
+    const sessionParticipant = await SessionParticipant.findByPk(
+      sessionParticipantId,
+      {
+        include: [
+          { model: User },
+          { model: Session, include: [{ model: Topic }] },
+        ],
+      }
+    );
 
     if (!sessionParticipant) {
-      throw new Error(
-        `Participant with id ${studentId} not found in session with id ${sessionId}`
-      );
+      return {
+        status: 404,
+        message: "Session participant not found",
+      };
     }
 
-    const studentAnswers = await StudentAnswer.findAll({
-      where: {
-        StudentID: studentId,
-        TopicID: topicId,
-      },
+    const topic = await Topic.findByPk(sessionParticipant.Session.examSet, {
       include: [
         {
-          model: User,
-        },
-        {
-          model: Topic,
-        },
-        {
-          model: Question,
-          where: {
-            Type: skillName,
-          },
+          model: Part,
+          required: true,
           include: [
             {
-              model: Part,
+              model: Question,
+              required: true,
+              include: [
+                {
+                  model: Skill,
+                  where: {
+                    Name: skillName.toUpperCase(),
+                  },
+                  required: true,
+                },
+              ],
             },
           ],
         },
       ],
     });
 
-    if (!studentAnswers) {
-      throw new Error(`Session with id ${sessionId} not found`);
+    if (!topic) {
+      return {
+        status: 404,
+        message: "Topic not found",
+      };
     }
+
+    // Filter parts that have non-empty Questions array
+    topic.Parts = topic.Parts.filter(
+      (part) => part.Questions && part.Questions.length > 0
+    );
+
+    const studentAnswers = await StudentAnswer.findAll({
+      where: {
+        StudentID: sessionParticipant.UserID,
+        TopicID: sessionParticipant.Session.examSet,
+      },
+      include: [
+        {
+          model: Question,
+          include: [
+            {
+              model: Skill,
+              where: {
+                Name: skillName.toUpperCase(),
+              },
+              required: true,
+            },
+          ],
+        },
+      ],
+    });
+
+    const answerMap = new Map();
+    studentAnswers.forEach((answer) => {
+      answerMap.set(answer.QuestionID, answer);
+    });
+
+    topic.Parts = topic.Parts.map((part) => {
+      part.Questions = part.Questions.map((question) => {
+        const studentAnswer = answerMap.get(question.ID);
+        if (studentAnswer) {
+          question.dataValues.studentAnswer = studentAnswer;
+        }
+        return question;
+      });
+      return part;
+    });
 
     return {
       status: 200,
-      message: "Participant exams fetched successfully",
-      data: studentAnswers,
+      data: {
+        topic,
+      },
     };
   } catch (error) {
     throw new Error(`Error fetching participant exams: ${error.message}`);
@@ -200,7 +236,7 @@ async function calculatePoints(req) {
         }
       } else if (typeOfQuestion === "matching") {
         const studentAnswers = JSON.parse(answer.AnswerText);
-        const correctAnswers = correctContent.correctAnswers;
+        const correctAnswers = correctContent.correctAnswer;
 
         correctAnswers.forEach((correct) => {
           const matched = studentAnswers.find(
@@ -227,7 +263,7 @@ async function calculatePoints(req) {
         }
       } else if (typeOfQuestion === "dropdown-list") {
         const studentAnswers = JSON.parse(answer.AnswerText);
-        const correctAnswers = correctContent.correctAnswers;
+        const correctAnswers = correctContent.correctAnswer;
 
         correctAnswers.forEach((correct) => {
           const student = studentAnswers.find((s) => s.key === correct.key);
