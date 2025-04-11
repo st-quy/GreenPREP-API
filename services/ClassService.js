@@ -15,9 +15,10 @@ async function findAll() {
 
 async function createClass(req) {
   try {
-    const { className } = req.body;
+    const { className, UserID } = req.body;
 
-    const newClass = await Class.create({ className });
+    const newClass = await Class.create({ className, UserID });
+
     return {
       status: 200,
       message: "Class created successfully",

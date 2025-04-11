@@ -1,4 +1,5 @@
 const { SessionParticipant, Session, User } = require("../models");
+const { CEFR_LEVELS } = require("../constants/levels");
 const sequelizePaginate = require("sequelize-paginate");
 
 async function addParticipant(sessionId, userId) {
@@ -163,7 +164,48 @@ const getPublishedSessionParticipantsByUserId = async (req) => {
   };
 };
 
+const updateLevelById = async (req) => {
+  try {
+    const { newLevel } = req.body;
+    const participantId = req.params.id;
+
+    if (!participantId) throw new Error("participantId is required.");
+    if (!newLevel) throw new Error("newLevel is required.");
+
+    if (!CEFR_LEVELS.includes(newLevel)) {
+      throw new Error(
+        `Invalid level: ${newLevel}. Valid levels are: ${CEFR_LEVELS.join(
+          ", "
+        )}`
+      );
+    }
+
+    const [affectedRows] = await SessionParticipant.update(
+      { Level: newLevel },
+      { where: { ID: participantId } }
+    );
+
+    if (affectedRows === 0) {
+      return {
+        status: 404,
+        message: `No participant found with ID ${participantId}.`,
+      };
+    }
+
+    return {
+      status: 200,
+      message: `Successfully updated level to "${newLevel}".`,
+    };
+  } catch (error) {
+    return {
+      status: 500,
+      message: error.message || "Internal server error.",
+    };
+  }
+};
+
 module.exports = {
+  updateLevelById,
   getPublishedSessionParticipantsByUserId,
   publishScoresBySessionId,
   addParticipant,

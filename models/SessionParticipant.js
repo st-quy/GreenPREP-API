@@ -1,4 +1,5 @@
 /**@type {import('./index').Modeling} */
+const { CEFR_LEVELS } = require("../constants/levels");
 module.exports = (sequelize, DataTypes) => {
   const SessionParticipant = sequelize.define("SessionParticipant", {
     ID: {
@@ -11,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: true,
     },
     GrammarVocabLevel: {
-      type: DataTypes.ENUM("A1", "A2", "B1", "B2", "C1", "C2"),
+      type: DataTypes.ENUM(...CEFR_LEVELS),
       allowNull: true,
     },
     Reading: {
@@ -19,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: true,
     },
     ReadingLevel: {
-      type: DataTypes.ENUM("A1", "A2", "B1", "B2", "C1", "C2"),
+      type: DataTypes.ENUM(...CEFR_LEVELS),
       allowNull: true,
     },
     Listening: {
@@ -27,7 +28,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: true,
     },
     ListeningLevel: {
-      type: DataTypes.ENUM("A1", "A2", "B1", "B2", "C1", "C2"),
+      type: DataTypes.ENUM(...CEFR_LEVELS),
       allowNull: true,
     },
     Speaking: {
@@ -35,7 +36,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: true,
     },
     SpeakingLevel: {
-      type: DataTypes.ENUM("A1", "A2", "B1", "B2", "C1", "C2"),
+      type: DataTypes.ENUM(...CEFR_LEVELS),
       allowNull: true,
     },
     Writing: {
@@ -43,7 +44,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: true,
     },
     WritingLevel: {
-      type: DataTypes.ENUM("A1", "A2", "B1", "B2", "C1", "C2"),
+      type: DataTypes.ENUM(...CEFR_LEVELS),
       allowNull: true,
     },
     Total: {
@@ -51,7 +52,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: true,
     },
     Level: {
-      type: DataTypes.ENUM("A1", "A2", "B1", "B2", "C1", "C2"),
+      type: DataTypes.ENUM(...CEFR_LEVELS),
       allowNull: true,
     },
     IsPublished: {
