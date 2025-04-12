@@ -1,8 +1,9 @@
 const { Class, sequelize } = require("../models");
 
-async function findAll() {
+async function findAll(teacherId = null) {
   try {
     const classes = await Class.findAll({
+      where: teacherId ? { UserID: teacherId } : undefined,
       include: [
         {
           association: "Sessions",
@@ -11,12 +12,14 @@ async function findAll() {
       attributes: {
         include: [
           [
-            sequelize.literal('(SELECT COUNT(*) FROM "Sessions" WHERE "Sessions"."ClassID" = "Classes"."ID")'),
-            'numberOfSessions'
-          ]
-        ]
+            sequelize.literal(
+              '(SELECT COUNT(*) FROM "Sessions" WHERE "Sessions"."ClassID" = "Classes"."ID")'
+            ),
+            "numberOfSessions",
+          ],
+        ],
       },
-      order: [['createdAt', 'DESC']] // Add sorting by createdAt in descending order
+      order: [["createdAt", "DESC"]], // Add sorting by createdAt in descending order
     });
     return {
       status: 200,
