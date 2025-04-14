@@ -79,8 +79,11 @@ async function registerUser(data) {
             return `${err.path} is existed.`;
         }
       });
-      
-      return res.status(400).json({ errors: messages });
+      return {
+        status: 400,
+        message: "Validation Error",
+        errors: messages,
+      }
     }
   }
 }
