@@ -14,6 +14,7 @@ const { skillMapping, pointsPerQuestion } = require("../helpers/constants");
 async function getParticipantExamBySession(req) {
   try {
     const { sessionParticipantId, skillName } = req.query;
+    const formattedSkillName = skillMapping[skillName.toUpperCase()] || null;
 
     if (!sessionParticipantId || !skillName) {
       return {
@@ -116,6 +117,7 @@ async function getParticipantExamBySession(req) {
       status: 200,
       data: {
         topic,
+        scoreBySkill: sessionParticipant[formattedSkillName],
       },
     };
   } catch (error) {
