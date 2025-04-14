@@ -114,6 +114,18 @@ async function createSessionRequest(req) {
       throw new Error("Session request already exists");
     }
 
+    const allSessionRequest = await SessionRequest.findAll({
+      where: {
+        UserID: UserID,
+        SessionID: session.ID,
+        status: SESSION_REQUEST_STATUS.REJECTED,
+      },
+    });
+
+    if (allSessionRequest.length >= 3) {
+      throw new Error("Session request limit reached");
+    }
+
     const sessionRequest = await SessionRequest.create({
       UserID: UserID,
       SessionID: session.ID,

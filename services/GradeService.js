@@ -80,6 +80,7 @@ async function getParticipantExamBySession(req) {
       where: {
         StudentID: sessionParticipant.UserID,
         TopicID: sessionParticipant.Session.examSet,
+        SessionID: sessionParticipant.SessionID,
       },
       include: [
         {
@@ -183,13 +184,12 @@ async function calculateTotalPoints(
 
 async function calculatePoints(req) {
   try {
-    const { studentId, topicId, sessionParticipantId, skillName } = req.body;
+    const { sessionParticipantId, skillName } = req.body;
 
-    if (!studentId || !topicId || !sessionParticipantId || !skillName) {
+    if (!sessionParticipantId || !skillName) {
       return {
         status: 400,
-        message:
-          "Missing required fields: studentId, topicId, sessionParticipantId, or skillName",
+        message: "Missing required fields: sessionParticipantId or skillName",
       };
     }
 
@@ -204,8 +204,25 @@ async function calculatePoints(req) {
     const pointPerQuestion =
       pointsPerQuestion[formattedSkillName.toLowerCase()] || 1;
 
+    const sessionParticipant = await SessionParticipant.findByPk(
+      sessionParticipantId,
+      {
+        include: [{ model: Session }],
+      }
+    );
+
+    console.log("Check data ::::", {
+      sessionParticipantId: sessionParticipant.ID,
+      StudentID: sessionParticipant.UserID,
+      TopicID: sessionParticipant.Session.examSet,
+      SessionID: sessionParticipant.SessionID,
+    });
     const answers = await StudentAnswer.findAll({
-      where: { StudentID: studentId, TopicID: topicId },
+      where: {
+        StudentID: sessionParticipant.UserID,
+        TopicID: sessionParticipant.Session.examSet,
+        SessionID: sessionParticipant.SessionID,
+      },
       include: [{ model: Question, include: [Skill] }],
     });
 
@@ -299,9 +316,9 @@ async function calculatePoints(req) {
       totalPoints
     );
 
-    const updatedSessionParticipant = await SessionParticipant.findOne({
-      where: { ID: sessionParticipantId, UserID: studentId },
-    });
+    const updatedSessionParticipant = await SessionParticipant.findByPk(
+      sessionParticipantId
+    );
 
     return {
       message: "Points calculated successfully",

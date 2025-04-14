@@ -1,4 +1,4 @@
-const { StudentAnswer } = require("../models");
+const { StudentAnswer, Session } = require("../models");
 const { calculatePoints } = require("../services/GradeService");
 
 /**
@@ -20,10 +20,11 @@ function validateQuestions(questions) {
  * Main handler to store student answers and calculate points
  */
 async function storeStudentAnswers(req) {
-  const { studentId, topicId, questions, skillName } = req.body;
+  const { studentId, topicId, sessionId, questions, skillName } = req.body;
 
   if (!studentId) throw new Error("Student ID is required");
   if (!topicId) throw new Error("Topic ID is required");
+  if (!sessionId) throw new Error("Session ID is required");
 
   validateQuestions(questions);
 
@@ -32,6 +33,7 @@ async function storeStudentAnswers(req) {
       StudentID: studentId,
       TopicID: topicId,
       QuestionID: questionId,
+      SessionID: sessionId,
       AnswerText: Array.isArray(answerText)
         ? JSON.stringify(answerText)
         : answerText,
