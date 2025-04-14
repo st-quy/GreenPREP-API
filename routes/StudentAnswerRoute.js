@@ -16,6 +16,7 @@ const {
  *         - questions
  *         - skillName
  *         - sessionParticipantId
+ *         - sessionId
  *       properties:
  *         studentId:
  *           type: string
@@ -25,6 +26,10 @@ const {
  *           type: string
  *           format: uuid
  *           description: ID of the topic
+ *         sessionId:
+ *           type: string
+ *           format: uuid
+ *           description: ID of the session
  *         skillName:
  *           type: string
  *           description: Name of the skill
@@ -82,6 +87,7 @@ const {
  *         topicId: ef6b69aa-2ec2-4c65-bf48-294fd12e13fc
  *         skillName: "GRAMMAR AND VOCABULARY"
  *         sessionParticipantId: a8e2b9e8-bb60-44f0-bd61-6bd524cdc87d
+ *         sessionId: 12bd21ef-b6d8-4991-b9ee-69160ce8fd09
  *         questions:
  *           - questionId: 4fc5f0df-18e1-449d-a1b9-7ac10b50b3bf
  *             answerText: "Definitely"
