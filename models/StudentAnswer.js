@@ -13,6 +13,14 @@ module.exports = (sequelize, DataTypes) => {
         key: "ID",
       },
     },
+    SessionID: {
+      type: DataTypes.UUID,
+      allowNull: false,
+      references: {
+        model: "Sessions",
+        key: "ID",
+      },
+    },
     TopicID: {
       type: DataTypes.UUID,
       allowNull: false,

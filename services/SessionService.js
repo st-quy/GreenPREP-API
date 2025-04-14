@@ -10,7 +10,7 @@ async function getAllSessions(req) {
         },
         {
           model: Topic,
-          as: "Topics",
+          as: "Topic",
         },
       ],
     });
