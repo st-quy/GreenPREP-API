@@ -1,0 +1,288 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+  background-color: #f5f5f5;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: white;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+header {
+  display: flex;
+  justify-content: flex-start; /* Align items to the left to keep logo in place */
+  align-items: center;
+  padding-bottom: 20px;
+  margin-bottom: 20px;
+  position: relative; /* Add position relative to allow absolute positioning of child */
+}
+
+.logo-section {
+  display: flex;
+  flex-direction: column;
+}
+
+.logo {
+  width: 220px;
+  height: auto;
+}
+
+.alliance {
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  color: #333;
+  margin-top: 5px;
+}
+
+.fet-logo {
+  width: 50px;
+  height: auto;
+  margin: 0 5px;
+}
+
+.student-info {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.student-info h1 {
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 5px;
+  margin-left: 0; /* Ensure no extra margin */
+}
+
+.student-info p {
+  font-size: 16px; /* Adjust font size for "STUDENT" */
+  color: #333; /* Match the color scheme */
+}
+
+.session-details h2,
+.all-score h2 {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.session-details {
+  margin-top: 80px;
+}
+
+.details-card {
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  overflow: hidden;
+  margin-bottom: 30px;
+}
+
+.session-grid {
+  display: flex;
+}
+
+.left-column,
+.right-column {
+  flex: 1;
+  padding: 20px;
+}
+
+.left-column {
+  border-right: 1px solid #ddd;
+}
+
+.info-row {
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+}
+
+.label {
+  font-weight: bold;
+  color: #555;
+  width: 160px;
+}
+
+.status-active {
+  background-color: #d7f3ea;
+  color: #4ca389;
+  padding: 3px 10px;
+  border-radius: 3px;
+  font-size: 14px;
+}
+
+.score-card {
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  overflow: hidden;
+  margin-bottom: 30px;
+}
+
+.score-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.score-table th,
+.score-table td {
+  padding: 12px 15px;
+  text-align: center;
+  border-bottom: 1px solid #ddd;
+}
+
+.score-table th {
+  background-color: #f9f9f9;
+  font-weight: bold;
+  color: #333;
+}
+
+.score-table tbody tr:hover {
+  background-color: #f5f5f5;
+}
+
+.writing-assessment {
+  margin-bottom: 30px;
+  border: none;
+  padding: 0;
+}
+
+.assessment-header-container {
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.assessment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.assessment-subtitle {
+  color: #999;
+  font-size: 14px;
+  margin-top: 5px;
+  margin-bottom: 0;
+}
+
+.total-score {
+  display: flex;
+  align-items: center;
+}
+
+.score-box {
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 5px 15px;
+  margin-left: 10px;
+  font-weight: bold;
+}
+
+.part-section {
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 20px;
+}
+
+.part-section h3 {
+  text-align: center;
+  margin-bottom: 15px;
+  font-size: 18px;
+}
+
+.instructions {
+  background-color: #f0f4f8;
+  border: 1px solid #d0d9e2;
+  padding: 15px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  margin-left: 5px;
+  margin-right: 558px;
+}
+
+.note {
+  margin-top: 10px;
+  font-style: italic;
+  font-size: 14px;
+}
+
+.question-block {
+  margin-bottom: 20px;
+  display: flex;
+  gap: 5px;
+}
+
+.question-container {
+  flex: 1;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.question {
+  background-color: #e0e0e0;
+  padding: 10px;
+  font-weight: bold;
+  border-bottom: 1px solid #ddd;
+  margin-bottom: 0;
+  border-radius: 0;
+}
+
+.answer-content {
+  padding: 15px;
+}
+
+.comment-container {
+  flex: 1;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.comment-label {
+  background-color: #e0e0e0;
+  padding: 10px;
+  font-weight: bold;
+  border-bottom: 1px solid #ddd;
+  margin-bottom: 0;
+  border-radius: 0;
+}
+
+.comment-content {
+  min-height: 70px;
+  padding: 15px;
+  border: none;
+}
+
+.answer-label {
+  font-weight: bold;
+  padding: 15px 15px 0 15px;
+}
+
+.details-card,
+.score-card,
+.score-box,
+.writing-assessment,
+.part-section,
+.instructions,
+.answer-box,
+.comment-box,
+.status-active {
+  border-radius: 5px;
+}

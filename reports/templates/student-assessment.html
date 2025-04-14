@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>University of Greenwich - Student Assessment</title>
+    <link rel="stylesheet" href="../styles/report-style.css" />
+  </head>
+
+  <body>
+    <div class="container">
+      <header>
+        <div class="header-content">
+          <div class="logo-section">
+            <img
+              src="logoUniversity.png"
+              alt="University of Greenwich Logo"
+              class="logo"
+            />
+          </div>
+          <div class="student-info">
+            <h1>{{studentName}}</h1>
+            <p>STUDENT</p>
+          </div>
+        </div>
+      </header>
+
+      <section class="session-details">
+        <h2>Session details</h2>
+        <div class="details-card">
+          <div class="session-grid">
+            <div class="left-column">
+              <div class="info-row">
+                <span class="label">Class Name:</span>
+                <span class="value">{{className}}</span>
+              </div>
+              <div class="info-row">
+                <span class="label">Class Key:</span>
+                <span class="value">{{classKey}}</span>
+              </div>
+              <div class="info-row">
+                <span class="label">Status:</span>
+                <span class="value"
+                  ><span class="status-active">{{status}}</span></span
+                >
+              </div>
+            </div>
+            <div class="right-column">
+              <div class="info-row">
+                <span class="label">Start date:</span>
+                <span class="value">{{startDate}}</span>
+              </div>
+              <div class="info-row">
+                <span class="label">End date:</span>
+                <span class="value">{{endDate}}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="all-score">
+        <h2>All Score</h2>
+        <div class="score-card">
+          <table class="score-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Session name</th>
+                <th>Grammar & Vocab</th>
+                <th>Listening</th>
+                <th>Reading</th>
+                <th>Speaking</th>
+                <th>Writing</th>
+                <th>Total</th>
+                <th>Level</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>{{Date}}</td>
+                <td>{{sessionName}}</td>
+                <td>{{Grammar&Vocab}} | {{Grammar&VocabLevel}}</td>
+                <td>{{Listening}} | {{ListeningLevel}}</td>
+                <td>{{Reading}} | {{ReadingLevel}}</td>
+                <td>{{Speaking}} | {{SpeakingLevel}}</td>
+                <td>{{Writing}} | {{WritingLevel}}</td>
+                <td>{{Total}}</td>
+                <td>{{Level}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="writing-assessment">
+        <div class="assessment-header-container">
+          <div class="assessment-header">
+            <h2>Writing Assessment Part</h2>
+            <div class="total-score">
+              <span>Total Score:</span>
+              <span class="score-box">40</span>
+            </div>
+          </div>
+          <p class="assessment-subtitle">
+            Detailed breakdown in the writing assessment
+          </p>
+        </div>
+
+        <div class="part-section">
+          <h3>Part 1</h3>
+          <div class="instructions">
+            <p>
+              Part 1. You want to join the Museum club. You have 5 messages from
+              a member of the club. Write short answers (1-5 words) to each
+              message. Recommended time: 3 minutes. [1 point]
+            </p>
+            <p class="note">
+              * You're allowed to write up to 10 words without affecting your
+              grade.
+            </p>
+          </div>
+
+          <div class="question-block">
+            <div class="question-container">
+              <div class="question">Question 1: Are you interested in art?</div>
+              <p class="answer-label">Student Answer:</p>
+              <p class="answer-content">
+                Yes, I love paintings. They are beautiful and inspiring. I often
+                visit art galleries. It makes me feel creative.
+              </p>
+            </div>
+            <div class="comment-container">
+              <div class="comment-label">Comment</div>
+              <div class="comment-content"></div>
+            </div>
+          </div>
+
+          <div class="question-block">
+            <div class="question-container">
+              <div class="question">Question 1: Are you interested in art?</div>
+              <p class="answer-label">Student Answer:</p>
+              <p class="answer-content">
+                Yes, I love paintings. They are beautiful and inspiring. I often
+                visit art galleries. It makes me feel creative.
+              </p>
+            </div>
+            <div class="comment-container">
+              <div class="comment-label">Comment</div>
+              <div class="comment-content"></div>
+            </div>
+          </div>
+
+          <div class="question-block">
+            <div class="question-container">
+              <div class="question">Question 1: Are you interested in art?</div>
+              <p class="answer-label">Student Answer:</p>
+              <p class="answer-content">
+                Yes, I love paintings. They are beautiful and inspiring. I often
+                visit art galleries. It makes me feel creative.
+              </p>
+            </div>
+            <div class="comment-container">
+              <div class="comment-label">Comment</div>
+              <div class="comment-content"></div>
+            </div>
+          </div>
+
+          <div class="question-block">
+            <div class="question-container">
+              <div class="question">Question 1: Are you interested in art?</div>
+              <p class="answer-label">Student Answer:</p>
+              <p class="answer-content">
+                Yes, I love paintings. They are beautiful and inspiring. I often
+                visit art galleries. It makes me feel creative.
+              </p>
+            </div>
+            <div class="comment-container">
+              <div class="comment-label">Comment</div>
+              <div class="comment-content"></div>
+            </div>
+          </div>
+
+          <div class="question-block">
+            <div class="question-container">
+              <div class="question">Question 1: Are you interested in art?</div>
+              <p class="answer-label">Student Answer:</p>
+              <p class="answer-content">
+                Yes, I love paintings. They are beautiful and inspiring. I often
+                visit art galleries. It makes me feel creative.
+              </p>
+            </div>
+            <div class="comment-container">
+              <div class="comment-label">Comment</div>
+              <div class="comment-content"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </body>
+</html>
