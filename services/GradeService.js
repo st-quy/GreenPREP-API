@@ -211,12 +211,6 @@ async function calculatePoints(req) {
       }
     );
 
-    console.log("Check data ::::", {
-      sessionParticipantId: sessionParticipant.ID,
-      StudentID: sessionParticipant.UserID,
-      TopicID: sessionParticipant.Session.examSet,
-      SessionID: sessionParticipant.SessionID,
-    });
     const answers = await StudentAnswer.findAll({
       where: {
         StudentID: sessionParticipant.UserID,
