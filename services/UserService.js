@@ -64,7 +64,24 @@ async function registerUser(data) {
       data: userWithoutPassword,
     };
   } catch (error) {
-    throw new Error(`Registration failed: ${error.message}`);
+    if (error.name === 'SequelizeUniqueConstraintError') {
+      const messages = error.errors.map((err) => {
+        switch (err.path) {
+          case 'email':
+            return 'Email is existed.';
+          case 'phone':
+            return 'Phone is existed.';
+          case 'studentCode':
+            return 'Student Code is existed.';
+          case 'teacherCode':
+            return 'Teacher Code is existed.';
+          default:
+            return `${err.path} is existed.`;
+        }
+      });
+      
+      return res.status(400).json({ errors: messages });
+
   }
 }
 
