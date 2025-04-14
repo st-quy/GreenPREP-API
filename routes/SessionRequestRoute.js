@@ -93,8 +93,6 @@ const {
  *             properties:
  *               sessionKey:
  *                 type: string
- *               sessionId:
- *                 type: string
  *               UserID:
  *                 type: string
  *     responses:
@@ -165,6 +163,12 @@ router.get("/:sessionId", getAllSessionRequests);
  *           type: string
  *         required: true
  *         description: The student ID
+ *       - in: query
+ *         name: requestId
+ *         schema:
+ *           type: string
+ *         required: false
+ *         description: The request ID
  *     responses:
  *       200:
  *         description: Session request details
@@ -176,7 +180,6 @@ router.get("/:sessionId", getAllSessionRequests);
  *         description: Server error
  */
 router.get("/:sessionId/student/:studentId", getSessionRequestByStudentId);
-
 /**
  * @swagger
  * /session-requests/{sessionId}/approve:

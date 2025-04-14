@@ -42,7 +42,52 @@ const getAllSessionParticipantsGroupedByUser = async (req, res) => {
   }
 };
 
+const publishScoresBySessionId = async (req, res) => {
+  try {
+    const updatedCount =
+      await SessionParticipantService.publishScoresBySessionId(req);
+
+    return res.status(updatedCount.status).json({
+      message: updatedCount.message,
+    });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: "Server error while updating scores." });
+  }
+};
+
+const getPublishedSessionParticipantsByUserId = async (req, res) => {
+  try {
+    const result =
+      await SessionParticipantService.getPublishedSessionParticipantsByUserId(
+        req
+      );
+
+    return res.status(result.status).json(result);
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message || "Server error while retrieving participants.",
+    });
+  }
+};
+
+const updateParticipantLevelById = async (req, res) => {
+  try {
+    const result = await SessionParticipantService.updateLevelById(req);
+    return res.status(result.status).json(result);
+  } catch (error) {
+    return res.status(500).json({
+      status: 500,
+      message: "Internal server error",
+    });
+  }
+};
+
 module.exports = {
+  updateParticipantLevelById,
+  getPublishedSessionParticipantsByUserId,
+  publishScoresBySessionId,
   getAllParticipants,
   getParticipantsByUserId,
   getAllSessionParticipantsGroupedByUser,

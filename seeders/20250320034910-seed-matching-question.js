@@ -76,7 +76,7 @@ module.exports = {
         ID: uuidv4(),
         Type: "matching",
         Content: "Match the words with their synonyms.",
-        AnswerContent: JSON.stringify([
+        AnswerContent: JSON.stringify(
           {
             title:
               "Select a word from the list that has the most similar meaning to the following words.",
@@ -94,7 +94,7 @@ module.exports = {
               "object",
               "follow",
             ],
-            correctAnswers: [
+            correctAnswer: [
               { left: "complain", right: "object" },
               { left: "copy", right: "duplicate" },
               { left: "cut", right: "slice" },
@@ -102,7 +102,7 @@ module.exports = {
               { left: "disagree", right: "argue" },
             ],
           },
-        ]),
+        ),
         PartID: partId,
         SkillID: skillId,
         createdAt: new Date(),
@@ -112,7 +112,7 @@ module.exports = {
         ID: uuidv4(),
         Type: "matching",
         Content: "Complete each definition using a word from the list.",
-        AnswerContent: JSON.stringify([
+        AnswerContent: JSON.stringify(
           {
             leftItems: [
               "To place in the ground, cover up or hide is to",
@@ -133,7 +133,7 @@ module.exports = {
               "blame",
               "bear",
             ],
-            correctAnswers: [
+            correctAnswer: [
               {
                 left: "To place in the ground, cover up or hide is to",
                 right: "bury",
@@ -150,7 +150,7 @@ module.exports = {
               },
             ],
           },
-        ]),
+        ),
         PartID: partId,
         SkillID: skillId,
         createdAt: new Date(),
@@ -160,7 +160,7 @@ module.exports = {
         ID: uuidv4(),
         Type: "matching",
         Content: "Complete each sentence using a word from the list.",
-        AnswerContent: JSON.stringify([
+        AnswerContent: JSON.stringify(
           {
             leftItems: [
               "The witness's testimony was ____ and helped to build the case.",
@@ -181,7 +181,7 @@ module.exports = {
               "careless",
               "credible",
             ],
-            correctAnswers: [
+            correctAnswer: [
               {
                 left: "The witness's testimony was ____ and helped to build the case.",
                 right: "credible",
@@ -204,7 +204,7 @@ module.exports = {
               },
             ],
           },
-        ]),
+        ),
         PartID: partId,
         SkillID: skillId,
         createdAt: new Date(),
@@ -215,7 +215,7 @@ module.exports = {
         Type: "matching",
         Content:
           "Select a word from the list that has the most similar meaning to the following words.",
-        AnswerContent: JSON.stringify([
+        AnswerContent: JSON.stringify(
           {
             leftItems: ["shore", "beginner", "child", "competition", "hatred"],
             rightItems: [
@@ -230,7 +230,7 @@ module.exports = {
               "disgust",
               "courage",
             ],
-            correctAnswers: [
+            correctAnswer: [
               { left: "shore", right: "coast" },
               { left: "beginner", right: "learner" },
               { left: "child", right: "toddler" },
@@ -238,7 +238,7 @@ module.exports = {
               { left: "hatred", right: "disgust" },
             ],
           },
-        ]),
+        ),
         PartID: partId,
         SkillID: skillId,
         createdAt: new Date(),
@@ -249,7 +249,7 @@ module.exports = {
         Type: "matching",
         Content:
           "Select a word from the list that is most often used with the following words.",
-        AnswerContent: JSON.stringify([
+        AnswerContent: JSON.stringify(
           {
             leftItems: [
               "detention +",
@@ -270,7 +270,7 @@ module.exports = {
               "claim",
               "center",
             ],
-            correctAnswers: [
+            correctAnswer: [
               { left: "detention +", right: "center" },
               { left: "black +", right: "list" },
               { left: "baggage +", right: "claim" },
@@ -278,7 +278,7 @@ module.exports = {
               { left: "driving +", right: "license" },
             ],
           },
-        ]),
+        ),
         PartID: partId,
         SkillID: skillId,
         createdAt: new Date(),

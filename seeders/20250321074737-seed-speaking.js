@@ -101,7 +101,6 @@ module.exports = {
       }
     }
 
-    // Danh sách 25 câu hỏi multiple-choice
     const questions = [
       {
         content: "Describe your journey here today.",
@@ -110,7 +109,7 @@ module.exports = {
         correctAnswer: null,
         partID: partIds["PART 1"],
         type: "speaking",
-        imageKeys: [""],
+        imageKeys: null,
       },
       {
         content: "Tell me about your favourite season.",
@@ -119,7 +118,7 @@ module.exports = {
         correctAnswer: null,
         partID: partIds["PART 1"],
         type: "speaking",
-        imageKeys: [""],
+        imageKeys: null,
       },
       {
         content: "Describe a typical meal of your country.",
@@ -128,7 +127,7 @@ module.exports = {
         correctAnswer: null,
         partID: partIds["PART 1"],
         type: "speaking",
-        imageKeys: [""],
+        imageKeys: null,
       },
       {
         content: "Describe the picture",

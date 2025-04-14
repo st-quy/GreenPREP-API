@@ -1,4 +1,4 @@
-const { Session, SessionParticipant, Class } = require("../models");
+const { Session, SessionParticipant, Class, Topic } = require("../models");
 
 async function getAllSessions(req) {
   try {
@@ -7,6 +7,10 @@ async function getAllSessions(req) {
         {
           model: Class,
           as: "Classes",
+        },
+        {
+          model: Topic,
+          as: "Topic",
         },
       ],
     });
@@ -58,8 +62,8 @@ async function getSessionByClass(req) {
 
 async function createSession(req) {
   try {
-    const { sessionName, sessionKey, startTime, endTime, examSet } = req.body;
-    const { classId } = req.query;
+    const { sessionName, sessionKey, startTime, endTime, examSet, ClassID } =
+      req.body;
 
     const sessionData = {
       sessionName,
@@ -67,7 +71,7 @@ async function createSession(req) {
       startTime,
       endTime,
       examSet,
-      ClassID: classId,
+      ClassID,
     };
     const newSession = await Session.create(sessionData);
     return {
@@ -118,6 +122,10 @@ async function getSessionDetailById(req) {
         {
           model: Class,
           as: "Classes",
+        },
+        {
+          model: Topic,
+          as: "Topic",
         },
       ],
     });

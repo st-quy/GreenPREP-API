@@ -17,22 +17,32 @@ const SessionParticipantController = require("../controller/SessionParticipantCo
  *           type: integer
  *           nullable: true
  *           description: Score for grammar and vocabulary
+ *         GrammarVocabLevel:
+ *           type: string
  *         Reading:
  *           type: integer
  *           nullable: true
  *           description: Score for reading
+ *         ReadingLevel:
+ *           type: string
  *         Listening:
  *           type: integer
  *           nullable: true
  *           description: Score for listening
+ *         ListeningLevel:
+ *           type: string
  *         Speaking:
  *           type: integer
  *           nullable: true
  *           description: Score for speaking
+ *         SpeakingLevel:
+ *           type: string
  *         Writing:
  *           type: integer
  *           nullable: true
  *           description: Score for writing
+ *         WritingLevel:
+ *           type: string
  *         Total:
  *           type: integer
  *           nullable: true
@@ -109,16 +119,59 @@ router.get(
  *           format: uuid
  *         required: true
  *         description: ID of the session to retrieve participants for
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *         description: Page number
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           default: 10
+ *         description: Number of items per page
  *     responses:
  *       200:
  *         description: A list of session participants
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/ApiResponseForSessionParticipantArray'
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: integer
+ *                   example: 200
+ *                 data:
+ *                   $ref: '#/components/schemas/ApiResponseForSessionParticipantArray'
+ *                 pagination:
+ *                   type: object
+ *                   properties:
+ *                     currentPage:
+ *                       type: integer
+ *                       example: 1
+ *                     pageSize:
+ *                       type: integer
+ *                       example: 10
+ *                     pageCount:
+ *                       type: integer
+ *                       example: 5
+ *                     totalItemPage:
+ *                       type: integer
+ *                       example: 10
+ *                     totalItems:
+ *                       type: integer
+ *                       example: 50
+ *       400:
+ *         description: Bad Request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
  *       500:
  *         $ref: '#/components/responses/ErrorResponse'
  */
+
 router.get("/:sessionId", SessionParticipantController.getAllParticipants);
 
 /**
@@ -144,6 +197,209 @@ router.get("/:sessionId", SessionParticipantController.getAllParticipants);
 router.get(
   "/group-by-user",
   SessionParticipantController.getAllSessionParticipantsGroupedByUser
+);
+
+/**
+ * @swagger
+ * /api/session-participants/{sessionId}/publish:
+ *   put:
+ *     summary: Publish scores for all participants in a session
+ *     description: Marks all SessionParticipants in the specified session as published. Returns 404 if no records were updated.
+ *     tags:
+ *       - SessionParticipants
+ *     parameters:
+ *       - in: path
+ *         name: sessionId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         description: The ID of the session to publish scores for
+ *     responses:
+ *       200:
+ *         description: Scores published successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Scores published successfully.
+ *                 data:
+ *                   type: integer
+ *                   example: 3
+ *       404:
+ *         description: No records updated - Possibly invalid SessionID
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: No records updated. Possibly invalid SessionID.
+ *                 data:
+ *                   type: integer
+ *                   example: 0
+ *       400:
+ *         description: Bad Request - Missing sessionId
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: sessionId is required
+ *       500:
+ *         description: Internal Server Error while updating scores
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Server error while updating scores.
+ */
+
+router.put(
+  "/:sessionId/publish",
+  SessionParticipantController.publishScoresBySessionId
+);
+
+/**
+ * @swagger
+ * /session-participants:
+ *   get:
+ *     summary: Get published session participants by user ID
+ *     tags:
+ *       - SessionParticipants
+ *     parameters:
+ *       - in: query
+ *         name: publish
+ *         required: true
+ *         schema:
+ *           type: string
+ *           enum: [true]
+ *         description: Must be 'true' to filter published results
+ *       - in: query
+ *         name: userId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         description: The ID of the user
+ *     responses:
+ *       200:
+ *         description: List of published session participants
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Published session participants retrieved successfully.
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/SessionParticipant'
+ *       400:
+ *         description: Bad Request - Missing or invalid parameters
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: publish=true and valid userId are required
+ *       500:
+ *         description: Internal server error
+ */
+
+router.get(
+  "/",
+  SessionParticipantController.getPublishedSessionParticipantsByUserId
+);
+
+/**
+ * @swagger
+ * /api/session-participants/{id}/level:
+ *   put:
+ *     summary: Update CEFR level of a session participant
+ *     tags:
+ *       - SessionParticipants
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID of the session participant
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - newLevel
+ *             properties:
+ *               newLevel:
+ *                 type: string
+ *                 enum: [A1, A2, B1, B2, C1, C2]  # Adjust to match your CEFR_LEVELS
+ *                 description: New CEFR level to assign
+ *     responses:
+ *       200:
+ *         description: Level updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: integer
+ *                   example: 200
+ *                 message:
+ *                   type: string
+ *                   example: Successfully updated level to "A1".
+ *       400:
+ *         description: Invalid input
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: integer
+ *                   example: 400
+ *                 message:
+ *                   type: string
+ *                   example: "Invalid level: B9"
+ *       404:
+ *         description: Participant not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: integer
+ *                   example: 404
+ *                 message:
+ *                   type: string
+ *                   example: No participant found with ID abc-123.
+ *       500:
+ *         description: Internal server error
+ */
+
+router.put(
+  "/:id/level",
+  SessionParticipantController.updateParticipantLevelById
 );
 
 module.exports = router;

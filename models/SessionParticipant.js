@@ -1,4 +1,5 @@
 /**@type {import('./index').Modeling} */
+const { CEFR_LEVELS } = require("../constants/levels");
 module.exports = (sequelize, DataTypes) => {
   const SessionParticipant = sequelize.define("SessionParticipant", {
     ID: {
@@ -7,32 +8,57 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true,
     },
     GrammarVocab: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.FLOAT,
+      allowNull: true,
+    },
+    GrammarVocabLevel: {
+      type: DataTypes.ENUM(...CEFR_LEVELS),
       allowNull: true,
     },
     Reading: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.FLOAT,
+      allowNull: true,
+    },
+    ReadingLevel: {
+      type: DataTypes.ENUM(...CEFR_LEVELS),
       allowNull: true,
     },
     Listening: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.FLOAT,
+      allowNull: true,
+    },
+    ListeningLevel: {
+      type: DataTypes.ENUM(...CEFR_LEVELS),
       allowNull: true,
     },
     Speaking: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.FLOAT,
+      allowNull: true,
+    },
+    SpeakingLevel: {
+      type: DataTypes.ENUM(...CEFR_LEVELS),
       allowNull: true,
     },
     Writing: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.FLOAT,
+      allowNull: true,
+    },
+    WritingLevel: {
+      type: DataTypes.ENUM(...CEFR_LEVELS),
       allowNull: true,
     },
     Total: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.FLOAT,
       allowNull: true,
     },
     Level: {
-      type: DataTypes.ENUM("A1", "A2", "B1", "B2", "C1", "C2"),
+      type: DataTypes.ENUM(...CEFR_LEVELS),
       allowNull: true,
+    },
+    IsPublished: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
     },
     SessionID: {
       type: DataTypes.UUID,

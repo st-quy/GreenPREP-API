@@ -1,4 +1,6 @@
 const { SessionParticipant, Session, User } = require("../models");
+const { CEFR_LEVELS } = require("../constants/levels");
+const sequelizePaginate = require("sequelize-paginate");
 
 async function addParticipant(sessionId, userId) {
   try {
@@ -24,14 +26,26 @@ async function addParticipant(sessionId, userId) {
  */
 async function getAllParticipants(req) {
   try {
+    sequelizePaginate.paginate(SessionParticipant);
     const { sessionId } = req.params;
-    const participants = await SessionParticipant.findAll({
+    const options = {
+      page: req.query.page || 1,
+      paginate: req.query.limit || 10,
       where: { SessionID: sessionId },
       include: ["User"],
-    });
+    };
+    const result = await SessionParticipant.paginate(options);
     return {
       status: 200,
-      data: participants,
+      message: "Participants retrieved successfully",
+      data: result.docs,
+      pagination: {
+        currentPage: parseInt(req.query.page) || 1,
+        pageSize: parseInt(req.query.limit) || 10,
+        itemsOnPage: result.docs.length,
+        totalPages: result.pages,
+        totalItems: result.total,
+      },
     };
   } catch (error) {
     console.error("Error getting participants:", error.message);
@@ -98,7 +112,102 @@ const getParticipantsByUserId = async (userId) => {
   };
 };
 
+const publishScoresBySessionId = async (req) => {
+  const { sessionId } = req.params;
+  if (!sessionId) {
+    throw new Error("sessionId is required");
+  }
+
+  const [updatedCount] = await SessionParticipant.update(
+    { IsPublished: true },
+    { where: { SessionID: sessionId } }
+  );
+
+  if (updatedCount === 0) {
+    return {
+      status: 404,
+      message: "No records updated. Possibly invalid SessionID.",
+      data: updatedCount,
+    };
+  }
+
+  return {
+    status: 200,
+    message: "Scores published successfully.",
+    data: updatedCount,
+  };
+};
+
+const getPublishedSessionParticipantsByUserId = async (req) => {
+  const { publish, userId } = req.query;
+  if (!publish) {
+    throw new Error("Publish parameter is required");
+  }
+  if (publish !== "true") {
+    throw new Error(
+      "Publish must be 'true' to retrieve published participants"
+    );
+  }
+  if (!userId) {
+    throw new Error("UserID is required");
+  }
+  const results = await SessionParticipant.findAll({
+    where: {
+      IsPublished: publish,
+      UserID: userId,
+    },
+  });
+  return {
+    status: 200,
+    message: "Published session participants retrieved successfully.",
+    data: results,
+  };
+};
+
+const updateLevelById = async (req) => {
+  try {
+    const { newLevel } = req.body;
+    const participantId = req.params.id;
+
+    if (!participantId) throw new Error("participantId is required.");
+    if (!newLevel) throw new Error("newLevel is required.");
+
+    if (!CEFR_LEVELS.includes(newLevel)) {
+      throw new Error(
+        `Invalid level: ${newLevel}. Valid levels are: ${CEFR_LEVELS.join(
+          ", "
+        )}`
+      );
+    }
+
+    const [affectedRows] = await SessionParticipant.update(
+      { Level: newLevel },
+      { where: { ID: participantId } }
+    );
+
+    if (affectedRows === 0) {
+      return {
+        status: 404,
+        message: `No participant found with ID ${participantId}.`,
+      };
+    }
+
+    return {
+      status: 200,
+      message: `Successfully updated level to "${newLevel}".`,
+    };
+  } catch (error) {
+    return {
+      status: 500,
+      message: error.message || "Internal server error.",
+    };
+  }
+};
+
 module.exports = {
+  updateLevelById,
+  getPublishedSessionParticipantsByUserId,
+  publishScoresBySessionId,
   addParticipant,
   getAllParticipants,
   getParticipantsByUserId,

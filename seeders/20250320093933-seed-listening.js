@@ -67,7 +67,7 @@ module.exports = {
       {
         content: "PART 3: Opinion Matching (4 questions)",
         subContent:
-          "15. Listen to two people discussing music. Read the opinions below and decide whose opinion matches the statements: the man, the woman, or both the man and the woman.",
+          "Listen to two people discussing music. Read the opinions below and decide whose opinion matches the statements: the man, the woman, or both the man and the woman.",
       },
       {
         content: "PART 4: Inference (2 talks - 4 questions)",
@@ -338,22 +338,22 @@ module.exports = {
           "E. walks with a friend",
           "F. walks with their mother",
         ],
-        correctAnswers: [
+        correctAnswer: [
           {
-            left: "1. Speaker A mainly _____.",
-            right: "D. travels by bus",
+            key: "1. Speaker A mainly _____.",
+            value: "D. travels by bus",
           },
           {
-            left: "2. Speaker B usually _____.",
-            right: "A. travels by car",
+            key: "2. Speaker B usually _____.",
+            value: "A. travels by car",
           },
           {
-            left: "3. Speaker C usually _____.",
-            right: "B. walks alone",
+            key: "3. Speaker C usually _____.",
+            value: "B. walks alone",
           },
           {
-            left: "4. Speaker D primarily _____.",
-            right: "E. walks with a friend",
+            key: "4. Speaker D primarily _____.",
+            value: "E. walks with a friend",
           },
         ],
         partID: partIds["PART 2: Information Matching (4 questions)"],
@@ -363,10 +363,10 @@ module.exports = {
       },
       {
         content:
-          "15. Listen to two people discussing music. Read the opinions below and decide whose opinion matches the statements: the man, the woman, or both the man and the woman.",
+          "Listen to two people discussing music. Read the opinions below and decide whose opinion matches the statements: the man, the woman, or both the man and the woman.",
         groupContent: {
           title:
-            "15. Listen to two people discussing music. Read the opinions below and decide whose opinion matches the statements: the man, the woman, or both the man and the woman.",
+            "Listen to two people discussing music. Read the opinions below and decide whose opinion matches the statements: the man, the woman, or both the man and the woman.",
           audioKey: "",
         },
         leftItems: [
@@ -376,22 +376,22 @@ module.exports = {
           "4. Technology has changed how community forms.",
         ],
         rightItems: ["Man", "Woman", "Both"],
-        correctAnswers: [
+        correctAnswer: [
           {
-            left: "1. Building design can influence people's behavior.",
-            right: "Both",
+            key: "1. Building design can influence people's behavior.",
+            value: "Both",
           },
           {
-            left: "2. Creating community can take time.",
-            right: "Woman",
+            key: "2. Creating community can take time.",
+            value: "Woman",
           },
           {
-            left: "3. Work communities and social communities are the same.",
-            right: "Man",
+            key: "3. Work communities and social communities are the same.",
+            value: "Man",
           },
           {
-            left: "4. Technology has changed how community forms..",
-            right: "Both",
+            key: "4. Technology has changed how community forms..",
+            value: "Both",
           },
         ],
         partID: partIds["PART 3: Opinion Matching (4 questions)"],
@@ -401,10 +401,10 @@ module.exports = {
       },
       {
         content:
-          "16. Monologue 1: Listen to an expert giving a talk about managing financial spending",
+          "Monologue 1: Listen to an expert giving a talk about managing financial spending",
         groupContent: {
           title:
-            "16. Monologue 1: Listen to an expert giving a talk about managing financial spending",
+            "Monologue 1: Listen to an expert giving a talk about managing financial spending",
           audioKey: "",
           listContent: [
             {
@@ -436,16 +436,16 @@ module.exports = {
           ],
         },
         partID: partIds["PART 4: Inference (2 talks - 4 questions)"],
-        type: "multiple-choice",
+        type: "listening-questions-group",
         audioKeys:
           "https://res.cloudinary.com/dlhcg0tcz/video/upload/v1742953612/greenprep/Part%204/1.mp3",
       },
       {
         content:
-          "17. Monologue 2: Listen to an person sharing their opinion about security cameras",
+          "Monologue 2: Listen to an person sharing their opinion about security cameras",
         groupContent: {
           title:
-            "17. Monologue 2: Listen to an person sharing their opinion about security cameras",
+            "Monologue 2: Listen to an person sharing their opinion about security cameras",
           audioKey: "",
           listContent: [
             {
@@ -478,7 +478,7 @@ module.exports = {
           ],
         },
         partID: partIds["PART 4: Inference (2 talks - 4 questions)"],
-        type: "multiple-choice",
+        type: "listening-questions-group",
         audioKeys:
           "https://res.cloudinary.com/dlhcg0tcz/video/upload/v1742953612/greenprep/Part%204/2.mp3",
       },

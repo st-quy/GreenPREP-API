@@ -176,7 +176,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-async function sendResetPasswordEmail(email) {
+async function sendResetPasswordEmail(email, host) {
   try {
     const user = await User.findOne({ where: { email } });
     if (!user) {
@@ -187,7 +187,7 @@ async function sendResetPasswordEmail(email) {
       expiresIn: "15m",
     });
 
-    const resetLink = `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}`;
+    const resetLink = `${host}/reset-password?token=${resetToken}`;
 
     const mailOptions = {
       from: process.env.EMAIL_USER,
@@ -291,6 +291,23 @@ async function getAllUsersByRoleTeacher(req) {
   }
 }
 
+async function deleteUser(userId) {
+  try {
+    const user = await User.findByPk(userId);
+    if (!user) {
+      throw new Error("User not found with ID: " + userId);
+    }
+    const result = await user.destroy();
+
+    return {
+      status: 200,
+      message: "User deleted successfully",
+    };
+  } catch (error) {
+    throw new Error(`Error deleting user: ${error.message}`);
+  }
+}
+
 module.exports = {
   registerUser,
   loginUser,
@@ -301,4 +318,5 @@ module.exports = {
   resetPassword,
   logoutUser,
   getAllUsersByRoleTeacher,
+  deleteUser,
 };

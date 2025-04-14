@@ -1,5 +1,5 @@
 const { SESSION_REQUEST_STATUS } = require("../helpers/constants");
-const { Session, SessionRequest } = require("../models");
+const { Session, SessionRequest, SessionParticipant } = require("../models");
 const { addParticipant } = require("./SessionParticipantService");
 
 /**
@@ -37,9 +37,15 @@ async function getAllSessionRequests(req) {
 async function getSessionRequestByStudentId(req) {
   try {
     const { sessionId, studentId } = req.params;
+    const { requestId } = req.query;
+
     const status = req.query.status;
 
-    const whereClause = { UserID: studentId, SessionID: sessionId };
+    const whereClause = {
+      UserID: studentId,
+      SessionID: sessionId,
+      ID: requestId,
+    };
     if (Object.values(SESSION_REQUEST_STATUS).includes(status)) {
       whereClause.status = status;
     }
@@ -49,6 +55,28 @@ async function getSessionRequestByStudentId(req) {
     });
     if (!sessionRequest) {
       throw new Error("Session request not found");
+    }
+
+    if (sessionRequest.status === SESSION_REQUEST_STATUS.APPROVED) {
+      const sessionParticipant = await SessionParticipant.findOne({
+        where: {
+          UserID: studentId,
+          SessionID: sessionId,
+        },
+      });
+
+      if (!sessionParticipant) {
+        throw new Error(
+          `Session participant with studentId ${studentId} and ${sessionId} not found`
+        );
+      }
+      return {
+        status: 200,
+        data: {
+          sessionParticipant,
+          sessionRequest,
+        },
+      };
     }
     return {
       status: 200,
@@ -66,22 +94,18 @@ async function getSessionRequestByStudentId(req) {
  */
 async function createSessionRequest(req) {
   try {
-    const { UserID, sessionId, sessionKey } = req.body;
+    const { UserID, sessionKey } = req.body;
 
-    const session = await Session.findOne({ where: { ID: sessionId } });
+    const session = await Session.findOne({ where: { sessionKey } });
     if (!session) {
-      throw new Error("Session not found");
-    }
-
-    if (session.sessionKey !== sessionKey) {
-      throw new Error("Invalid session key");
+      throw new Error("Session not found with sessionKey: " + sessionKey);
     }
 
     const checks = await Promise.all(
       [SESSION_REQUEST_STATUS.APPROVED, SESSION_REQUEST_STATUS.PENDING].map(
         (status) =>
           SessionRequest.findOne({
-            where: { UserID: UserID, SessionID: sessionId, status },
+            where: { UserID: UserID, SessionID: session.ID, status },
           })
       )
     );
@@ -92,7 +116,7 @@ async function createSessionRequest(req) {
 
     const sessionRequest = await SessionRequest.create({
       UserID: UserID,
-      SessionID: sessionId,
+      SessionID: session.ID,
     });
 
     return {

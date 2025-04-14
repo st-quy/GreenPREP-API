@@ -10,6 +10,10 @@ async function generateJwtAccess(user) {
     lastName: user.lastName,
     firstName: user.firstName,
     email: user.email,
+    phone: user.phone,
+    class: user.class,
+    studentCode: user.studentCode,
+    teacherCode: user.teacherCode,
   };
   return jwt.sign(payload, JWT_SECRET, { expiresIn: "1d" });
 }

@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-  const StudentAnswer = sequelize.define("StudentAnswer", {
+  const StudentAnswerDraft = sequelize.define("StudentAnswerDraft", {
     ID: {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
@@ -10,14 +10,6 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       references: {
         model: "Users",
-        key: "ID",
-      },
-    },
-    SessionID: {
-      type: DataTypes.UUID,
-      allowNull: false,
-      references: {
-        model: "Sessions",
         key: "ID",
       },
     },
@@ -45,11 +37,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.TEXT,
       allowNull: true,
     },
-    Comment: {
-      type: DataTypes.TEXT,
-      allowNull: true,
-    },
   });
 
-  return StudentAnswer;
+  return StudentAnswerDraft;
 };

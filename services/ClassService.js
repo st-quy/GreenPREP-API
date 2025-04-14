@@ -1,8 +1,26 @@
-const { Class } = require("../models");
+const { Class, sequelize } = require("../models");
 
-async function findAll() {
+async function findAll(teacherId = null) {
   try {
-    const classes = await Class.findAll();
+    const classes = await Class.findAll({
+      where: teacherId ? { UserID: teacherId } : undefined,
+      include: [
+        {
+          association: "Sessions",
+        },
+      ],
+      attributes: {
+        include: [
+          [
+            sequelize.literal(
+              '(SELECT COUNT(*) FROM "Sessions" WHERE "Sessions"."ClassID" = "Classes"."ID")'
+            ),
+            "numberOfSessions",
+          ],
+        ],
+      },
+      order: [["createdAt", "DESC"]], // Add sorting by createdAt in descending order
+    });
     return {
       status: 200,
       message: "Classes fetched successfully",
@@ -15,9 +33,10 @@ async function findAll() {
 
 async function createClass(req) {
   try {
-    const { className } = req.body;
+    const { className, UserID } = req.body;
 
-    const newClass = await Class.create({ className });
+    const newClass = await Class.create({ className, UserID });
+
     return {
       status: 200,
       message: "Class created successfully",
