@@ -81,7 +81,7 @@ async function registerUser(data) {
       });
       
       return res.status(400).json({ errors: messages });
-
+    }
   }
 }
 
