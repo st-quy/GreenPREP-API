@@ -99,7 +99,10 @@ async function createSessionRequest(req) {
 
     const session = await Session.findOne({ where: { sessionKey } });
     if (!session) {
-      throw new Error("Session not found with sessionKey: " + sessionKey);
+      return {
+        status: 400,
+        message: "Session not found with sessionKey: " + sessionKey,
+      };
     }
 
     const checks = await Promise.all(

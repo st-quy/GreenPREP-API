@@ -20,6 +20,14 @@ async function registerUser(data) {
       };
     }
 
+    const userValid = await User.findOne({ where: { email } });
+    if (!userValid) {
+      return {
+        status: 400,
+        message: "Email is already registered",
+      };
+    }
+
     if (phone) {
       const phoneRegex = /^\d{10}$/;
       if (!phoneRegex.test(phone)) {
