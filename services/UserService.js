@@ -281,6 +281,7 @@ async function getAllUsersByRoleTeacher(req) {
       where: whereClause,
       offset,
       limit,
+      order: [["updatedAt", "DESC"]],
     });
 
     return {
