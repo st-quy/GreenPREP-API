@@ -72,7 +72,7 @@ const storage = multer.memoryStorage();
 /**
  * @swagger
  * /users/teachers:
- *   post:
+ *   get:
  *     summary: Get all users with the role of teacher
  *     tags: [User]
  *     requestBody:
@@ -150,7 +150,7 @@ const storage = multer.memoryStorage();
  *       500:
  *         description: Internal server error
  */
-router.post("/teachers", getAllUsersByRoleTeacher);
+router.get("/teachers", getAllUsersByRoleTeacher);
 
 /**
  * @swagger

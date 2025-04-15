@@ -63,6 +63,7 @@ async function getSessionRequestByStudentId(req) {
           UserID: studentId,
           SessionID: sessionId,
         },
+        include: ["Session"],
       });
 
       if (!sessionParticipant) {
@@ -111,7 +112,12 @@ async function createSessionRequest(req) {
     );
 
     if (checks.filter(Boolean).length > 0) {
-      throw new Error("Session request already exists");
+      const existingRequest = checks[1].dataValues;
+      return {
+      status: 400,
+      message: "Session request already exists",
+      data: existingRequest
+      };
     }
 
     const allSessionRequest = await SessionRequest.findAll({
