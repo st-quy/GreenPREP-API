@@ -1,9 +1,5 @@
 const express = require("express");
-const {
-  sendEmailSubmit,
-  getStudentReport,
-} = require("../controller/SendMailController");
-
+const { sendEmailSubmit } = require("../controller/SendMailController");
 const router = express.Router();
 
 /**
@@ -66,7 +62,5 @@ const router = express.Router();
  *         description: Internal Server Error
  */
 router.post("/:userId", sendEmailSubmit);
-
-router.get("/PDF", getStudentReport);
 
 module.exports = router;

@@ -1,6 +1,7 @@
 const { SessionParticipant, Session, User } = require("../models");
 const { CEFR_LEVELS } = require("../constants/levels");
 const sequelizePaginate = require("sequelize-paginate");
+const { generateStudentReportAndSendMail } = require("./ExportPdfService");
 
 async function addParticipant(sessionId, userId) {
   try {
@@ -113,7 +114,13 @@ const getParticipantsByUserId = async (userId) => {
 };
 
 const publishScoresBySessionId = async (req) => {
-  const { sessionId } = req.params;
+  const { studentIds, sessionId } = req.body;
+  if (!Array.isArray(studentIds) || studentIds.length === 0) {
+    return res
+      .status(400)
+      .json({ message: "studentIds must be a non-empty array" });
+  }
+
   if (!sessionId) {
     throw new Error("sessionId is required");
   }
@@ -130,6 +137,8 @@ const publishScoresBySessionId = async (req) => {
       data: updatedCount,
     };
   }
+
+  await generateStudentReportAndSendMail({ req });
 
   return {
     status: 200,
