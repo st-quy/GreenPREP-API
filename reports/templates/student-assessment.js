@@ -1,4 +1,5 @@
-<!DOCTYPE html>
+const Handlebars = require("handlebars");
+const html = ` <!DOCTYPE html>
 <html lang="vi">
   <head>
     <meta charset="UTF-8" />
@@ -274,3 +275,5 @@
     <div>{{{writingSection}}}</div>
   </body>
 </html>
+`;
+module.exports = Handlebars.compile(html);

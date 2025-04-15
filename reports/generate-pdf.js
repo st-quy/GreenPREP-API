@@ -20,15 +20,9 @@ exports.generatePDF = async (
   result
 ) => {
   try {
-    const htmlPath = path.join(
-      __dirname,
-      "templates",
-      "student-assessment.html"
-    );
     const logoPath = path.join(__dirname, "assets", "logo.png");
     const logogreenPrepPath = path.join(__dirname, "assets", "greenPrep.png");
 
-    let html = fs.readFileSync(htmlPath, "utf-8");
     const logo = fs.readFileSync(logoPath);
     const logogreenPrep = fs.readFileSync(logogreenPrepPath);
 
@@ -36,7 +30,7 @@ exports.generatePDF = async (
     const logogreenPrepBase64 = `data:image/png;base64,${logogreenPrep.toString(
       "base64"
     )}`;
-    const template = Handlebars.compile(html);
+    const template = require("./templates/student-assessment.js");
     const writingHTML = generateWritingSection(result, sessionParticipant);
     const speakingHTML = generateSpeakingSection(result, sessionParticipant);
 
@@ -88,6 +82,6 @@ exports.generatePDF = async (
     return pdfBuffer;
   } catch (error) {
     console.error("❌ Lỗi khi tạo PDF:", error);
-    throw error; // ném lỗi ra ngoài nếu muốn xử lý tiếp ở controller/service
+    throw error; 
   }
 };
