@@ -108,7 +108,7 @@ const generateStudentReportAndSendMail = async ({ req }) => {
               questions: [],
             };
           }
-          
+
           result[Type][PartID].questions.push({
             QuestionID: ID,
             ContentQuestion: Content,

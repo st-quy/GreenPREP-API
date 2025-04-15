@@ -181,11 +181,11 @@
   <body>
     <div class="header">
       <img
-        src="greenPrep.png"
+        src="{{greenPrep}}"
         alt="University of Greenwich Logo"
         class="logo logo-right"
       />
-      <img src="logo.png" alt="GreenPREP Logo" class="logo logo-left" />
+      <img src="{{logo}}" alt="GreenPREP Logo" class="logo logo-left" />
     </div>
 
     <div class="student-name">
@@ -246,7 +246,7 @@
       <div class="score-grid">
         <div class="info-item">
           <span class="label">Grammar & Vocab:</span>
-          <span>{{Grammar&Vocab}} | {{Grammar&VocabLevel}} </span>
+          <span>{{GrammarAndVocab}} | {{GrammarAndVocabLevel}} </span>
         </div>
         <div class="info-item">
           <span class="label">Listening:</span>
@@ -270,7 +270,7 @@
         </div>
       </div>
     </div>
-    <div>{{speakingSection}}</div>
-    <div>{{writingSection}}</div>
+    <div>{{{speakingSection}}}</div>
+    <div>{{{writingSection}}}</div>
   </body>
 </html>
