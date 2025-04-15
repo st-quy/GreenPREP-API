@@ -9,49 +9,32 @@ const { Op } = require("sequelize");
 // Logic for user registration
 async function registerUser(data) {
   try {
-    const { email, password, studentCode, teacherCode, phone } = data;
+    const { email, password, teacherCode, phone } = data;
 
     // Validate email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      throw new Error(`Invalid email format: ${email}`);
-    }
-
-    const existingUser = await User.findOne({ where: { email } });
-    if (existingUser) {
-      throw new Error("Email already exists");
-    }
-
-    if (studentCode) {
-      const existingStudentCode = await User.findOne({
-        where: { studentCode },
-      });
-      if (existingStudentCode) {
-        throw new Error("Student code already exists");
-      }
-    }
-
-    if (teacherCode) {
-      const existingTeacherCode = await User.findOne({
-        where: { teacherCode },
-      });
-      if (existingTeacherCode) {
-        throw new Error("Teacher code already exists");
-      }
+      return {
+        status: 400,
+        message: `Invalid email format: ${email}`,
+      };
     }
 
     if (phone) {
       const phoneRegex = /^\d{10}$/;
       if (!phoneRegex.test(phone)) {
-        throw new Error(`Invalid phone format: ${phone}`);
+        return {
+          status: 400,
+          message: `Invalid phone format: ${phone}`,
+        };
       }
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = await User.create({
       ...data,
-      phone: data.phone ? String(data.phone) : null,
-      teacherCode: data.teacherCode ? String(teacherCode) : null,
+      phone: phone ? String(phone) : null,
+      teacherCode: teacherCode ? String(teacherCode) : null,
       password: hashedPassword,
     });
     await newUser.save();
@@ -64,27 +47,34 @@ async function registerUser(data) {
       data: userWithoutPassword,
     };
   } catch (error) {
-    if (error.name === 'SequelizeUniqueConstraintError') {
+    if (error.name === "SequelizeUniqueConstraintError") {
       const messages = error.errors.map((err) => {
         switch (err.path) {
-          case 'email':
-            return 'Email is existed.';
-          case 'phone':
-            return 'Phone is existed.';
-          case 'studentCode':
-            return 'Student Code is existed.';
-          case 'teacherCode':
-            return 'Teacher Code is existed.';
+          case "email":
+            return "Email already exists";
+          case "phone":
+            return "Phone already exists";
+          case "studentCode":
+            return "Student Code already exists";
+          case "teacherCode":
+            return "Teacher Code already exists";
           default:
-            return `${err.path} is existed.`;
+            return `${err.path} already exists`;
         }
       });
       return {
         status: 400,
         message: "Validation Error",
         errors: messages,
-      }
+      };
     }
+
+    // ❗ Catch all other unexpected errors
+    return {
+      status: 500,
+      message: "Internal Server Error",
+      error: error.message,
+    };
   }
 }
 
