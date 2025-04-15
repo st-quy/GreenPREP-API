@@ -63,6 +63,7 @@ async function getSessionRequestByStudentId(req) {
           UserID: studentId,
           SessionID: sessionId,
         },
+        include: ["Session"],
       });
 
       if (!sessionParticipant) {
