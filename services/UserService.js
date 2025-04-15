@@ -21,7 +21,7 @@ async function registerUser(data) {
     }
 
     const userValid = await User.findOne({ where: { email } });
-    if (!userValid) {
+    if (userValid) {
       return {
         status: 400,
         message: "Email is already registered",
