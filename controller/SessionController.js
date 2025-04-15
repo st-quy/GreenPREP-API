@@ -1,3 +1,4 @@
+const { Session } = require("../models");
 const SessionsService = require("../services/SessionService");
 
 async function getAllSessions(req, res) {
@@ -54,14 +55,30 @@ async function removeSession(req, res) {
   }
 }
 
-function generateSessionKey(req, res) {
+async function generateSessionKey(req, res) {
   try {
     const characters =
       "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    let key = "";
-    for (let i = 0; i < 10; i++) {
-      key += characters.charAt(Math.floor(Math.random() * characters.length));
+
+    let key;
+    let isUnique = false;
+
+    // Loop until a unique key is found
+    while (!isUnique) {
+      key = "";
+      for (let i = 0; i < 10; i++) {
+        key += characters.charAt(Math.floor(Math.random() * characters.length));
+      }
+
+      // Check DB for existing key
+      const existingSession = await Session.findOne({
+        where: { sessionKey: key },
+      });
+      if (!existingSession) {
+        isUnique = true;
+      }
     }
+
     return res.status(200).json({ key });
   } catch (error) {
     return res.status(500).json({ error: error.message });

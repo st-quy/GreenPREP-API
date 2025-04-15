@@ -41,11 +41,39 @@ async function storeStudentAnswers(req) {
     })
   );
 
+  const questionIDs = studentAnswers.map((a) => a.QuestionID);
+
+  const existing = await StudentAnswer.findOne({
+    where: {
+      StudentID: studentId,
+      SessionID: sessionId,
+      QuestionID: questionIDs,
+    },
+  });
+
   try {
-    // Save all student answers at once
-    const savedAnswers = await StudentAnswer.bulkCreate(studentAnswers, {
-      ignoreDuplicates: true,
-    });
+    let savedAnswers = [];
+    if (existing) {
+      await Promise.all(
+        studentAnswers.map((answer) =>
+          StudentAnswer.update(
+            {
+              AnswerText: answer.AnswerText,
+              AnswerAudio: answer.AnswerAudio,
+            },
+            {
+              where: {
+                StudentID: answer.StudentID,
+                SessionID: answer.SessionID,
+                QuestionID: answer.QuestionID,
+              },
+            }
+          )
+        )
+      );
+    } else {
+      savedAnswers = await StudentAnswer.bulkCreate(studentAnswers);
+    }
 
     // Then calculate points based on the answers
     if (skillName === "WRITING" || skillName === "SPEAKING") {

@@ -406,7 +406,11 @@ async function calculatePointForWritingAndSpeaking(req) {
       };
     }
 
-    if (typeof teacherGradedScore !== "number" || teacherGradedScore < 0) {
+    if (
+      typeof teacherGradedScore !== "number" ||
+      teacherGradedScore < 0 ||
+      teacherGradedScore > 50
+    ) {
       return {
         status: 400,
         message: "Invalid teacher graded score",
@@ -420,16 +424,10 @@ async function calculatePointForWritingAndSpeaking(req) {
         }
       });
 
-      const studentAnswerData = studentAnswers.filter(
-        ({ messageContent }) =>
-          messageContent !== null &&
-          messageContent !== undefined &&
-          messageContent.trim() !== ""
-      );
       await Promise.all(
-        studentAnswerData.map(({ studentAnswerId, messageContent }) =>
+        studentAnswers.map(({ studentAnswerId, messageContent }) =>
           StudentAnswer.update(
-            { Comment: messageContent },
+            { Comment: messageContent ?? "" },
             { where: { ID: studentAnswerId } }
           )
         )

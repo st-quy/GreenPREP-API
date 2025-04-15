@@ -258,20 +258,29 @@ async function logoutUser(userId) {
 
 async function getAllUsersByRoleTeacher(req) {
   try {
-    const { page = 1, limit = 10, search = "", status } = req.body;
+    const { page = 1, limit = 10, search = "", status } = req.query;
 
-    const offset = (page - 1) * limit;
+    const offset = (parseInt(page) - 1) * parseInt(limit);
+    const searchTerms = search
+      .trim()
+      .split(" ")
+      .filter((term) => term);
 
     const whereClause = {
       roleIDs: {
         [Op.contains]: ["teacher"],
       },
-      [Op.or]: [
-        { lastName: { [Op.iLike]: `%${search}%` } },
-        { firstName: { [Op.iLike]: `%${search}%` } },
-        { teacherCode: { [Op.iLike]: `%${search}%` } },
-      ],
     };
+
+    if (searchTerms.length > 0) {
+      whereClause[Op.and] = searchTerms.map((term) => ({
+        [Op.or]: [
+          { lastName: { [Op.iLike]: `%${term}%` } },
+          { firstName: { [Op.iLike]: `%${term}%` } },
+          { teacherCode: { [Op.iLike]: `%${term}%` } },
+        ],
+      }));
+    }
 
     if (status !== undefined) {
       whereClause.status = status;
@@ -280,7 +289,8 @@ async function getAllUsersByRoleTeacher(req) {
     const { rows: teachers, count: total } = await User.findAndCountAll({
       where: whereClause,
       offset,
-      limit,
+      limit: parseInt(limit),
+      order: [["updatedAt", "DESC"]],
     });
 
     return {
@@ -290,9 +300,9 @@ async function getAllUsersByRoleTeacher(req) {
         teachers,
         pagination: {
           total,
-          page,
-          limit,
-          totalPages: Math.ceil(total / limit),
+          page: parseInt(page),
+          limit: parseInt(limit),
+          totalPages: Math.ceil(total / parseInt(limit)),
         },
       },
     };

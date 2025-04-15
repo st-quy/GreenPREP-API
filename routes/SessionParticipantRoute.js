@@ -198,23 +198,26 @@ router.get(
   "/group-by-user",
   SessionParticipantController.getAllSessionParticipantsGroupedByUser
 );
-
 /**
  * @swagger
- * /api/session-participants/{sessionId}/publish:
+ * /api/session-participants/publish-scores:
  *   put:
- *     summary: Publish scores for all participants in a session
- *     description: Marks all SessionParticipants in the specified session as published. Returns 404 if no records were updated.
+ *     summary: Publish scores for specified participants in a session
+ *     description: Marks the specified SessionParticipants as published. Returns 404 if no records were updated.
  *     tags:
  *       - SessionParticipants
- *     parameters:
- *       - in: path
- *         name: sessionId
- *         required: true
- *         schema:
- *           type: string
- *           format: uuid
- *         description: The ID of the session to publish scores for
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               sessionId:
+ *                 type: string
+ *                 format: uuid
+ *                 description: The ID of the session to publish scores for
+ *                 example: "12bd21ef-b6d8-4991-b9ee-69160ce8fd09"
  *     responses:
  *       200:
  *         description: Scores published successfully
@@ -226,11 +229,8 @@ router.get(
  *                 message:
  *                   type: string
  *                   example: Scores published successfully.
- *                 data:
- *                   type: integer
- *                   example: 3
  *       404:
- *         description: No records updated - Possibly invalid SessionID
+ *         description: No records updated - Possibly invalid SessionID or StudentIDs
  *         content:
  *           application/json:
  *             schema:
@@ -238,12 +238,12 @@ router.get(
  *               properties:
  *                 message:
  *                   type: string
- *                   example: No records updated. Possibly invalid SessionID.
+ *                   example: No records updated. Possibly invalid SessionID or StudentIDs.
  *                 data:
  *                   type: integer
  *                   example: 0
  *       400:
- *         description: Bad Request - Missing sessionId
+ *         description: Bad Request - Missing required fields
  *         content:
  *           application/json:
  *             schema:
@@ -251,7 +251,7 @@ router.get(
  *               properties:
  *                 message:
  *                   type: string
- *                   example: sessionId is required
+ *                   example: sessionId are required
  *       500:
  *         description: Internal Server Error while updating scores
  *         content:
@@ -265,64 +265,8 @@ router.get(
  */
 
 router.put(
-  "/:sessionId/publish",
+  "/publish-scores",
   SessionParticipantController.publishScoresBySessionId
-);
-
-/**
- * @swagger
- * /session-participants:
- *   get:
- *     summary: Get published session participants by user ID
- *     tags:
- *       - SessionParticipants
- *     parameters:
- *       - in: query
- *         name: publish
- *         required: true
- *         schema:
- *           type: string
- *           enum: [true]
- *         description: Must be 'true' to filter published results
- *       - in: query
- *         name: userId
- *         required: true
- *         schema:
- *           type: string
- *           format: uuid
- *         description: The ID of the user
- *     responses:
- *       200:
- *         description: List of published session participants
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: Published session participants retrieved successfully.
- *                 data:
- *                   type: array
- *                   items:
- *                     $ref: '#/components/schemas/SessionParticipant'
- *       400:
- *         description: Bad Request - Missing or invalid parameters
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: publish=true and valid userId are required
- *       500:
- *         description: Internal server error
- */
-
-router.get(
-  "/",
-  SessionParticipantController.getPublishedSessionParticipantsByUserId
 );
 
 /**
