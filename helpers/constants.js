@@ -14,6 +14,6 @@ module.exports = {
   pointsPerQuestion: {
     listening: 2,
     GrammarVocab: 1,
-    reading: 1.7,
+    reading: 50/29,
   },
 };

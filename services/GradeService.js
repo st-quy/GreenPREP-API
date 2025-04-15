@@ -352,7 +352,11 @@ async function calculatePointForWritingAndSpeaking(req) {
       };
     }
 
-    if (typeof teacherGradedScore !== "number" || teacherGradedScore < 0) {
+    if (
+      typeof teacherGradedScore !== "number" ||
+      teacherGradedScore < 0 ||
+      teacherGradedScore > 50
+    ) {
       return {
         status: 400,
         message: "Invalid teacher graded score",
