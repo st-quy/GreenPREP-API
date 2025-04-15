@@ -65,6 +65,21 @@ async function createSession(req) {
     const { sessionName, sessionKey, startTime, endTime, examSet, ClassID } =
       req.body;
 
+    // Check for existing session with same name in the same class
+    const existingSession = await Session.findOne({
+      where: {
+        sessionName,
+        ClassID
+      }
+    });
+
+    if (existingSession) {
+      return {
+        status: 400,
+        message: "Session name already exists in this class"
+      };
+    }
+
     const sessionData = {
       sessionName,
       sessionKey,

@@ -51,6 +51,43 @@ async function sendEmail(
   }
 }
 
+const sendMailWithAttachment = async ({
+  to,
+  studentName,
+  sessionName,
+  pdfBuffer,
+}) => {
+  try {
+    const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to: to,
+      subject: `🎓 Score Report – ${sessionName}`,
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #eee; border-radius: 8px;">
+          <h2 style="color: #4A90E2;">Hello ${studentName},</h2>
+          <p>We are pleased to share your report for the session: <strong>${sessionName}</strong>.</p>
+
+          <p>Please find your detailed report attached in PDF format. This includes your performance in each section and personalized comments from our instructors.</p>
+
+          <p style="margin-top: 30px;">Best regards,<br/>The Academic Team</p>
+        </div>
+      `,
+      attachments: [
+        {
+          filename: `${studentName.replace(/\s+/g, "_")}_Report.pdf`,
+          content: pdfBuffer,
+          contentType: "application/pdf",
+        },
+      ],
+    };
+
+    await transporter.sendMail(mailOptions);
+  } catch (error) {
+    throw new Error("Email sending failed");
+  }
+};
+
 module.exports = {
   sendEmail,
+  sendMailWithAttachment,
 };
