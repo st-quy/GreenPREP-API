@@ -9,7 +9,12 @@ const {
   Part,
   Skill,
 } = require("../models"); // Ensure models are imported
-const { skillMapping, pointsPerQuestion } = require("../helpers/constants");
+const {
+  skillMapping,
+  pointsPerQuestion,
+  level,
+  skillMappingLevel,
+} = require("../helpers/constants");
 
 async function getParticipantExamBySession(req) {
   try {
@@ -126,6 +131,79 @@ async function getParticipantExamBySession(req) {
   }
 }
 
+async function suggestLevels(score, skillName) {
+  console.log("🚀 ~ suggestLevels ~ skillName:", skillName);
+
+  try {
+    if (skillName === "LISTENING") {
+      switch (score) {
+        case score < 8:
+          return level.X;
+        case 8 <= score < 16:
+          return level.A1;
+        case 16 <= score < 24:
+          return level.A2;
+        case 24 <= score < 34:
+          return level.B1;
+        case 34 <= score < 42:
+          return level.B2;
+        case 42 <= score <= 50:
+          return level.C;
+      }
+    }
+    if (skillName === "READING") {
+      switch (score) {
+        case score < 8:
+          return level.X;
+        case 8 <= score < 16:
+          return level.A1;
+        case 16 <= score < 26:
+          return level.A2;
+        case 26 <= score < 38:
+          return level.B1;
+        case 38 <= score < 46:
+          return level.B2;
+        case 46 <= score <= 50:
+          return level.C;
+      }
+    }
+    if (skillName === "WRITING") {
+      switch (score) {
+        case score < 6:
+          return level.X;
+        case 6 <= score < 18:
+          return level.A1;
+        case 18 <= score < 26:
+          return level.A2;
+        case 26 <= score < 40:
+          return level.B1;
+        case 40 <= score < 48:
+          return level.B2;
+        case 48 <= score <= 50:
+          return level.C;
+      }
+    }
+    if (skillName === "SPEAKING") {
+      switch (score) {
+        case score < 4:
+          return level.X;
+        case 4 <= score < 16:
+          return level.A1;
+        case 16 <= score < 26:
+          return level.A2;
+        case 26 <= score < 41:
+          return level.B1;
+        case 41 <= score < 48:
+          return level.B2;
+        case 48 <= score <= 50:
+          return level.C;
+      }
+    }
+  } catch {
+    throw new Error(error.message);
+  }
+}
+
 async function calculateTotalPoints(
   sessionParticipantId,
   skillName,
@@ -162,6 +240,10 @@ async function calculateTotalPoints(
 
     const totalPoints = listening + reading + writing + speaking;
 
+    const level = await suggestLevels(skillScore, skillName.toUpperCase());
+    console.log("🚀 ~ level:", level);
+    console.log("🚀 ~ Uppercase skillName:", skillName.toUpperCase());
+
     if (skillName === skillMapping["GRAMMAR AND VOCABULARY"]) {
       await SessionParticipant.update(
         { [skillName]: skillScore },
@@ -169,7 +251,11 @@ async function calculateTotalPoints(
       );
     } else {
       await SessionParticipant.update(
-        { [skillName]: skillScore, Total: totalPoints },
+        {
+          [skillName]: skillScore,
+          [skillMappingLevel[skillName.toUpperCase()]]: level,
+          Total: totalPoints,
+        },
         { where: { ID: sessionParticipantId } }
       );
     }
@@ -219,6 +305,7 @@ async function calculatePoints(req) {
       },
       include: [{ model: Question, include: [Skill] }],
     });
+    console.log("🚀 ~ answers:", answers.length);
 
     if (answers.length === 0) {
       return {
