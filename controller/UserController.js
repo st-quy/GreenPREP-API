@@ -3,7 +3,6 @@ const userService = require("../services/UserService");
 const registerUser = async (req, res) => {
   try {
     const result = await userService.registerUser(req.body);
-    console.log(result, 'resultresultresult');
     
     return res.status(result.status).json(result);
   } catch (error) {

@@ -47,17 +47,17 @@ async function registerUser(data) {
       data: userWithoutPassword,
     };
   } catch (error) {
-    if (error.name === 'SequelizeUniqueConstraintError') {
+    if (error.name === "SequelizeUniqueConstraintError") {
       const messages = error.errors.map((err) => {
         switch (err.path) {
-          case 'email':
-            return 'Email already exists';
-          case 'phone':
-            return 'Phone already exists';
-          case 'studentCode':
-            return 'Student Code already exists';
-          case 'teacherCode':
-            return 'Teacher Code already exists';
+          case "email":
+            return "Email already exists";
+          case "phone":
+            return "Phone already exists";
+          case "studentCode":
+            return "Student Code already exists";
+          case "teacherCode":
+            return "Teacher Code already exists";
           default:
             return `${err.path} already exists`;
         }
@@ -281,6 +281,7 @@ async function getAllUsersByRoleTeacher(req) {
       where: whereClause,
       offset,
       limit,
+      order: [["updatedAt", "DESC"]],
     });
 
     return {
