@@ -51,15 +51,15 @@ async function registerUser(data) {
       const messages = error.errors.map((err) => {
         switch (err.path) {
           case 'email':
-            return 'Email is existed.';
+            return 'Email already exists';
           case 'phone':
-            return 'Phone is existed.';
+            return 'Phone already exists';
           case 'studentCode':
-            return 'Student Code is existed.';
+            return 'Student Code already exists';
           case 'teacherCode':
-            return 'Teacher Code is existed.';
+            return 'Teacher Code already exists';
           default:
-            return `${err.path} is existed.`;
+            return `${err.path} already exists`;
         }
       });
       return {
