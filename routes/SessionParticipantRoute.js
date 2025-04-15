@@ -213,13 +213,6 @@ router.get(
  *           schema:
  *             type: object
  *             properties:
- *               studentIds:
- *                 type: array
- *                 items:
- *                   type: string
- *                   format: uuid
- *                 description: A list of student IDs to publish scores for
- *                 example: ["77b5f9cb-73ba-4edd-9c90-998710832c87"]
  *               sessionId:
  *                 type: string
  *                 format: uuid
@@ -236,9 +229,6 @@ router.get(
  *                 message:
  *                   type: string
  *                   example: Scores published successfully.
- *                 data:
- *                   type: integer
- *                   example: 3
  *       404:
  *         description: No records updated - Possibly invalid SessionID or StudentIDs
  *         content:
@@ -261,7 +251,7 @@ router.get(
  *               properties:
  *                 message:
  *                   type: string
- *                   example: sessionId and studentIds are required
+ *                   example: sessionId are required
  *       500:
  *         description: Internal Server Error while updating scores
  *         content:
