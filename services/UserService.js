@@ -259,9 +259,12 @@ async function logoutUser(userId) {
 async function getAllUsersByRoleTeacher(req) {
   try {
     const { page = 1, limit = 10, search = "", status } = req.query;
-    
+
     const offset = (parseInt(page) - 1) * parseInt(limit);
-    const searchTerms = search.trim().split(' ').filter(term => term);
+    const searchTerms = search
+      .trim()
+      .split(" ")
+      .filter((term) => term);
 
     const whereClause = {
       roleIDs: {
@@ -270,12 +273,12 @@ async function getAllUsersByRoleTeacher(req) {
     };
 
     if (searchTerms.length > 0) {
-      whereClause[Op.and] = searchTerms.map(term => ({
+      whereClause[Op.and] = searchTerms.map((term) => ({
         [Op.or]: [
           { lastName: { [Op.iLike]: `%${term}%` } },
           { firstName: { [Op.iLike]: `%${term}%` } },
           { teacherCode: { [Op.iLike]: `%${term}%` } },
-        ]
+        ],
       }));
     }
 

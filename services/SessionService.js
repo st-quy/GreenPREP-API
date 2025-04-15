@@ -1,3 +1,4 @@
+const { Sequelize } = require("sequelize");
 const { Session, SessionParticipant, Class, Topic } = require("../models");
 
 async function getAllSessions(req) {
@@ -64,31 +65,69 @@ async function createSession(req) {
   try {
     const { sessionName, sessionKey, startTime, endTime, examSet, ClassID } =
       req.body;
-
-    // Check for existing session with same name in the same class
-    const existingSession = await Session.findOne({
-      where: {
-        sessionName,
-        ClassID
-      }
-    });
-
-    if (existingSession) {
+    if (!sessionKey || !startTime || !endTime || !examSet || !ClassID) {
       return {
         status: 400,
-        message: "Session name already exists in this class"
+        message:
+          "sessionKey, startTime, endTime, examSet, and ClassID are required",
       };
     }
 
-    const sessionData = {
+    if (startTime > endTime) {
+      return {
+        status: 400,
+        message: "Start time must be before end time",
+      };
+    }
+
+    const checkExistTopic = await Topic.findByPk(examSet);
+    console.log("🚀 ~ createSession ~ checkExistTopic:", checkExistTopic);
+    if (!checkExistTopic) {
+      return {
+        status: 400,
+        message: "Topic not found",
+      };
+    }
+
+    const checkExistClass = await Class.findByPk(ClassID);
+    if (!checkExistClass) {
+      return {
+        status: 400,
+        message: "Class not found",
+      };
+    }
+
+    const checkExistSession = await Session.findOne({
+      where: {
+        sessionKey,
+      },
+    });
+    if (checkExistSession) {
+      return {
+        status: 400,
+        message: `Session with key ${sessionKey} already exists`,
+      };
+    }
+
+    let status;
+    const now = new Date();
+    if (new Date(startTime) > now) {
+      status = "NOT_STARTED";
+    } else if (new Date(endTime) > now) {
+      status = "ON_GOING";
+    } else {
+      status = "COMPLETE";
+    }
+
+    const newSession = await Session.create({
       sessionName,
       sessionKey,
       startTime,
       endTime,
       examSet,
       ClassID,
-    };
-    const newSession = await Session.create(sessionData);
+      status,
+    });
     return {
       status: 201,
       data: newSession,
