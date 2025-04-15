@@ -14,6 +14,7 @@ const { skillMapping, pointsPerQuestion } = require("../helpers/constants");
 async function getParticipantExamBySession(req) {
   try {
     const { sessionParticipantId, skillName } = req.query;
+    const formattedSkillName = skillMapping[skillName.toUpperCase()] || null;
 
     if (!sessionParticipantId || !skillName) {
       return {
@@ -79,6 +80,7 @@ async function getParticipantExamBySession(req) {
       where: {
         StudentID: sessionParticipant.UserID,
         TopicID: sessionParticipant.Session.examSet,
+        SessionID: sessionParticipant.SessionID,
       },
       include: [
         {
@@ -116,6 +118,7 @@ async function getParticipantExamBySession(req) {
       status: 200,
       data: {
         topic,
+        scoreBySkill: sessionParticipant[formattedSkillName],
       },
     };
   } catch (error) {
@@ -181,13 +184,12 @@ async function calculateTotalPoints(
 
 async function calculatePoints(req) {
   try {
-    const { studentId, topicId, sessionParticipantId, skillName } = req.body;
+    const { sessionParticipantId, skillName } = req.body;
 
-    if (!studentId || !topicId || !sessionParticipantId || !skillName) {
+    if (!sessionParticipantId || !skillName) {
       return {
         status: 400,
-        message:
-          "Missing required fields: studentId, topicId, sessionParticipantId, or skillName",
+        message: "Missing required fields: sessionParticipantId or skillName",
       };
     }
 
@@ -202,8 +204,19 @@ async function calculatePoints(req) {
     const pointPerQuestion =
       pointsPerQuestion[formattedSkillName.toLowerCase()] || 1;
 
+    const sessionParticipant = await SessionParticipant.findByPk(
+      sessionParticipantId,
+      {
+        include: [{ model: Session }],
+      }
+    );
+
     const answers = await StudentAnswer.findAll({
-      where: { StudentID: studentId, TopicID: topicId },
+      where: {
+        StudentID: sessionParticipant.UserID,
+        TopicID: sessionParticipant.Session.examSet,
+        SessionID: sessionParticipant.SessionID,
+      },
       include: [{ model: Question, include: [Skill] }],
     });
 
@@ -297,9 +310,9 @@ async function calculatePoints(req) {
       totalPoints
     );
 
-    const updatedSessionParticipant = await SessionParticipant.findOne({
-      where: { ID: sessionParticipantId, UserID: studentId },
-    });
+    const updatedSessionParticipant = await SessionParticipant.findByPk(
+      sessionParticipantId
+    );
 
     return {
       message: "Points calculated successfully",
@@ -319,23 +332,6 @@ async function calculatePointForWritingAndSpeaking(req) {
     studentAnswers,
   } = req.body;
   try {
-    if (
-      !studentAnswers ||
-      !Array.isArray(studentAnswers) ||
-      studentAnswers.length === 0
-    ) {
-      throw new Error(
-        "studentAnswers are required and must be a non-empty array"
-      );
-    }
-
-    studentAnswers.forEach(({ studentAnswerId }, index) => {
-      if (!studentAnswerId) {
-        throw new Error(`Missing studentAnswerId at index ${index}`);
-      }
-    });
-    console.log(sessionParticipantID, teacherGradedScore, skillName);
-
     if (
       !sessionParticipantID ||
       typeof teacherGradedScore !== "number" ||
@@ -363,20 +359,28 @@ async function calculatePointForWritingAndSpeaking(req) {
       };
     }
 
-    const studentAnswerData = studentAnswers.filter(
-      ({ messageContent }) =>
-        messageContent !== null &&
-        messageContent !== undefined &&
-        messageContent.trim() !== ""
-    );
-    await Promise.all(
-      studentAnswerData.map(({ studentAnswerId, messageContent }) =>
-        StudentAnswer.update(
-          { Comment: messageContent },
-          { where: { ID: studentAnswerId } }
+    if (studentAnswers) {
+      studentAnswers.forEach(({ studentAnswerId }, index) => {
+        if (!studentAnswerId) {
+          throw new Error(`Missing studentAnswerId at index ${index}`);
+        }
+      });
+
+      const studentAnswerData = studentAnswers.filter(
+        ({ messageContent }) =>
+          messageContent !== null &&
+          messageContent !== undefined &&
+          messageContent.trim() !== ""
+      );
+      await Promise.all(
+        studentAnswerData.map(({ studentAnswerId, messageContent }) =>
+          StudentAnswer.update(
+            { Comment: messageContent },
+            { where: { ID: studentAnswerId } }
+          )
         )
-      )
-    );
+      );
+    }
 
     const totalPoints = teacherGradedScore;
     const formattedSkillName = skillMapping[skillName.toUpperCase()] || null;
@@ -392,6 +396,9 @@ async function calculatePointForWritingAndSpeaking(req) {
     return {
       status: 200,
       message: "Writing points calculated successfully",
+      data: {
+        sessionParticipant: updatedSessionParticipant[formattedSkillName],
+      },
     };
   } catch (error) {
     return {

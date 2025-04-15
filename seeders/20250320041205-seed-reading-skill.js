@@ -61,7 +61,7 @@ module.exports = {
       },
       {
         ID: partId2a,
-        Content: `Part 2A: The sentences below are from instructions. Put the sentences in the right order.
+        Content: `Part 2: The sentences below are from instructions. Put the sentences in the right order.
             The first sentence is done for you.
             Follow the steps below if you join a talk by Professor James Smith.
             `,
@@ -72,7 +72,7 @@ module.exports = {
       },
       {
         ID: partId2b,
-        Content: `Part 2B: The sentences below are from instructions. Put the sentences in the right order. 
+        Content: `Part 3: The sentences below are from instructions. Put the sentences in the right order. 
         The first sentence is done for you.
         Most of drivers must follow the schedule of company.
             `,
@@ -83,7 +83,7 @@ module.exports = {
       },
       {
         ID: partId3,
-        Content: `Part 3: Four people respond in the comments section of an online magazine article about technology. Read the texts and then answer the questions below.`,
+        Content: `Part 4: Four people respond in the comments section of an online magazine article about technology. Read the texts and then answer the questions below.`,
         SubContent: "",
         TopicID: topicId, // Gán vào "Practice Test 2"
         createdAt: new Date(),
@@ -91,7 +91,7 @@ module.exports = {
       },
       {
         ID: partId4,
-        Content: `Part 4 - Read the following passage quickly. Choose a heading for each numbered paragraph (1-7). There is one more heading than you need.`,
+        Content: `Part 5 - Read the following passage quickly. Choose a heading for each numbered paragraph (1-7). There is one more heading than you need.`,
         SubContent: "",
         TopicID: topicId, // Gán vào "Practice Test 2"
         createdAt: new Date(),

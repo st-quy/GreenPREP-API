@@ -63,6 +63,7 @@ async function getSessionRequestByStudentId(req) {
           UserID: studentId,
           SessionID: sessionId,
         },
+        include: ["Session"],
       });
 
       if (!sessionParticipant) {
@@ -112,6 +113,18 @@ async function createSessionRequest(req) {
 
     if (checks.filter(Boolean).length > 0) {
       throw new Error("Session request already exists");
+    }
+
+    const allSessionRequest = await SessionRequest.findAll({
+      where: {
+        UserID: UserID,
+        SessionID: session.ID,
+        status: SESSION_REQUEST_STATUS.REJECTED,
+      },
+    });
+
+    if (allSessionRequest.length >= 3) {
+      throw new Error("Session request limit reached");
     }
 
     const sessionRequest = await SessionRequest.create({

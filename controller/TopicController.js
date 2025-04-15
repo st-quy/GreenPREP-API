@@ -22,6 +22,8 @@ const getTopicWithRelations = async (req, res) => {
       include: [
         {
           model: Part,
+          separate: true,
+          order: [["Content", "ASC"]],
           include: [
             {
               model: Question,

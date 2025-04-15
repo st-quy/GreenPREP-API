@@ -33,7 +33,7 @@
     "puppeteer": "^24.6.1",
     "qs": "^6.13.1",
     "sequelize": "^6.37.5",
-    "sequelize-paginate": "^1.1.6",
+    "sequelize-paginate": "1.1.6",
     "stripe": "^17.4.0",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1"
