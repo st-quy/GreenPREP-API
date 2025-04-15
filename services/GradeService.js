@@ -370,16 +370,10 @@ async function calculatePointForWritingAndSpeaking(req) {
         }
       });
 
-      const studentAnswerData = studentAnswers.filter(
-        ({ messageContent }) =>
-          messageContent !== null &&
-          messageContent !== undefined &&
-          messageContent.trim() !== ""
-      );
       await Promise.all(
-        studentAnswerData.map(({ studentAnswerId, messageContent }) =>
+        studentAnswers.map(({ studentAnswerId, messageContent }) =>
           StudentAnswer.update(
-            { Comment: messageContent },
+            { Comment: messageContent ?? "" },
             { where: { ID: studentAnswerId } }
           )
         )

@@ -56,6 +56,10 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: true,
       },
+      dob: {
+        type: DataTypes.STRING,
+        allowNull: true
+      }
     },
     {
       getterMethods: {
