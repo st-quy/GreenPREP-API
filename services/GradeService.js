@@ -9,7 +9,12 @@ const {
   Part,
   Skill,
 } = require("../models"); // Ensure models are imported
-const { skillMapping, pointsPerQuestion } = require("../helpers/constants");
+const {
+  skillMapping,
+  pointsPerQuestion,
+  level,
+  skillMappingLevel,
+} = require("../helpers/constants");
 
 async function getParticipantExamBySession(req) {
   try {
@@ -126,6 +131,48 @@ async function getParticipantExamBySession(req) {
   }
 }
 
+async function suggestLevels(score, skillName) {
+  try {
+    if (skillName === "LISTENING") {
+      if (score < 8) return level.X;
+      else if (score < 16) return level.A1;
+      else if (score < 24) return level.A2;
+      else if (score < 34) return level.B1;
+      else if (score < 42) return level.B2;
+      else return level.C;
+    }
+
+    if (skillName === "READING") {
+      if (score < 8) return level.X;
+      else if (score < 16) return level.A1;
+      else if (score < 26) return level.A2;
+      else if (score < 38) return level.B1;
+      else if (score < 46) return level.B2;
+      else return level.C;
+    }
+
+    if (skillName === "WRITING") {
+      if (score < 6) return level.X;
+      else if (score < 18) return level.A1;
+      else if (score < 26) return level.A2;
+      else if (score < 40) return level.B1;
+      else if (score < 48) return level.B2;
+      else return level.C;
+    }
+
+    if (skillName === "SPEAKING") {
+      if (score < 4) return level.X;
+      else if (score < 16) return level.A1;
+      else if (score < 26) return level.A2;
+      else if (score < 41) return level.B1;
+      else if (score < 48) return level.B2;
+      else return level.C;
+    }
+  } catch (error) {
+    throw new Error(error.message);
+  }
+}
+
 async function calculateTotalPoints(
   sessionParticipantId,
   skillName,
@@ -162,6 +209,8 @@ async function calculateTotalPoints(
 
     const totalPoints = listening + reading + writing + speaking;
 
+    const levelSkill = await suggestLevels(skillScore, skillName.toUpperCase());
+
     if (skillName === skillMapping["GRAMMAR AND VOCABULARY"]) {
       await SessionParticipant.update(
         { [skillName]: skillScore },
@@ -169,13 +218,18 @@ async function calculateTotalPoints(
       );
     } else {
       await SessionParticipant.update(
-        { [skillName]: skillScore, Total: totalPoints },
+        {
+          [skillName]: skillScore,
+          [skillMappingLevel[skillName.toUpperCase()]]: levelSkill,
+          Total: totalPoints,
+        },
         { where: { ID: sessionParticipantId } }
       );
     }
 
     return {
       totalPoints,
+      levelSkill,
     };
   } catch (error) {
     throw new Error(error.message);
@@ -302,7 +356,7 @@ async function calculatePoints(req) {
       }
     });
 
-    totalPoints = parseFloat(totalPoints.toFixed(3));
+    totalPoints = parseFloat(totalPoints.toFixed(1));
 
     await calculateTotalPoints(
       sessionParticipantId,
