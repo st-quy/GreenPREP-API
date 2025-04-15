@@ -114,12 +114,7 @@ const getParticipantsByUserId = async (userId) => {
 };
 
 const publishScoresBySessionId = async (req) => {
-  const { studentIds, sessionId } = req.body;
-  if (!Array.isArray(studentIds) || studentIds.length === 0) {
-    return res
-      .status(400)
-      .json({ message: "studentIds must be a non-empty array" });
-  }
+  const { sessionId } = req.body;
 
   if (!sessionId) {
     throw new Error("sessionId is required");

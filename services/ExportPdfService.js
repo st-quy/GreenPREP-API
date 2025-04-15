@@ -11,7 +11,12 @@ const { generatePDF } = require("../reports/generate-pdf");
 const { sendMailWithAttachment } = require("../services/SendEmailService");
 
 const generateStudentReportAndSendMail = async ({ req }) => {
-  const { studentIds, sessionId } = req.body;
+  const { sessionId } = req.body;
+
+  const studentIds = await SessionParticipant.findAll({
+    where: { SessionID: sessionId, IsPublished: true },
+    attributes: ["UserID"],
+  }).then((participants) => participants.map((p) => p.UserID));
 
   await Promise.all(
     studentIds.map(async (studentId) => {
