@@ -153,6 +153,7 @@ const storage = multer.memoryStorage();
  *         description: Internal server error
  */
 router.get("/teachers", getAllUsersByRoleTeacher);
+
 /**
  * @swagger
  * /users/register:
