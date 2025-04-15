@@ -75,29 +75,31 @@ const storage = multer.memoryStorage();
  *   get:
  *     summary: Get all users with the role of teacher
  *     tags: [User]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               page:
- *                 type: integer
- *                 example: 1
- *                 description: The page number for pagination
- *               limit:
- *                 type: integer
- *                 example: 10
- *                 description: The number of items per page
- *               search:
- *                 type: string
- *                 example: "John"
- *                 description: Search term for filtering teachers by name or teacher code
- *               status:
- *                 type: boolean
- *                 example: true
- *                 description: Filter teachers by status
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           example: 1
+ *         description: The page number for pagination
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           example: 10
+ *         description: The number of items per page
+ *       - in: query
+ *         name: search
+ *         schema:
+ *           type: string
+ *           example: "John"
+ *         description: Search term for filtering teachers by name or teacher code
+ *       - in: query
+ *         name: status
+ *         schema:
+ *           type: boolean
+ *           example: true
+ *         description: Filter teachers by status
  *     responses:
  *       200:
  *         description: List of users with the role of teacher retrieved successfully
@@ -151,7 +153,6 @@ const storage = multer.memoryStorage();
  *         description: Internal server error
  */
 router.get("/teachers", getAllUsersByRoleTeacher);
-
 /**
  * @swagger
  * /users/register:

@@ -258,7 +258,7 @@ async function logoutUser(userId) {
 
 async function getAllUsersByRoleTeacher(req) {
   try {
-    const { page = 1, limit = 10, search = "", status } = req.body;
+    const { page = 1, limit = 10, search = "", status } = req.query;
 
     const offset = (page - 1) * limit;
 
