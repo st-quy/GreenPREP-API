@@ -6,3 +6,4 @@ etc/secrets/firebase.json
 package-lock.json
 config/default.json
 .vscode
+yarn.lock
