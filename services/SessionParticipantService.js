@@ -2,6 +2,7 @@ const { SessionParticipant, Session, User } = require("../models");
 const { CEFR_LEVELS } = require("../constants/levels");
 const sequelizePaginate = require("sequelize-paginate");
 const { generateStudentReportAndSendMail } = require("./ExportPdfService");
+const { Op } = require("sequelize");
 
 async function addParticipant(sessionId, userId) {
   try {
@@ -118,6 +119,35 @@ const publishScoresBySessionId = async (req) => {
 
   if (!sessionId) {
     throw new Error("sessionId is required");
+  }
+
+  const incompleteStudents = await SessionParticipant.findAll({
+    where: {
+      SessionID: sessionId,
+      [Op.or]: [
+        { GrammarVocab: { [Op.is]: null } },
+        { GrammarVocabLevel: { [Op.is]: null } },
+        { Reading: { [Op.is]: null } },
+        { ReadingLevel: { [Op.is]: null } },
+        { Listening: { [Op.is]: null } },
+        { ListeningLevel: { [Op.is]: null } },
+        { Writing: { [Op.is]: null } },
+        { WritingLevel: { [Op.is]: null } },
+        { Speaking: { [Op.is]: null } },
+        { SpeakingLevel: { [Op.is]: null } },
+        { Total: { [Op.is]: null } },
+        { Level: { [Op.is]: null } },
+      ],
+    },
+    attributes: ["UserID"],
+  });
+
+  if (incompleteStudents.length > 0) {
+    return {
+      status: 400,
+      message:
+        "Some students are missing scores or levels. Please complete the data before publishing.",
+    };
   }
 
   const [updatedCount] = await SessionParticipant.update(
