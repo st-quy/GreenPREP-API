@@ -26,8 +26,7 @@ async function getAllSessions(req) {
 
 async function getSessionByClass(req) {
   try {
-    const { sessionName, status, page = 1, limit = 10 } = req.body;
-    const { classId } = req.query;
+    const { classId, sessionName, status, page = 1, limit = 10 } = req.query;
 
     const offset = (page - 1) * limit;
     const whereClause = {

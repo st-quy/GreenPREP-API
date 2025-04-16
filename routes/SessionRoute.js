@@ -114,6 +114,30 @@ router.get("/generate-key", generateSessionKey);
  *           type: string
  *         required: true
  *         description: The ID of the class to filter sessions
+ *       - in: query
+ *         name: sessionName
+ *         schema:
+ *           type: string
+ *         required: false
+ *         description: Name of the session
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: number
+ *         required: false
+ *         description: Page number
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: number
+ *         required: false
+ *         description: Number of items per page
+ *       - in: query
+ *         name: status
+ *         schema:
+ *           type: string
+ *         required: false
+ *         description: Status of the session
  *     responses:
  *       200:
  *         description: List of sessions
