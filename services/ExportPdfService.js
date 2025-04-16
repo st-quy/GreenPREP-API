@@ -27,31 +27,11 @@ const generateStudentReportAndSendMail = async ({ req }) => {
     await Promise.all(
       studentIds.map(async (studentId) => {
         try {
-          const sessionInformation = await Session.findOne({
-            where: { ID: sessionId },
-            attributes: [
-              "ID",
-              "sessionName",
-              "sessionKey",
-              "ClassID",
-              "startTime",
-              "endTime",
-              "status",
-            ],
-          });
-
-          const classInformation = await Class.findOne({
-            where: { ID: sessionInformation.ClassID },
-            attributes: ["ID", "className"],
-          });
-
-          const studentInformation = await User.findOne({
-            where: { ID: studentId.UserID },
-            attributes: ["ID", "lastName", "firstName", "email", "phone"],
-          });
-
           const sessionParticipant = await SessionParticipant.findOne({
-            where: { UserID: studentId.UserID, SessionID: sessionId },
+            where: {
+              UserID: studentId.UserID,
+              SessionID: sessionId,
+            },
             attributes: [
               "ID",
               "UserID",
@@ -70,6 +50,32 @@ const generateStudentReportAndSendMail = async ({ req }) => {
               "Level",
               "createdAt",
             ],
+            include: [
+              {
+                model: User,
+                attributes: ["ID", "firstName", "lastName", "email", "phone"],
+              },
+              {
+                model: Session,
+                attributes: [
+                  "ID",
+                  "sessionName",
+                  "sessionKey",
+                  "ClassID",
+                  "startTime",
+                  "endTime",
+                  "status",
+                ],
+              },
+            ],
+          });
+
+          sessionInformation = sessionParticipant.Session;
+          studentInformation = sessionParticipant.User;
+
+          classInformation = await Class.findOne({
+            where: { ID: sessionInformation.ClassID },
+            attributes: ["ID", "className"],
           });
 
           const studentAnswers = await StudentAnswer.findAll({
@@ -86,10 +92,10 @@ const generateStudentReportAndSendMail = async ({ req }) => {
             raw: true,
           });
 
-          const answerMap = {};
-          studentAnswers.forEach((ans) => {
-            answerMap[ans.QuestionID] = ans;
-          });
+          const answerMap = studentAnswers.reduce((acc, ans) => {
+            acc[ans.QuestionID] = ans;
+            return acc;
+          }, {});
 
           const partIDs = [...new Set(questions.map((q) => q.PartID))];
           const parts = await Part.findAll({
@@ -98,24 +104,25 @@ const generateStudentReportAndSendMail = async ({ req }) => {
             raw: true,
           });
 
-          const partMap = {};
-          parts.forEach((part) => {
-            partMap[part.ID] = part.Content;
-          });
+          const partMap = parts.reduce((acc, part) => {
+            acc[part.ID] = part.Content;
+            return acc;
+          }, {});
 
-          const result = {};
-          questions.forEach((question) => {
+          const result = questions.reduce((acc, question) => {
             const { ID, Content, Type, PartID, ImageKeys } = question;
             const answer = answerMap[ID];
-            if (!result[Type]) result[Type] = {};
-            if (!result[Type][PartID]) {
-              result[Type][PartID] = {
+
+            if (!acc[Type]) acc[Type] = {};
+            if (!acc[Type][PartID]) {
+              acc[Type][PartID] = {
                 PartID,
                 ContentPart: partMap[PartID],
                 questions: [],
               };
             }
-            result[Type][PartID].questions.push({
+
+            const questionItem = {
               QuestionID: ID,
               ContentQuestion: Content,
               Comment: answer?.Comment ?? "",
@@ -126,8 +133,11 @@ const generateStudentReportAndSendMail = async ({ req }) => {
                 AnswerAudio: answer?.AnswerAudio ?? "",
                 ImageUrl: ImageKeys?.[0] ?? "",
               }),
-            });
-          });
+            };
+
+            acc[Type][PartID].questions.push(questionItem);
+            return acc;
+          }, {});
 
           const pdfBuffer = await generatePDF(
             studentInformation,
