@@ -9,7 +9,6 @@ const {
 } = require("../models");
 const { generatePDF } = require("../reports/generate-pdf");
 const { sendMailWithAttachment } = require("../services/SendEmailService");
-const { Op } = require("sequelize");
 
 const generateStudentReportAndSendMail = async ({ req }) => {
   try {
@@ -19,51 +18,20 @@ const generateStudentReportAndSendMail = async ({ req }) => {
       where: {
         SessionID: sessionId,
         IsPublished: true,
-        GrammarVocab: { [Op.ne]: null },
-        GrammarVocabLevel: { [Op.ne]: null },
-        Reading: { [Op.ne]: null },
-        ReadingLevel: { [Op.ne]: null },
-        Listening: { [Op.ne]: null },
-        ListeningLevel: { [Op.ne]: null },
-        Writing: { [Op.ne]: null },
-        WritingLevel: { [Op.ne]: null },
-        Speaking: { [Op.ne]: null },
-        SpeakingLevel: { [Op.ne]: null },
-        Total: { [Op.ne]: null },
-        Level: { [Op.ne]: null },
       },
       attributes: ["UserID"],
-    }).then((participants) => participants.map((p) => p.UserID));
+    });
     if (studentIds.length === 0) {
       throw new Error("No students found for the given sessionId.");
     }
     await Promise.all(
       studentIds.map(async (studentId) => {
         try {
-          const classInformation = await Class.findOne({
-            where: { UserID: studentId },
-            attributes: ["ID", "className"],
-          });
-
-          const sessionInformation = await Session.findOne({
-            where: { ID: sessionId },
-            attributes: [
-              "ID",
-              "sessionName",
-              "sessionKey",
-              "startTime",
-              "endTime",
-              "status",
-            ],
-          });
-
-          const studentInformation = await User.findOne({
-            where: { ID: studentId },
-            attributes: ["ID", "lastName", "firstName", "email", "phone"],
-          });
-
           const sessionParticipant = await SessionParticipant.findOne({
-            where: { UserID: studentId, SessionID: sessionId },
+            where: {
+              UserID: studentId.UserID,
+              SessionID: sessionId,
+            },
             attributes: [
               "ID",
               "UserID",
@@ -82,10 +50,36 @@ const generateStudentReportAndSendMail = async ({ req }) => {
               "Level",
               "createdAt",
             ],
+            include: [
+              {
+                model: User,
+                attributes: ["ID", "firstName", "lastName", "email", "phone"],
+              },
+              {
+                model: Session,
+                attributes: [
+                  "ID",
+                  "sessionName",
+                  "sessionKey",
+                  "ClassID",
+                  "startTime",
+                  "endTime",
+                  "status",
+                ],
+              },
+            ],
+          });
+
+          sessionInformation = sessionParticipant.Session;
+          studentInformation = sessionParticipant.User;
+
+          classInformation = await Class.findOne({
+            where: { ID: sessionInformation.ClassID },
+            attributes: ["ID", "className"],
           });
 
           const studentAnswers = await StudentAnswer.findAll({
-            where: { StudentID: studentId, SessionID: sessionId },
+            where: { StudentID: studentId.UserID, SessionID: sessionId },
             attributes: ["QuestionID", "AnswerText", "AnswerAudio", "Comment"],
             raw: true,
           });
@@ -98,10 +92,10 @@ const generateStudentReportAndSendMail = async ({ req }) => {
             raw: true,
           });
 
-          const answerMap = {};
-          studentAnswers.forEach((ans) => {
-            answerMap[ans.QuestionID] = ans;
-          });
+          const answerMap = studentAnswers.reduce((acc, ans) => {
+            acc[ans.QuestionID] = ans;
+            return acc;
+          }, {});
 
           const partIDs = [...new Set(questions.map((q) => q.PartID))];
           const parts = await Part.findAll({
@@ -110,24 +104,25 @@ const generateStudentReportAndSendMail = async ({ req }) => {
             raw: true,
           });
 
-          const partMap = {};
-          parts.forEach((part) => {
-            partMap[part.ID] = part.Content;
-          });
+          const partMap = parts.reduce((acc, part) => {
+            acc[part.ID] = part.Content;
+            return acc;
+          }, {});
 
-          const result = {};
-          questions.forEach((question) => {
+          const result = questions.reduce((acc, question) => {
             const { ID, Content, Type, PartID, ImageKeys } = question;
             const answer = answerMap[ID];
-            if (!result[Type]) result[Type] = {};
-            if (!result[Type][PartID]) {
-              result[Type][PartID] = {
+
+            if (!acc[Type]) acc[Type] = {};
+            if (!acc[Type][PartID]) {
+              acc[Type][PartID] = {
                 PartID,
                 ContentPart: partMap[PartID],
                 questions: [],
               };
             }
-            result[Type][PartID].questions.push({
+
+            const questionItem = {
               QuestionID: ID,
               ContentQuestion: Content,
               Comment: answer?.Comment ?? "",
@@ -138,8 +133,11 @@ const generateStudentReportAndSendMail = async ({ req }) => {
                 AnswerAudio: answer?.AnswerAudio ?? "",
                 ImageUrl: ImageKeys?.[0] ?? "",
               }),
-            });
-          });
+            };
+
+            acc[Type][PartID].questions.push(questionItem);
+            return acc;
+          }, {});
 
           const pdfBuffer = await generatePDF(
             studentInformation,
@@ -157,7 +155,7 @@ const generateStudentReportAndSendMail = async ({ req }) => {
           });
         } catch (err) {
           throw new Error(
-            `Error generating report for studentId ${studentId}: ${err.message}`
+            `Error generating report for studentId ${studentId.UserID}: ${err.message}`
           );
         }
       })
