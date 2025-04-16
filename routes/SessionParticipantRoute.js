@@ -200,7 +200,7 @@ router.get(
 );
 /**
  * @swagger
- * /api/session-participants/publish-scores:
+ * /session-participants/publish-scores:
  *   put:
  *     summary: Publish scores for specified participants in a session
  *     description: Marks the specified SessionParticipants as published. Returns 404 if no records were updated.
