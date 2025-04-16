@@ -126,7 +126,6 @@ const publishScoresBySessionId = async (req) => {
       SessionID: sessionId,
       [Op.or]: [
         { GrammarVocab: { [Op.is]: null } },
-        { GrammarVocabLevel: { [Op.is]: null } },
         { Reading: { [Op.is]: null } },
         { ReadingLevel: { [Op.is]: null } },
         { Listening: { [Op.is]: null } },
