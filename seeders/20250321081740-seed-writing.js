@@ -241,6 +241,7 @@ It has been reported that maintaining old buildings is expensive, and they take 
             GroupContent: q.groupContent
               ? JSON.stringify(q.groupContent)
               : null,
+            Sequence: questions.indexOf(q) + 1,
             PartID: q.partID,
             SkillID: skillId,
             createdAt: new Date(),

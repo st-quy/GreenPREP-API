@@ -252,6 +252,7 @@ module.exports = {
             GroupContent: JSON.stringify(q.groupContent),
             PartID: q.partID,
             SkillID: skillId,
+            Sequence: questions.indexOf(q) + 1,
             createdAt: new Date(),
             updatedAt: new Date(),
             ImageKeys: q.imageKeys,
