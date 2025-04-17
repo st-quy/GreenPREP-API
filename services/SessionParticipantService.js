@@ -1,7 +1,7 @@
 const { SessionParticipant, Session, User } = require("../models");
 const { CEFR_LEVELS } = require("../constants/levels");
 const sequelizePaginate = require("sequelize-paginate");
-const { generateStudentReportAndSendMail } = require("./ExportPdfService");
+const { generateStudentReportAndSendMail } = require("./ScoreMailService");
 const { Op } = require("sequelize");
 
 async function addParticipant(sessionId, userId) {

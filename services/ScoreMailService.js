@@ -7,8 +7,8 @@ const {
   Question,
   Part,
 } = require("../models");
-const { generatePDF } = require("../reports/generate-pdf");
-const { sendMailWithAttachment } = require("../services/SendEmailService");
+const { generatePDF } = require("../reports/generate-assessment-html");
+const { sendMailWithAttachment } = require("./SendEmailService");
 
 const generateStudentReportAndSendMail = async ({ req }) => {
   try {
@@ -37,7 +37,6 @@ const generateStudentReportAndSendMail = async ({ req }) => {
               "UserID",
               "SessionID",
               "GrammarVocab",
-              "GrammarVocabLevel",
               "Reading",
               "ReadingLevel",
               "Listening",
@@ -139,7 +138,7 @@ const generateStudentReportAndSendMail = async ({ req }) => {
             return acc;
           }, {});
 
-          const pdfBuffer = await generatePDF(
+          let inlinedHtml = await generatePDF(
             studentInformation,
             classInformation,
             sessionInformation,
@@ -151,7 +150,7 @@ const generateStudentReportAndSendMail = async ({ req }) => {
             to: studentInformation.email,
             studentName: `${studentInformation.firstName} ${studentInformation.lastName}`,
             sessionName: sessionInformation.sessionName,
-            pdfBuffer: pdfBuffer,
+            htmlContent: inlinedHtml,
           });
         } catch (err) {
           throw new Error(
