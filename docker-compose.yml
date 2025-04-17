@@ -19,7 +19,6 @@ services:
       - .env
     depends_on:
       - postgres_db_greenprep
-    command: ["sh", "-c", "npm run run-migration && npm start"]
   pgadmin:
     container_name: pgadmin4_greenprep
     image: dpage/pgadmin4
