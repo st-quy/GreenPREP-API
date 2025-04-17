@@ -6,6 +6,7 @@
     "start": "nodemon server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "seed": "sequelize db:seed:all",
+    "seed-only": "sequelize db:seed --seed",
     "create-migration": "npx sequelize-cli migration:generate --name",
     "run-migration": "npx sequelize-cli db:migrate"
   },
@@ -24,6 +25,7 @@
     "express": "^4.21.1",
     "handlebars": "^4.7.8",
     "jsonwebtoken": "^9.0.2",
+    "juice": "^11.0.1",
     "moment": "^2.30.1",
     "multer": "^1.4.5-lts.1",
     "multer-storage-cloudinary": "^4.0.0",
@@ -31,7 +33,6 @@
     "nodemon": "^3.1.7",
     "pg": "^8.13.1",
     "pg-hstore": "^2.3.4",
-    "puppeteer": "^24.6.1",
     "qs": "^6.13.1",
     "sequelize": "^6.37.5",
     "sequelize-paginate": "1.1.6",

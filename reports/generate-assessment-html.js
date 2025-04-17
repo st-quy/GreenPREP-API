@@ -1,11 +1,12 @@
 const fs = require("fs");
 const path = require("path");
-const puppeteer = require("puppeteer");
-const Handlebars = require("handlebars");
+const juice = require("juice");
 const {
   generateWritingSection,
   generateSpeakingSection,
 } = require("./utils/helpers");
+
+const template = require("./templates/student-assessment.js");
 
 function formatDate(dateObj) {
   const date = new Date(dateObj);
@@ -20,24 +21,15 @@ exports.generatePDF = async (
   result
 ) => {
   try {
-    const logoPath = path.join(__dirname, "assets", "logo.png");
-    const logogreenPrepPath = path.join(__dirname, "assets", "greenPrep.png");
-
-    const logo = fs.readFileSync(logoPath);
-    const logogreenPrep = fs.readFileSync(logogreenPrepPath);
-
-    const logoBase64 = `data:image/png;base64,${logo.toString("base64")}`;
-    const logogreenPrepBase64 = `data:image/png;base64,${logogreenPrep.toString(
-      "base64"
-    )}`;
-    const template = require("./templates/student-assessment.js");
-    const writingHTML = generateWritingSection(result, sessionParticipant);
-    const speakingHTML = generateSpeakingSection(result, sessionParticipant);
+    const writingHTML = generateWritingSection(result);
+    const speakingHTML = generateSpeakingSection(
+      result,
+      className.className,
+      session.sessionName
+    );
 
     const data = {
-      logo: logoBase64,
-      greenPrep: logogreenPrepBase64,
-      studentId: student.ID,
+      studentId: student.studentCode,
       studentEmail: student.email,
       studentFirstName: student.firstName,
       studentLastName: student.lastName,
@@ -50,7 +42,6 @@ exports.generatePDF = async (
       sessionName: session.sessionName,
       sessionKey: session.sessionKey,
       GrammarAndVocab: sessionParticipant.GrammarVocab,
-      GrammarAndVocabLevel: sessionParticipant.GrammarVocabLevel,
       Reading: sessionParticipant.Reading,
       ReadingLevel: sessionParticipant.ReadingLevel,
       Listening: sessionParticipant.Listening,
@@ -66,22 +57,11 @@ exports.generatePDF = async (
       speakingSection: speakingHTML,
     };
 
-    const finalHtml = template(data);
-
-    const browser = await puppeteer.launch({
-      headless: true,
-      args: ["--no-sandbox"],
-    });
-
-    const page = await browser.newPage();
-    await page.setContent(finalHtml, { waitUntil: "networkidle0" });
-
-    const pdfBuffer = await page.pdf({ format: "A4" });
-
-    await browser.close();
-    return pdfBuffer;
+    const rawHtml = template(data);
+    const inlinedHtml = juice(rawHtml);
+    return inlinedHtml;
   } catch (error) {
     console.error("❌ Lỗi khi tạo PDF:", error);
-    throw error; 
+    throw error;
   }
 };
