@@ -21,11 +21,15 @@ exports.generatePDF = async (
   result
 ) => {
   try {
-    const writingHTML = generateWritingSection(result, sessionParticipant);
-    const speakingHTML = generateSpeakingSection(result, sessionParticipant);
+    const writingHTML = generateWritingSection(result);
+    const speakingHTML = generateSpeakingSection(
+      result,
+      className.className,
+      session.sessionName
+    );
 
     const data = {
-      studentId: student.ID,
+      studentId: student.studentCode,
       studentEmail: student.email,
       studentFirstName: student.firstName,
       studentLastName: student.lastName,

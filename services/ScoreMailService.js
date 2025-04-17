@@ -52,7 +52,14 @@ const generateStudentReportAndSendMail = async ({ req }) => {
             include: [
               {
                 model: User,
-                attributes: ["ID", "firstName", "lastName", "email", "phone"],
+                attributes: [
+                  "ID",
+                  "firstName",
+                  "lastName",
+                  "email",
+                  "phone",
+                  "studentCode",
+                ],
               },
               {
                 model: Session,
