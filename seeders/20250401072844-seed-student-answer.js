@@ -34,6 +34,7 @@ module.exports = {
     const studentAnswers = sessionParticipantData.map((participant, index) => ({
       ID: uuidv4(),
       StudentID: participant.UserID,
+      SessionID: participant.SessionID,
       TopicID: topicIds[0],
       QuestionID: questionIds[index % questionIds.length],
       AnswerText: `This is a sample answer text for question ${index + 1}.`,

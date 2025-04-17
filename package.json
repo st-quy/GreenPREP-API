@@ -6,6 +6,7 @@
     "start": "nodemon server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "seed": "sequelize db:seed:all",
+    "seed-only": "sequelize db:seed --seed",
     "create-migration": "npx sequelize-cli migration:generate --name",
     "run-migration": "npx sequelize-cli db:migrate"
   },

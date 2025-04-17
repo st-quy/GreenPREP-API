@@ -60,7 +60,7 @@ module.exports = {
         Speaking: 88,
         Writing: 90,
         Total: 454,
-        Level: "C1",
+        Level: "C",
         SessionID: sessionIds[2],
         approvedAt: new Date(),
         UserID: userIds[2],
