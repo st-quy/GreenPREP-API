@@ -224,6 +224,7 @@ module.exports = {
                   correctAnswer: q.correctAnswer,
                 },
               ),
+              Sequence: questions.indexOf(q) + 1,
               PartID: partId,
               SkillID: skillId,
               createdAt: new Date(),
