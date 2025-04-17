@@ -38,9 +38,8 @@ function generateWritingSection(result, sessionParticipant) {
 
 function generateSpeakingSection(result, sessionParticipant) {
   const speakingParts = result.speaking || {};
-  const totalScore = sessionParticipant.Speaking || 0;
   let html = "";
-  
+
   Object.values(speakingParts).forEach((part, index) => {
     html += `
       <div class="assessment-content">
@@ -52,6 +51,14 @@ function generateSpeakingSection(result, sessionParticipant) {
         <div class="question-container">
           <div class="question-header">Question ${i + 1}</div>
           <div class="question-content">
+           <div class="audio-section" style="margin-bottom: 6px;">
+              <span style="font-size: 13px; color: #888;">🔊 Audio: </span>
+              ${
+                q.AnswerAudio
+                  ? `<a href="${q.AnswerAudio}" target="_blank" style="color: #4A90E2; text-decoration: none;">Listen</a>`
+                  : `<span style="color: #aaa;">(No audio available)</span>`
+              }
+            </div>
              <div class="comment-section">
                 <div class="section-label">Comment</div>
                 <div>${q.Comment}</div>
