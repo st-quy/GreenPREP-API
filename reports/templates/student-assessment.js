@@ -270,8 +270,8 @@ const html = `<!DOCTYPE html>
                     </td>
                   </tr>
                   <tr>
-                    <td width="120" style="color: #666;">Band Level:</td>
-                    <td colspan="3"><span style="background-color: #E5F6FD; color: #666; padding: 2px 8px; border-radius: 4px; font-size: 16px;">{{{Level}}}</span></td>
+                    <td width="120" style="color: #333; font-weight: bold;">Band Level:</td>
+                    <td colspan="3"><span style="background-color: #CCE5FF; color: #0066CC; padding: 4px 12px; border-radius: 4px; font-size: 16px; font-weight: bold;">{{{Level}}}</span></td>
                   </tr>
                   <tr>
                     <td width="120" style="color: #666;">Grammar & Vocab:</td>
