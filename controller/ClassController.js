@@ -1,3 +1,4 @@
+const e = require("express");
 const ClassService = require("../services/ClassService");
 
 const getAllClasses = async (req, res) => {
@@ -26,8 +27,7 @@ const createClass = async (req, res) => {
 
     return res.status(newClass.status).json(newClass);
   } catch (error) {
-    console.error("Error creating class:", error);
-    res.status(500).json({ message: "Internal server error" });
+    res.status(500).json({ message: error.message || "Internal server error" });
   }
 };
 

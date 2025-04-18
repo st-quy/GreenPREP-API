@@ -1,4 +1,4 @@
-const { Class, sequelize } = require("../models");
+const { Class, sequelize, User, Role } = require("../models");
 
 async function findAll(teacherId = null) {
   try {
@@ -33,9 +33,27 @@ async function findAll(teacherId = null) {
 
 async function createClass(req) {
   try {
-    const { className, UserID } = req.body;
+    const { className, userId } = req.body;
 
-    const newClass = await Class.create({ className, UserID });
+    if (!className || !userId) {
+      throw new Error("Class name and user ID are required");
+    }
+
+    const user = await User.findByPk(userId);
+
+    if (!user) {
+      throw new Error("User not found");
+    } else {
+      const hasTeacherRole = user.roleIDs.includes("teacher");
+      if (!hasTeacherRole) {
+        throw new Error("Only teachers can create classes");
+      }
+    }
+
+    const newClass = await Class.create({
+      className,
+      UserID: userId,
+    });
 
     return {
       status: 200,
