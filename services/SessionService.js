@@ -80,7 +80,7 @@ async function createSession(req) {
     }
 
     const checkExistTopic = await Topic.findByPk(examSet);
-    console.log("🚀 ~ createSession ~ checkExistTopic:", checkExistTopic);
+
     if (!checkExistTopic) {
       return {
         status: 400,

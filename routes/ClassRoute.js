@@ -72,7 +72,17 @@ router.get("/", getAllClasses);
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Class'
+ *             type: object
+ *             required:
+ *               - className
+ *               - userId
+ *             properties:
+ *               className:
+ *                 type: string
+ *                 description: The name of the class
+ *               userId:
+ *                 type: string
+ *                 description: The ID of the user who created the class
  *     responses:
  *       201:
  *         description: Class created successfully
