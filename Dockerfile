@@ -1,21 +1,29 @@
-FROM node:20.19-alpine
+# Stage 1: Build stage
+FROM node:20.19-alpine AS build
 
-# Create app directory
 WORKDIR /app
 
-# Install app dependencies
 COPY package*.json ./
-RUN npm i 
+RUN npm ci --omit=dev
 
-# Bundle app source
 COPY . .
 
-# Add entrypoint script
-COPY entrypoint.sh .
-RUN chmod +x entrypoint.sh
+# Remove unnecessary files from build
+RUN rm -rf \
+    *.md \
+    .git \
+    .env \
+    etc \
+    seeders \
+    migrations
+# Stage 2: Production image
+FROM node:20.19-alpine
 
-# Run migrations
-# CMD ["sh", "-c", "npm run run-migration && npm start"]
+WORKDIR /app
+
+COPY --from=build /app ./
+
+RUN chmod +x entrypoint.sh
 
 EXPOSE 3010
 
