@@ -29,6 +29,10 @@ module.exports = (sequelize, DataTypes) => {
         key: "ID",
       },
     },
+    Sequence: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
     Content: {
       type: DataTypes.TEXT,
       allowNull: false,

@@ -502,6 +502,7 @@ module.exports = {
             Content: q.content,
             AnswerContent: JSON.stringify(q),
             GroupContent: JSON.stringify(q.groupContent),
+            Sequence: questions.indexOf(q) + 1,
             PartID: q.partID,
             SkillID: skillId,
             createdAt: new Date(),

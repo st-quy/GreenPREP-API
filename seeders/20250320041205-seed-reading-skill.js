@@ -367,6 +367,7 @@ Paragraph 7 - However, the tulip’s rise to fame came with a sudden twist. In 1
             Type: q.type,
             Content: q.content,
             AnswerContent: JSON.stringify(q),
+            Sequence: questions.indexOf(q) + 1,
             PartID: q.partID,
             SkillID: skillId,
             createdAt: new Date(),

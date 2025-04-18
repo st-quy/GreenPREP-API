@@ -1,7 +1,6 @@
 const bcrypt = require("bcrypt");
 const { User } = require("../models");
 const jwtUtils = require("../helpers/jwt");
-const crypto = require("crypto");
 const nodemailer = require("nodemailer");
 const jwt = require("jsonwebtoken");
 const { Op } = require("sequelize");
