@@ -9,12 +9,16 @@ module.exports = {
       `SELECT "ID" FROM "Sessions" LIMIT 5;`
     );
 
-    const users = await queryInterface.sequelize.query(
-      `SELECT "ID" FROM "Users" LIMIT 5;`
+    const [users] = await queryInterface.sequelize.query(
+      `SELECT "ID" FROM "Users" WHERE "email" = 'student@greenprep.com';`
     );
 
     const sessionIds = sessions[0].map((session) => session.ID);
-    const userIds = users[0].map((user) => user.ID);
+
+    
+    if (!users || users.length === 0) {
+      throw new Error('Student user not found');
+    }
 
     const id1 = uuidv4();
 
@@ -24,7 +28,7 @@ module.exports = {
         status: SESSION_REQUEST_STATUS.PENDING,
         requestDate: new Date(),
         SessionID: sessionIds[0],
-        UserID: userIds[0],
+        UserID: users[0].ID,
         createdAt: new Date(),
         updatedAt: new Date(),
       },

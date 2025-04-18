@@ -29,12 +29,12 @@ module.exports = {
     );
 
     if (!topicId) {
-      topicId = uuidv4();
+      const newTopicId = "ef6b69aa-2ec2-4c65-bf48-294fd12e13fc";
       await queryInterface.bulkInsert(
         "Topics",
         [
           {
-            ID: topicId,
+            ID: newTopicId,
             Name: "Practice Test 2",
             createdAt: new Date(),
             updatedAt: new Date(),
@@ -42,6 +42,7 @@ module.exports = {
         ],
         {}
       );
+      topicId = newTopicId;
     }
 
     // Tạo Part "PART 1: GRAMMAR" liên kết với Topic này

@@ -25,14 +25,23 @@ module.exports = {
     const topicIds = topics[0].map((t) => t.ID);
 
 
+    // Check for existing session keys
+    const existingSessions = await queryInterface.sequelize.query(
+      `SELECT "sessionKey" FROM "Sessions" WHERE "sessionKey" IN ('S1-KEY', 'S2-KEY', 'S3-KEY', 'S4-KEY', 'S5-KEY', 'S6-KEY');`
+    );
+
+    if (existingSessions[0].length > 0) {
+      return;
+    }
+
     return queryInterface.bulkInsert("Sessions", [
       {
-        ID: id1,
-        sessionName: "Session 1",
-        sessionKey: "S1-KEY",
-        startTime: new Date(),
-        endTime: new Date(new Date().getTime() + 3600000),
-        examSet: topicIds[0], // Assign first topic
+      ID: id1,
+      sessionName: "Session 1",
+      sessionKey: "S1-KEY",
+      startTime: new Date(),
+      endTime: new Date(new Date().getTime() + 3600000),
+      examSet: topicIds[0], // Assign first topic
         status: "NOT_STARTED",
         ClassID: classIds[0], // Assign first class
         createdAt: new Date(),

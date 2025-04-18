@@ -37,18 +37,21 @@ module.exports = {
       (cls) => !existingClassNames.includes(cls.className)
     );
 
-    // Fetch user IDs
-    const userData = await queryInterface.sequelize.query(
-      `SELECT "ID" FROM "Users";`
-    );
-    const userIds = userData[0].map((c) => c.ID);
+// Fetch user IDs
+const [users] = await queryInterface.sequelize.query(
+  `SELECT "ID" FROM "Users" WHERE "email" = 'teacher@greenprep.com';`
+);
 
-    // Assign UserID and timestamps to filtered classes
-    filteredClasses.forEach((cls) => {
-      cls.UserID = userIds[0];
-      cls.createdAt = new Date();
-      cls.updatedAt = new Date();
-    });
+if (!users || users.length === 0) {
+  throw new Error('Teacher user not found');
+}
+
+// Assign UserID and timestamps to filtered classes
+filteredClasses.forEach((cls) => {
+  cls.UserID = users[0].ID;
+  cls.createdAt = new Date();
+  cls.updatedAt = new Date();
+});
 
     // Insert filtered classes
     if (filteredClasses.length > 0) {

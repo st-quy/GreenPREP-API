@@ -9,12 +9,12 @@ module.exports = {
       SELECT "SessionID", "UserID"
       FROM "SessionParticipants"
       WHERE "approvedAt" IS NOT NULL AND "UserID" IS NOT NULL
-      LIMIT 5;
+      LIMIT 1;
       `
     );
 
     const topics = await queryInterface.sequelize.query(
-      `SELECT "ID" FROM "Topics" LIMIT 5;`
+      `SELECT "ID" FROM "Topics" LIMIT 1;`
     );
 
     const questions = await queryInterface.sequelize.query(
@@ -47,7 +47,6 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    // Xóa tất cả các bản ghi trong bảng StudentAnswer
     await queryInterface.bulkDelete("StudentAnswers", null, {});
   },
-};
+}

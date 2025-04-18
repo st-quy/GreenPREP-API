@@ -331,12 +331,12 @@ module.exports = {
           "4. Speaker D primarily _____.",
         ],
         rightItems: [
-          "A. travels by car",
-          "B. walks alone",
-          "C. travels by bike",
-          "D. travels by bus",
-          "E. walks with a friend",
-          "F. walks with their mother",
+          "travels by car",
+          "walks alone",
+          "travels by bike",
+          "travels by bus",
+          "walks with a friend",
+          "walks with their mother",
         ],
         correctAnswer: [
           {
