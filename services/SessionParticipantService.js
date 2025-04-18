@@ -162,7 +162,15 @@ const publishScoresBySessionId = async (req) => {
     };
   }
 
-  await generateStudentReportAndSendMail({ req });
+  try {
+    await generateStudentReportAndSendMail({ req });
+  } catch (err) {
+    console.error("Error generating student report:", err.message);
+    return {
+      status: 500,
+      message: "Failed to generate student report.",
+    };
+  }
 
   return {
     status: 200,
