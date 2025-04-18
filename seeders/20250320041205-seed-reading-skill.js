@@ -317,32 +317,32 @@ Paragraph 7 - However, the tulip’s rise to fame came with a sudden twist. In 1
         ],
         correctAnswer: [
           {
-            key: "Paragraph 1",
-            value: "F. The economy during the Golden Age",
+            left: "Paragraph 1",
+            right: "F. The economy during the Golden Age",
           },
           {
-            key: "Pragraph 2",
-            value: "E. Coming into fashion",
+            left: "Pragraph 2",
+            right: "E. Coming into fashion",
           },
           {
-            key: "Paragraph 3",
-            value: "G. An object of trade",
+            left: "Paragraph 3",
+            right: "G. An object of trade",
           },
           {
-            key: "Paragraph 4",
-            value: "C. Different types of tulip",
+            left: "Paragraph 4",
+            right: "C. Different types of tulip",
           },
           {
-            key: "Paragraph 5",
-            value: "B. Trade mechanics",
+            left: "Paragraph 5",
+            right: "B. Trade mechanics",
           },
           {
-            key: "Paragraph 6",
-            value: "D. Tulips across Europe",
+            left: "Paragraph 6",
+            right: "D. Tulips across Europe",
           },
           {
-            key: "Paragraph 7",
-            value: "A. An unexpected turn of events",
+            left: "Paragraph 7",
+            right: "A. An unexpected turn of events",
           },
         ],
         partID: partId4,
