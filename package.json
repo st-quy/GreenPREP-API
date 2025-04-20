@@ -5,8 +5,10 @@
   "scripts": {
     "start": "nodemon server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "seed": "sequelize db:seed:all",
-    "seed-only": "sequelize db:seed --seed",
+    "seed-prod": "NODE_ENV=production sequelize db:seed:all",
+    "seed": "NODE_ENV=development sequelize db:seed:all",
+    "seed-only": "NODE_ENV=development sequelize db:seed --seed",
+    "seed-only-prod": "NODE_ENV=production sequelize db:seed --seed",
     "create-migration": "npx sequelize-cli migration:generate --name",
     "run-migration": "npx sequelize-cli db:migrate"
   },
