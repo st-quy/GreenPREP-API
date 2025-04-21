@@ -177,15 +177,16 @@ async function changePassword(userId, oldPassword, newPassword) {
   }
 }
 
-const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-});
+
 
 async function sendResetPasswordEmail(email, host) {
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS,
+    },
+  });
   try {
     const user = await User.findOne({ where: { email } });
     if (!user) {
