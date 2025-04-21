@@ -154,6 +154,8 @@ const publishScoresBySessionId = async (req) => {
     { where: { SessionID: sessionId } }
   );
 
+
+
   if (updatedCount === 0) {
     return {
       status: 404,
@@ -164,6 +166,10 @@ const publishScoresBySessionId = async (req) => {
 
   try {
     await generateStudentReportAndSendMail({ req });
+    await Session.update(
+      { isPublished: true },
+      { where: { ID: sessionId } }
+    );
   } catch (err) {
     console.error("Error generating student report:", err.message);
     return {
