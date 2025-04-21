@@ -42,6 +42,11 @@ module.exports = (sequelize, DataTypes) => {
         key: "ID",
       },
     },
+    isPublished: {
+      type: DataTypes.BOOLEAN,
+      allowNull: true,
+      defaultValue: false,
+    },
   });
 
   return Session;
