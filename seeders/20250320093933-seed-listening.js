@@ -57,20 +57,20 @@ module.exports = {
 
     const parts = [
       {
-        content: "PART 1: Information recognition (13 questions)",
+        content: "Information recognition (13 questions)",
         subContent: "",
       },
       {
-        content: "PART 2: Information Matching (4 questions)",
+        content: "Information Matching (4 questions)",
         subContent: "",
       },
       {
-        content: "PART 3: Opinion Matching (4 questions)",
+        content: "Opinion Matching (4 questions)",
         subContent:
-          "Listen to two people discussing music. Read the opinions below and decide whose opinion matches the statements: the man, the woman, or both the man and the woman.",
+          "Listen to two people discussing community design. Read the opinions below and decide whose opinion matches the statements: the man, the woman, or both the man and the woman.",
       },
       {
-        content: "PART 4: Inference (2 talks - 4 questions)",
+        content: "Inference (2 talks - 4 questions)",
         subContent:
           "Listen to two long monologues and choose the correct answer for each question.",
       },
@@ -115,7 +115,7 @@ module.exports = {
         },
         options: ["£1.50", "£2.50", "£3.50"],
         correctAnswer: "£1.50",
-        partID: partIds["PART 1: Information recognition (13 questions)"],
+        partID: partIds["Information recognition (13 questions)"],
         type: "multiple-choice",
         audioKeys:
           "https://res.cloudinary.com/dlhcg0tcz/video/upload/v1742953612/greenprep/Part%201/1.mp3",
@@ -130,7 +130,7 @@ module.exports = {
         },
         options: ["In the mornings", "In the afternoons", "In the evenings"],
         correctAnswer: "In the mornings",
-        partID: partIds["PART 1: Information recognition (13 questions)"],
+        partID: partIds["Information recognition (13 questions)"],
         type: "multiple-choice",
         audioKeys:
           "https://res.cloudinary.com/dlhcg0tcz/video/upload/v1742953612/greenprep/Part%201/2.mp3",
@@ -145,7 +145,7 @@ module.exports = {
         },
         options: ["Blue", "Purple", "Red"],
         correctAnswer: "Blue",
-        partID: partIds["PART 1: Information recognition (13 questions)"],
+        partID: partIds["Information recognition (13 questions)"],
         type: "multiple-choice",
         audioKeys:
           "https://res.cloudinary.com/dlhcg0tcz/video/upload/v1742953612/greenprep/Part%201/3.mp3",
@@ -158,7 +158,7 @@ module.exports = {
         },
         options: ["At home", "In the garden", "Outside the shop"],
         correctAnswer: "Outside the shop",
-        partID: partIds["PART 1: Information recognition (13 questions)"],
+        partID: partIds["Information recognition (13 questions)"],
         type: "multiple-choice",
         audioKeys:
           "https://res.cloudinary.com/dlhcg0tcz/video/upload/v1742953612/greenprep/Part%201/4.mp3",
@@ -173,7 +173,7 @@ module.exports = {
         },
         options: ["6 o’clock", "7 o’clock", "8 o’clock"],
         correctAnswer: "7 o’clock",
-        partID: partIds["PART 1: Information recognition (13 questions)"],
+        partID: partIds["Information recognition (13 questions)"],
         type: "multiple-choice",
         audioKeys:
           "https://res.cloudinary.com/dlhcg0tcz/video/upload/v1742953612/greenprep/Part%201/5.mp3",
@@ -193,7 +193,7 @@ module.exports = {
           "On Saturday morning",
         ],
         correctAnswer: "On Friday morning",
-        partID: partIds["PART 1: Information recognition (13 questions)"],
+        partID: partIds["Information recognition (13 questions)"],
         type: "multiple-choice",
         audioKeys:
           "https://res.cloudinary.com/dlhcg0tcz/video/upload/v1742953612/greenprep/Part%201/6.mp3",
@@ -213,7 +213,7 @@ module.exports = {
           "They both had long hair",
         ],
         correctAnswer: "They both had blue eyes",
-        partID: partIds["PART 1: Information recognition (13 questions)"],
+        partID: partIds["Information recognition (13 questions)"],
         type: "multiple-choice",
         audioKeys:
           "https://res.cloudinary.com/dlhcg0tcz/video/upload/v1742953612/greenprep/Part%201/7.mp3",
@@ -228,7 +228,7 @@ module.exports = {
         },
         options: ["8,000", "9,000", "10,000"],
         correctAnswer: "9,000",
-        partID: partIds["PART 1: Information recognition (13 questions)"],
+        partID: partIds["Information recognition (13 questions)"],
         type: "multiple-choice",
         audioKeys:
           "https://res.cloudinary.com/dlhcg0tcz/video/upload/v1742953612/greenprep/Part%201/8.mp3",
@@ -243,7 +243,7 @@ module.exports = {
         },
         options: ["Math classes", "Geography classes", "History classes"],
         correctAnswer: "History classes",
-        partID: partIds["PART 1: Information recognition (13 questions)"],
+        partID: partIds["Information recognition (13 questions)"],
         type: "multiple-choice",
         audioKeys:
           "https://res.cloudinary.com/dlhcg0tcz/video/upload/v1742953612/greenprep/Part%201/9.mp3",
@@ -258,7 +258,7 @@ module.exports = {
         },
         options: ["11 p.m", "1 p.m", "6 p.m"],
         correctAnswer: "1 p.m",
-        partID: partIds["PART 1: Information recognition (13 questions)"],
+        partID: partIds["Information recognition (13 questions)"],
         type: "multiple-choice",
         audioKeys:
           "https://res.cloudinary.com/dlhcg0tcz/video/upload/v1742953612/greenprep/Part%201/10.mp3",
@@ -273,7 +273,7 @@ module.exports = {
         },
         options: ["Goes running", "Cycles home", "Meets his client"],
         correctAnswer: "Cycles home",
-        partID: partIds["PART 1: Information recognition (13 questions)"],
+        partID: partIds["Information recognition (13 questions)"],
         type: "multiple-choice",
         audioKeys:
           "https://res.cloudinary.com/dlhcg0tcz/video/upload/v1742953612/greenprep/Part%201/11.mp3",
@@ -292,7 +292,7 @@ module.exports = {
           "Tutor another student",
         ],
         correctAnswer: "Speak at a conference",
-        partID: partIds["PART 1: Information recognition (13 questions)"],
+        partID: partIds["Information recognition (13 questions)"],
         type: "multiple-choice",
         audioKeys:
           "https://res.cloudinary.com/dlhcg0tcz/video/upload/v1742953612/greenprep/Part%201/12.mp3",
@@ -311,7 +311,7 @@ module.exports = {
           "Playing chess with her cousin",
         ],
         correctAnswer: "Going to the theatre",
-        partID: partIds["PART 1: Information recognition (13 questions)"],
+        partID: partIds["Information recognition (13 questions)"],
         type: "multiple-choice",
         audioKeys:
           "https://res.cloudinary.com/dlhcg0tcz/video/upload/v1742953612/greenprep/Part%201/13.mp3",
@@ -325,10 +325,10 @@ module.exports = {
           audioKey: "",
         },
         leftItems: [
-          "1. Speaker A mainly _____.",
-          "2. Speaker B usually _____.",
-          "3. Speaker C usually_____.",
-          "4. Speaker D primarily _____.",
+          "Speaker mainly _____.",
+          "Speaker usually _____.",
+          "Speaker usually_____.",
+          "Speaker primarily _____.",
         ],
         rightItems: [
           "travels by car",
@@ -340,23 +340,23 @@ module.exports = {
         ],
         correctAnswer: [
           {
-            key: "1. Speaker A mainly _____.",
-            value: "D. travels by bus",
+            key: "Speaker mainly _____.",
+            value: "travels by bus",
           },
           {
-            key: "2. Speaker B usually _____.",
-            value: "A. travels by car",
+            key: "Speaker usually _____.",
+            value: "travels by car",
           },
           {
-            key: "3. Speaker C usually _____.",
-            value: "B. walks alone",
+            key: "Speaker usually _____.",
+            value: "walks alone",
           },
           {
-            key: "4. Speaker D primarily _____.",
-            value: "E. walks with a friend",
+            key: "Speaker primarily _____.",
+            value: "walks with a friend",
           },
         ],
-        partID: partIds["PART 2: Information Matching (4 questions)"],
+        partID: partIds["Information Matching (4 questions)"],
         type: "dropdown-list",
         audioKeys:
           "https://res.cloudinary.com/dlhcg0tcz/video/upload/v1742953612/greenprep/Part%202/1.mp3",
@@ -370,41 +370,41 @@ module.exports = {
           audioKey: "",
         },
         leftItems: [
-          "1. Building design can influence people's behavior.",
-          "2. Creating community can take time.",
-          "3. Work communities and social communities are the same.",
-          "4. Technology has changed how community forms.",
+          "Building design can influence people's behavior.",
+          "Creating community can take time.",
+          "Work communities and social communities are the same.",
+          "Technology has changed how community forms.",
         ],
         rightItems: ["Man", "Woman", "Both"],
         correctAnswer: [
           {
-            key: "1. Building design can influence people's behavior.",
+            key: "Building design can influence people's behavior.",
             value: "Both",
           },
           {
-            key: "2. Creating community can take time.",
+            key: "Creating community can take time.",
             value: "Woman",
           },
           {
-            key: "3. Work communities and social communities are the same.",
+            key: "Work communities and social communities are the same.",
             value: "Man",
           },
           {
-            key: "4. Technology has changed how community forms..",
+            key: "Technology has changed how community forms..",
             value: "Both",
           },
         ],
-        partID: partIds["PART 3: Opinion Matching (4 questions)"],
+        partID: partIds["Opinion Matching (4 questions)"],
         type: "dropdown-list",
         audioKeys:
           "https://res.cloudinary.com/dlhcg0tcz/video/upload/v1742953612/greenprep/Part%203/1.mp3",
       },
       {
         content:
-          "Monologue 1: Listen to an expert giving a talk about managing financial spending",
+          "Listen to an expert giving a talk about managing financial spending",
         groupContent: {
           title:
-            "Monologue 1: Listen to an expert giving a talk about managing financial spending",
+            "Listen to an expert giving a talk about managing financial spending",
           audioKey: "",
           listContent: [
             {
@@ -418,7 +418,7 @@ module.exports = {
               ],
               type: "multiple-choice",
               correctAnswer: "Organizing their resources more effectively.",
-              partID: partIds["PART 4: Inference (2 talks - 4 questions)"],
+              partID: partIds["Inference (2 talks - 4 questions)"],
             },
             {
               ID: 2,
@@ -431,26 +431,26 @@ module.exports = {
               ],
               type: "multiple-choice",
               correctAnswer: "Get advice from people that have experience.",
-              partID: partIds["PART 4: Inference (2 talks - 4 questions)"],
+              partID: partIds["Inference (2 talks - 4 questions)"],
             },
           ],
         },
-        partID: partIds["PART 4: Inference (2 talks - 4 questions)"],
+        partID: partIds["Inference (2 talks - 4 questions)"],
         type: "listening-questions-group",
         audioKeys:
           "https://res.cloudinary.com/dlhcg0tcz/video/upload/v1742953612/greenprep/Part%204/1.mp3",
       },
       {
         content:
-          "Monologue 2: Listen to an person sharing their opinion about security cameras",
+          "Listen to an person sharing their opinion about security cameras",
         groupContent: {
           title:
-            "Monologue 2: Listen to an person sharing their opinion about security cameras",
+            "Listen to an person sharing their opinion about security cameras",
           audioKey: "",
           listContent: [
             {
               ID: 1,
-              content:
+            content:
                 "What is the speaker’s opinion about security cameras at work?",
               options: [
                 "People are unnecessarily worried about them.",
@@ -459,7 +459,7 @@ module.exports = {
               ],
               type: "multiple-choice",
               correctAnswer: "People are unnecessarily worried about them.",
-              partID: partIds["PART 4: Inference (2 talks - 4 questions)"],
+              partID: partIds["Inference (2 talks - 4 questions)"],
             },
             {
               ID: 2,
@@ -473,11 +473,11 @@ module.exports = {
               type: "multiple-choice",
               correctAnswer:
                 "People should feel reassured about their presence.",
-              partID: partIds["PART 4: Inference (2 talks - 4 questions)"],
+              partID: partIds["Inference (2 talks - 4 questions)"],
             },
           ],
         },
-        partID: partIds["PART 4: Inference (2 talks - 4 questions)"],
+        partID: partIds["Inference (2 talks - 4 questions)"],
         type: "listening-questions-group",
         audioKeys:
           "https://res.cloudinary.com/dlhcg0tcz/video/upload/v1742953612/greenprep/Part%204/2.mp3",
@@ -519,7 +519,7 @@ module.exports = {
       PartID: Sequelize.col("ID"),
     });
     await queryInterface.bulkDelete("Parts", {
-      Content: "PART 1: Information recognition (13 questions)",
+      Content: "Information recognition (13 questions)",
     });
     await queryInterface.bulkDelete("Topics", { Name: "Practice Test 2" }, {});
   },
