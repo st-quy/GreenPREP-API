@@ -121,55 +121,49 @@ const publishScoresBySessionId = async (req) => {
     throw new Error("sessionId is required");
   }
 
-  const incompleteStudents = await SessionParticipant.findAll({
+  const completeStudents = await SessionParticipant.findAll({
     where: {
       SessionID: sessionId,
-      [Op.or]: [
-        { GrammarVocab: { [Op.is]: null } },
-        { Reading: { [Op.is]: null } },
-        { ReadingLevel: { [Op.is]: null } },
-        { Listening: { [Op.is]: null } },
-        { ListeningLevel: { [Op.is]: null } },
-        { Writing: { [Op.is]: null } },
-        { WritingLevel: { [Op.is]: null } },
-        { Speaking: { [Op.is]: null } },
-        { SpeakingLevel: { [Op.is]: null } },
-        { Total: { [Op.is]: null } },
-        { Level: { [Op.is]: null } },
-      ],
+      IsPublished: false,
+      GrammarVocab: { [Op.not]: null },
+      Reading: { [Op.not]: null },
+      ReadingLevel: { [Op.not]: null },
+      Listening: { [Op.not]: null },
+      ListeningLevel: { [Op.not]: null },
+      Writing: { [Op.not]: null },
+      WritingLevel: { [Op.not]: null },
+      Speaking: { [Op.not]: null },
+      SpeakingLevel: { [Op.not]: null },
+      Total: { [Op.not]: null },
+      Level: { [Op.not]: null },
     },
     attributes: ["UserID"],
   });
 
-  if (incompleteStudents.length > 0) {
+  if (!completeStudents.length) {
     return {
       status: 400,
-      message:
-        "Some students are missing scores or levels. Please complete the data before publishing.",
+      message: "No students meet the requirements to publish scores.",
     };
   }
 
-  const [updatedCount] = await SessionParticipant.update(
-    { IsPublished: true },
-    { where: { SessionID: sessionId } }
-  );
+  const userIds = completeStudents.map((s) => s.UserID);
 
-
-
-  if (updatedCount === 0) {
-    return {
-      status: 404,
-      message: "No records updated. Possibly invalid SessionID.",
-      data: updatedCount,
-    };
+  if (userIds.length) {
+    await SessionParticipant.update(
+      { IsPublished: true },
+      {
+        where: {
+          SessionID: sessionId,
+          UserID: userIds,
+        },
+      }
+    );
   }
 
   try {
-    await generateStudentReportAndSendMail({ req });
-    await Session.update(
-      { isPublished: true },
-      { where: { ID: sessionId } }
-    );
+    await generateStudentReportAndSendMail({ req, userIds });
+    await Session.update({ isPublished: true }, { where: { ID: sessionId } });
   } catch (err) {
     console.error("Error generating student report:", err.message);
     return {
@@ -181,7 +175,6 @@ const publishScoresBySessionId = async (req) => {
   return {
     status: 200,
     message: "Scores published successfully.",
-    data: updatedCount,
   };
 };
 

@@ -21,18 +21,18 @@ function generateWritingSection(result) {
         </div>
       `;
         })
-        .join(""); 
+        .join("");
 
       return `
       <div class="assessment-section">
         <div class="assessment-content">
-          <h4 class="part-title">Part ${part.ContentPart}</h4>
+          <h4 class="part-title">${part.ContentPart}</h4>
           ${partHtml}
         </div>
       </div>
     `;
     })
-    .join(""); 
+    .join("");
 }
 
 function generateSpeakingSection(result, className, sessionName) {
@@ -81,7 +81,7 @@ function generateSpeakingSection(result, className, sessionName) {
 
       return `
         <div class="assessment-content">
-          <h4 class="part-title">Part ${part.ContentPart}</h4>
+          <h4 class="part-title">${part.ContentPart}</h4>
           ${questionsHtml}
         </div>
       `;
