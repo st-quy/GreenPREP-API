@@ -53,47 +53,50 @@ module.exports = {
     await queryInterface.bulkInsert("Parts", [
       {
         ID: partId1,
-        Content: "Part 1 - Choose one word from the list for each gap.",
+        Content: "Choose one word from the list for each gap.",
         SubContent: "",
         TopicID: topicId, // Gán vào "Practice Test 2"
+        Sequence: 1,
         createdAt: new Date(),
         updatedAt: new Date(),
       },
       {
         ID: partId2a,
-        Content: `Part 2: The sentences below are from instructions. Put the sentences in the right order.
-            The first sentence is done for you.
+        Content: `The sentences below are from instructions. Put the sentences in the right order. The first sentence is done for you.
             Follow the steps below if you join a talk by Professor James Smith.
             `,
         SubContent: "",
         TopicID: topicId, // Gán vào "Practice Test 2"
+        Sequence: 2,
         createdAt: new Date(),
         updatedAt: new Date(),
       },
       {
         ID: partId2b,
-        Content: `Part 3: The sentences below are from instructions. Put the sentences in the right order. 
-        The first sentence is done for you.
+        Content: `The sentences below are from instructions. Put the sentences in the right order. The first sentence is done for you.
         Most of drivers must follow the schedule of company.
             `,
         SubContent: "",
         TopicID: topicId, // Gán vào "Practice Test 2"
+        Sequence: 3,
         createdAt: new Date(),
         updatedAt: new Date(),
       },
       {
         ID: partId3,
-        Content: `Part 4: Four people respond in the comments section of an online magazine article about technology. Read the texts and then answer the questions below.`,
+        Content: `Four people respond in the comments section of an online magazine article about technology. Read the texts and then answer the questions below.`,
         SubContent: "",
         TopicID: topicId, // Gán vào "Practice Test 2"
+        Sequence: 4,
         createdAt: new Date(),
         updatedAt: new Date(),
       },
       {
         ID: partId4,
-        Content: `Part 5 - Read the following passage quickly. Choose a heading for each numbered paragraph (1-7). There is one more heading than you need.`,
+        Content: `Read the following passage quickly. Choose a heading for each numbered paragraph (1-7). There is one more heading than you need.`,
         SubContent: "",
         TopicID: topicId, // Gán vào "Practice Test 2"
+        Sequence: 5,
         createdAt: new Date(),
         updatedAt: new Date(),
       },
@@ -158,38 +161,38 @@ However, I need to finish this meeting with my 5. (boss/ client/ host)
       },
       {
         content: `
-A. After he finishes, there will be time for questions.
-B. A staff member will note this down and give you a welcome pack
-C. If you would like to attend his talk, it will take place in the main hall at midday
-D. When you arrive at the conference hall, give your booking number.
-E. Inside, you will find a schedule of events and the information of the key speaker
+After he finishes, there will be time for questions.
+A staff member will note this down and give you a welcome pack.
+If you would like to attend his talk, it will take place in the main hall at midday.
+When you arrive at the conference hall, give your booking number.
+Inside, you will find a schedule of events and the information of the key speaker.
 `,
         options: [
-          "A. After he finishes, there will be time for questions.",
-          "B. A staff member will note this down and give you a welcome pack",
-          "C. If you would like to attend his talk, it will take place in the main hall at midday",
-          "D. When you arrive at the conference hall, give your booking number.",
-          "E. Inside, you will find a schedule of events and the information of the key speaker",
+          "After he finishes, there will be time for questions.",
+          "A staff member will note this down and give you a welcome pack.",
+          "If you would like to attend his talk, it will take place in the main hall at midday.",
+          "When you arrive at the conference hall, give your booking number.",
+          "Inside, you will find a schedule of events and the information of the key speaker.",
         ],
         correctAnswer: [
           {
-            key: "A. After he finishes, there will be time for questions.",
+            key: "After he finishes, there will be time for questions.",
             value: 5,
           },
           {
-            key: "B. A staff member will note this down and give you a welcome pack",
+            key: "A staff member will note this down and give you a welcome pack.",
             value: 2,
           },
           {
-            key: "C. If you would like to attend his talk, it will take place in the main hall at midday",
+            key: "If you would like to attend his talk, it will take place in the main hall at midday.",
             value: 4,
           },
           {
-            key: "D. When you arrive at the conference hall, give your booking number.",
+            key: "When you arrive at the conference hall, give your booking number.",
             value: 1,
           },
           {
-            key: "E. Inside, you will find a schedule of events and the information of the key speaker",
+            key: "Inside, you will find a schedule of events and the information of the key speaker.",
             value: 3,
           },
         ],
@@ -198,38 +201,38 @@ E. Inside, you will find a schedule of events and the information of the key spe
       },
       {
         content: `
-A. You must return truck keys to the office after being back.
-B. In the company office, you can take a map with you.
-C. You should arrive the office by 6 am and have your truck keys.
-D. When you complete delivers, return to the company office.
-E. You must follow the map to send your products.
+You must return truck keys to the office after being back.
+In the company office, you can take a map with you.
+You should arrive the office by 6 am and have your truck keys.
+When you complete delivers, return to the company office.
+You must follow the map to send your products.
 `,
         options: [
-          "A. You must return truck keys to the office after being back.",
-          "B. In the company office, you can take a map with you.",
-          "C. You should arrive the office by 6 am and have your truck keys.",
-          "D. When you complete delivers, return to the company office.",
-          "E. You must follow the map to send your products.",
+          "You must return truck keys to the office after being back.",
+          "In the company office, you can take a map with you.",
+          "You should arrive the office by 6 am and have your truck keys.",
+          "When you complete delivers, return to the company office.",
+          "You must follow the map to send your products.",
         ],
         correctAnswer: [
           {
-            key: "A. After he finishes, there will be time for questions.",
+            key: "After he finishes, there will be time for questions.",
             value: 5,
           },
           {
-            key: "B. A staff member will note this down and give you a welcome pack",
+            key: "A staff member will note this down and give you a welcome pack.",
             value: 2,
           },
           {
-            key: "C. If you would like to attend his talk, it will take place in the main hall at midday",
+            key: "If you would like to attend his talk, it will take place in the main hall at midday.",
             value: 4,
           },
           {
-            key: "D. When you arrive at the conference hall, give your booking number.",
+            key: "When you arrive at the conference hall, give your booking number.",
             value: 1,
           },
           {
-            key: "E. Inside, you will find a schedule of events and the information of the key speaker",
+            key: "Inside, you will find a schedule of events and the information of the key speaker.",
             value: 3,
           },
         ],
@@ -306,43 +309,43 @@ Paragraph 7 - However, the tulip’s rise to fame came with a sudden twist. In 1
           "Paragraph 7",
         ],
         rightItems: [
-          "A. An unexpected turn of events",
-          "B. Trade mechanics",
-          "C. Different types of tulip",
-          "D. Tulips across Europe",
-          "E. Coming into fashion",
-          "F. The economy during the Golden Age",
-          "G. An object of trade",
-          "H. The scientific study of tulip varieties",
+          "An unexpected turn of events",
+          "Trade mechanics",
+          "Different types of tulip",
+          "Tulips across Europe",
+          "Coming into fashion",
+          "The economy during the Golden Age",
+          "An object of trade",
+          "The scientific study of tulip varieties",
         ],
         correctAnswer: [
           {
             left: "Paragraph 1",
-            right: "F. The economy during the Golden Age",
+            right: "The economy during the Golden Age",
           },
           {
-            left: "Pragraph 2",
-            right: "E. Coming into fashion",
+            left: "Paragraph 2",
+            right: "Coming into fashion",
           },
           {
             left: "Paragraph 3",
-            right: "G. An object of trade",
+            right: "An object of trade",
           },
           {
             left: "Paragraph 4",
-            right: "C. Different types of tulip",
+            right: "Different types of tulip",
           },
           {
             left: "Paragraph 5",
-            right: "B. Trade mechanics",
+            right: "Trade mechanics",
           },
           {
             left: "Paragraph 6",
-            right: "D. Tulips across Europe",
+            right: "Tulips across Europe",
           },
           {
             left: "Paragraph 7",
-            right: "A. An unexpected turn of events",
+            right: "An unexpected turn of events",
           },
         ],
         partID: partId4,
@@ -384,16 +387,14 @@ Paragraph 7 - However, the tulip’s rise to fame came with a sudden twist. In 1
     });
     await queryInterface.bulkDelete(
       "Parts",
-      { Content: "Part 1 - Choose one word from the list for each gap." },
+      { Content: "Part 1: Choose one word from the list for each gap." },
       {
-        Content: `Part 2A: The sentences below are from instructions. Put the sentences in the right order.
-            The first sentence is done for you.
+        Content: `Part 2A: The sentences below are from instructions. Put the sentences in the right order. The first sentence is done for you.
             Follow the steps below if you join a talk by Professor James Smith.
             `,
       },
       {
-        content: `Part 2B: The sentences below are from instructions. Put the sentences in the right order.
-        The first sentence is done for you.
+        content: `Part 2B: The sentences below are from instructions. Put the sentences in the right order. The first sentence is done for you.
         Most of drivers must follow the schedule of company.
             `,
       },
@@ -401,7 +402,7 @@ Paragraph 7 - However, the tulip’s rise to fame came with a sudden twist. In 1
         Content: `Part 3: Four people respond in the comments section of an online magazine article about technology. Read the texts and then answer the questions below.`,
       },
       {
-        Content: `Part 4 - Read the following passage quickly. Choose a heading for each numbered paragraph (1-7). There is one more heading than you need.`,
+        Content: `Part 4: Read the following passage quickly. Choose a heading for each numbered paragraph (1-7). There is one more heading than you need.`,
       }
     );
     await queryInterface.bulkDelete("Topics", { Name: "Practice Test 2" });

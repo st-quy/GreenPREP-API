@@ -55,9 +55,10 @@ module.exports = {
       {
         ID: 1,
         content:
-          "Part 1: You want to join the beautiful homes club. You have 5 messages from a member of the club. Write short answers (1 – 5 words) to each message. Recommended time: 3 minutes. (1 point)",
+          "Part 1: You want to join the beautiful homes club. You have 5 messages from a member of the club. Write short answers (1 – 5 words) to each message. Recommended time: 3 minutes.",
         subContent:
           "* (You’re allowed to write up to 10 words without affecting your grade).",
+        Sequence: 1,
       },
       {
         ID: 2,
@@ -65,6 +66,7 @@ module.exports = {
           "Part 2: You are a new member of the beautiful homes club. Fill in the form. Write sentences. Use 20 – 30 words. Recommended time: 7 minutes. (1.5 points)",
         subContent:
           "* (You’re allowed to write up to 45 words without affecting your grade).",
+        Sequence: 2,
       },
       {
         ID: 3,
@@ -72,6 +74,7 @@ module.exports = {
           "Part 3: You are a member of the beautiful homes club. You are talking to some members in the club’s chat room. Talk to them using sentences. Use 30 – 40 words per answer. Recommended time: 10 minutes. (2.5 points)",
         subContent:
           "* (You’re allowed to write up to 60 words without affecting your grade).",
+        Sequence: 3,
       },
       {
         ID: 4,
@@ -79,6 +82,7 @@ module.exports = {
           "Part 4: You are a member of the beautiful homes club. You received this email from the club president. (5 points) ",
         subContent: `Dear members,
 It has been reported that maintaining old buildings is expensive, and they take up a lot of space. These buildings may no longer be safe. The government is suggesting that these old buildings should be demolished and replaced with modern apartment buildings. This would help create more housing and improve the overall look of the city. We would like to hear your suggestions on this.`,
+        Sequence: 4,
       },
     ];
 
@@ -93,6 +97,7 @@ It has been reported that maintaining old buildings is expensive, and they take 
             Content: part.content,
             SubContent: part.subContent,
             TopicID: topicId, // Gán vào "Practice Test 2"
+            Sequence: part.Sequence,
             createdAt: new Date(),
             updatedAt: new Date(),
           },
@@ -196,7 +201,7 @@ It has been reported that maintaining old buildings is expensive, and they take 
       },
       {
         content:
-          "1. Write an email to your friend. Share your thoughts on this piece of news and your suggestions. Write about 50 words. Recommended time: 10 minutes. (2 points)",
+          "Write an email to your friend. Share your thoughts on this piece of news and your suggestions. Write about 50 words. Recommended time: 10 minutes.",
         subContent:
           "* (You’re allowed to write up to 75 words without affecting your grade).",
         groupContent: null,
@@ -208,7 +213,7 @@ It has been reported that maintaining old buildings is expensive, and they take 
       },
       {
         content:
-          "2. Write an email to the club president. Express your feelings about this piece of news and your suggestions. Write about 120-150 words. Recommended time: 20 minutes. (3 points)",
+          "Write an email to the club president. Express your feelings about this piece of news and your suggestions. Write about 120-150 words. Recommended time: 20 minutes.",
         subContent:
           "* (You’re allowed to write up to 225 words without affecting your grade).",
         groupContent: null,
@@ -260,19 +265,19 @@ It has been reported that maintaining old buildings is expensive, and they take 
       "Parts",
       {
         Content:
-          "Part 1: You want to join the beautiful homes club. You have 5 messages from a member of the club. Write short answers (1 – 5 words) to each message. Recommended time: 3 minutes. (1 point)",
+          "Part 1: You want to join the beautiful homes club. You have 5 messages from a member of the club. Write short answers (1 – 5 words) to each message. Recommended time: 3 minutes.",
       },
       {
         Content:
-          "Part 2: You are a new member of the beautiful homes club. Fill in the form. Write sentences. Use 20 – 30 words. Recommended time: 7 minutes. (1.5 points)",
+          "Part 2: You are a new member of the beautiful homes club. Fill in the form. Write sentences. Use 20 – 30 words. Recommended time: 7 minutes.",
       },
       {
         Content:
-          "Part 3: You are a member of the beautiful homes club. You are talking to some members in the club’s chat room. Talk to them using sentences. Use 30 – 40 words per answer. Recommended time: 10 minutes. (2.5 points)",
+          "Part 3: You are a member of the beautiful homes club. You are talking to some members in the club’s chat room. Talk to them using sentences. Use 30 – 40 words per answer. Recommended time: 10 minutes.",
       },
       {
         Content:
-          "Part 4: You are a member of the beautiful homes club. You received this email from the club president. (5 points)",
+          "Part 4: You are a member of the beautiful homes club. You received this email from the club president.",
       }
     );
     await queryInterface.bulkDelete("Topics", { Name: "Practice Test 2" });

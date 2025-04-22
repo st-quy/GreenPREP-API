@@ -99,7 +99,17 @@ async function createSessionRequest(req) {
 
     const session = await Session.findOne({ where: { sessionKey } });
     if (!session) {
-      throw new Error("Session not found with sessionKey: " + sessionKey);
+      return {
+        status: 404,
+        message: "Session not found",
+      };
+    }
+
+    if (session.status === "COMPLETE") {
+      return {
+        status: 400,
+        message: "Session is completed",
+      };
     }
 
     const checks = await Promise.all(
@@ -112,11 +122,11 @@ async function createSessionRequest(req) {
     );
 
     if (checks.filter(Boolean).length > 0) {
-      const existingRequest = checks[1].dataValues;
+      const existingRequest = checks.filter(Boolean);
       return {
-      status: 400,
-      message: "Session request already exists",
-      data: existingRequest
+        status: 400,
+        message: "Session request already exists",
+        data: existingRequest,
       };
     }
 

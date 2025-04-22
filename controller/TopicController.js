@@ -23,11 +23,12 @@ const getTopicWithRelations = async (req, res) => {
         {
           model: Part,
           separate: true,
-          order: [["Content", "ASC"]],
+          order: [["Sequence", "ASC"]],
           include: [
             {
               model: Question,
               where: questionFilter,
+              order: [["Sequence", "ASC"]],
               include: [
                 {
                   model: Skill,

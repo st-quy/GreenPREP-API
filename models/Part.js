@@ -13,6 +13,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.TEXT,
       allowNull: true,
     },
+    Sequence: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
     TopicID: {
       type: DataTypes.UUID,
       allowNull: false,

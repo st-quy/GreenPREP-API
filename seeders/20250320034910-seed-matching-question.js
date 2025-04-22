@@ -62,6 +62,7 @@ module.exports = {
             Content: "PART 2: VOCABULARY",
             SubContent: "(Question 26-30: 25 questions)",
             TopicID: topicId, // Gán vào "Practice Test 2"
+            Sequence: 2,
             createdAt: new Date(),
             updatedAt: new Date(),
           },

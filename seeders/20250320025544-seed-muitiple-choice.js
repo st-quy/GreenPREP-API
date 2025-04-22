@@ -54,6 +54,7 @@ module.exports = {
           ID: partId,
           Content: "PART 1: GRAMMAR",
           SubContent: "Question 1-25",
+          Sequence: 1,
           TopicID: topicId, // Gán vào "Practice Test 2"
           createdAt: new Date(),
           updatedAt: new Date(),
