@@ -89,7 +89,7 @@ async function getAllParticipantsGroupedByUser(req) {
 
 const getParticipantsByUserId = async (userId) => {
   const participants = await SessionParticipant.findAll({
-    where: { UserID: userId },
+    where: { UserID: userId, IsPublished: true },
     include: [
       {
         model: Session,

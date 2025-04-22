@@ -64,11 +64,11 @@ async function createSession(req) {
   try {
     const { sessionName, sessionKey, startTime, endTime, examSet, ClassID } =
       req.body;
-    if (!sessionKey || !startTime || !endTime || !examSet || !ClassID) {
+    if (!sessionName || !sessionKey || !startTime || !endTime || !examSet || !ClassID) {
       return {
         status: 400,
         message:
-          "sessionKey, startTime, endTime, examSet, and ClassID are required",
+          "sessionName, sessionKey, startTime, endTime, examSet, and ClassID are required",
       };
     }
 
@@ -96,15 +96,29 @@ async function createSession(req) {
       };
     }
 
-    const checkExistSession = await Session.findOne({
+    const checkExistSessionKey = await Session.findOne({
       where: {
         sessionKey,
       },
     });
-    if (checkExistSession) {
+    if (checkExistSessionKey) {
       return {
         status: 400,
         message: `Session with key ${sessionKey} already exists`,
+      };
+    }
+
+    const checkExistSessionName = await Session.findOne({
+      where: {
+        sessionName,
+        ClassID,
+      },
+    });
+    
+    if (checkExistSessionName) {
+      return {
+        status: 400,
+        message: `Session with name ${sessionName} already exists in this class`,
       };
     }
 
