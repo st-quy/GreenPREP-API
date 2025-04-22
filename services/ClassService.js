@@ -39,6 +39,15 @@ async function createClass(req) {
       throw new Error("Class name and user ID are required");
     }
 
+    // Check if class name already exists
+    const existingClass = await Class.findOne({
+      where: { className }
+    });
+
+    if (existingClass) {
+      throw new Error("Class name already exists");
+    }
+
     const user = await User.findByPk(userId);
 
     if (!user) {
