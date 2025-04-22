@@ -59,20 +59,24 @@ module.exports = {
       {
         content: "Information recognition (13 questions)",
         subContent: "",
+        Sequence: 1,
       },
       {
         content: "Information Matching (4 questions)",
         subContent: "",
+        Sequence: 2,
       },
       {
         content: "Opinion Matching (4 questions)",
         subContent:
           "Listen to two people discussing community design. Read the opinions below and decide whose opinion matches the statements: the man, the woman, or both the man and the woman.",
+        Sequence: 3,
       },
       {
         content: "Inference (2 talks - 4 questions)",
         subContent:
           "Listen to two long monologues and choose the correct answer for each question.",
+        Sequence: 4,
       },
     ];
 
@@ -87,6 +91,7 @@ module.exports = {
             Content: part.content,
             SubContent: part.subContent,
             TopicID: topicId, // Gán vào "Practice Test 2"
+            Sequence: part.Sequence,
             createdAt: new Date(),
             updatedAt: new Date(),
           },
@@ -450,7 +455,7 @@ module.exports = {
           listContent: [
             {
               ID: 1,
-            content:
+              content:
                 "What is the speaker’s opinion about security cameras at work?",
               options: [
                 "People are unnecessarily worried about them.",

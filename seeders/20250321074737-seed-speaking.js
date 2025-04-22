@@ -59,18 +59,22 @@ module.exports = {
       {
         content: "PART 1",
         subContent: "",
+        Sequence: 1,
       },
       {
         content: "PART 2",
         subContent: "",
+        Sequence: 2,
       },
       {
         content: "PART 3",
         subContent: "",
+        Sequence: 3,
       },
       {
         content: "PART 4",
         subContent: "",
+        Sequence: 4,
       },
     ];
 
@@ -85,6 +89,7 @@ module.exports = {
             Content: part.content,
             SubContent: part.subContent,
             TopicID: topicId, // Gán vào "Practice Test 2"
+            Sequence: part.Sequence,
             createdAt: new Date(),
             updatedAt: new Date(),
           },

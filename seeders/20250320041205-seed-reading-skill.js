@@ -56,6 +56,7 @@ module.exports = {
         Content: "Choose one word from the list for each gap.",
         SubContent: "",
         TopicID: topicId, // Gán vào "Practice Test 2"
+        Sequence: 1,
         createdAt: new Date(),
         updatedAt: new Date(),
       },
@@ -66,6 +67,7 @@ module.exports = {
             `,
         SubContent: "",
         TopicID: topicId, // Gán vào "Practice Test 2"
+        Sequence: 2,
         createdAt: new Date(),
         updatedAt: new Date(),
       },
@@ -76,6 +78,7 @@ module.exports = {
             `,
         SubContent: "",
         TopicID: topicId, // Gán vào "Practice Test 2"
+        Sequence: 3,
         createdAt: new Date(),
         updatedAt: new Date(),
       },
@@ -84,6 +87,7 @@ module.exports = {
         Content: `Four people respond in the comments section of an online magazine article about technology. Read the texts and then answer the questions below.`,
         SubContent: "",
         TopicID: topicId, // Gán vào "Practice Test 2"
+        Sequence: 4,
         createdAt: new Date(),
         updatedAt: new Date(),
       },
@@ -92,6 +96,7 @@ module.exports = {
         Content: `Read the following passage quickly. Choose a heading for each numbered paragraph (1-7). There is one more heading than you need.`,
         SubContent: "",
         TopicID: topicId, // Gán vào "Practice Test 2"
+        Sequence: 5,
         createdAt: new Date(),
         updatedAt: new Date(),
       },
