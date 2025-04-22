@@ -12,27 +12,18 @@ const { sendMailWithAttachment } = require("./SendEmailService");
 
 const pLimit = require("p-limit").default;
 
-const generateStudentReportAndSendMail = async ({ req }) => {
+const generateStudentReportAndSendMail = async ({ req, userIds }) => {
   try {
     const { sessionId } = req.body;
 
-    const studentIds = await SessionParticipant.findAll({
-      where: {
-        SessionID: sessionId,
-        IsPublished: true,
-      },
-      attributes: ["UserID"],
-      raw: true,
-    });
-
-    if (studentIds.length === 0) {
-      throw new Error("No students found for the given sessionId.");
+    if (!userIds || userIds.length === 0) {
+      throw new Error("No students to generate reports for.");
     }
 
     const limit = pLimit(5);
 
-    const tasks = studentIds.map((student) =>
-      limit(() => generateReportAndSendMail(student.UserID, sessionId))
+    const tasks = userIds.map((userId) =>
+      limit(() => generateReportAndSendMail(userId, sessionId))
     );
 
     await Promise.all(tasks);
