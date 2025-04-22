@@ -56,28 +56,29 @@ module.exports = {
         Content: "Choose one word from the list for each gap.",
         SubContent: "",
         TopicID: topicId, // Gán vào "Practice Test 2"
+        Sequence: 1,
         createdAt: new Date(),
         updatedAt: new Date(),
       },
       {
         ID: partId2a,
-        Content: `The sentences below are from instructions. Put the sentences in the right order.
-            The first sentence is done for you.
+        Content: `The sentences below are from instructions. Put the sentences in the right order. The first sentence is done for you.
             Follow the steps below if you join a talk by Professor James Smith.
             `,
         SubContent: "",
         TopicID: topicId, // Gán vào "Practice Test 2"
+        Sequence: 2,
         createdAt: new Date(),
         updatedAt: new Date(),
       },
       {
         ID: partId2b,
-        Content: `The sentences below are from instructions. Put the sentences in the right order. 
-        The first sentence is done for you.
+        Content: `The sentences below are from instructions. Put the sentences in the right order. The first sentence is done for you.
         Most of drivers must follow the schedule of company.
             `,
         SubContent: "",
         TopicID: topicId, // Gán vào "Practice Test 2"
+        Sequence: 3,
         createdAt: new Date(),
         updatedAt: new Date(),
       },
@@ -86,6 +87,7 @@ module.exports = {
         Content: `Four people respond in the comments section of an online magazine article about technology. Read the texts and then answer the questions below.`,
         SubContent: "",
         TopicID: topicId, // Gán vào "Practice Test 2"
+        Sequence: 4,
         createdAt: new Date(),
         updatedAt: new Date(),
       },
@@ -94,6 +96,7 @@ module.exports = {
         Content: `Read the following passage quickly. Choose a heading for each numbered paragraph (1-7). There is one more heading than you need.`,
         SubContent: "",
         TopicID: topicId, // Gán vào "Practice Test 2"
+        Sequence: 5,
         createdAt: new Date(),
         updatedAt: new Date(),
       },
@@ -159,17 +162,17 @@ However, I need to finish this meeting with my 5. (boss/ client/ host)
       {
         content: `
 After he finishes, there will be time for questions.
-A staff member will note this down and give you a welcome pack
-If you would like to attend his talk, it will take place in the main hall at midday
+A staff member will note this down and give you a welcome pack.
+If you would like to attend his talk, it will take place in the main hall at midday.
 When you arrive at the conference hall, give your booking number.
-Inside, you will find a schedule of events and the information of the key speaker
+Inside, you will find a schedule of events and the information of the key speaker.
 `,
         options: [
           "After he finishes, there will be time for questions.",
-          "A staff member will note this down and give you a welcome pack",
-          "If you would like to attend his talk, it will take place in the main hall at midday",
+          "A staff member will note this down and give you a welcome pack.",
+          "If you would like to attend his talk, it will take place in the main hall at midday.",
           "When you arrive at the conference hall, give your booking number.",
-          "Inside, you will find a schedule of events and the information of the key speaker",
+          "Inside, you will find a schedule of events and the information of the key speaker.",
         ],
         correctAnswer: [
           {
@@ -177,11 +180,11 @@ Inside, you will find a schedule of events and the information of the key speake
             value: 5,
           },
           {
-            key: "A staff member will note this down and give you a welcome pack",
+            key: "A staff member will note this down and give you a welcome pack.",
             value: 2,
           },
           {
-            key: "If you would like to attend his talk, it will take place in the main hall at midday",
+            key: "If you would like to attend his talk, it will take place in the main hall at midday.",
             value: 4,
           },
           {
@@ -189,7 +192,7 @@ Inside, you will find a schedule of events and the information of the key speake
             value: 1,
           },
           {
-            key: "Inside, you will find a schedule of events and the information of the key speaker",
+            key: "Inside, you will find a schedule of events and the information of the key speaker.",
             value: 3,
           },
         ],
@@ -217,11 +220,11 @@ You must follow the map to send your products.
             value: 5,
           },
           {
-            key: "A staff member will note this down and give you a welcome pack",
+            key: "A staff member will note this down and give you a welcome pack.",
             value: 2,
           },
           {
-            key: "If you would like to attend his talk, it will take place in the main hall at midday",
+            key: "If you would like to attend his talk, it will take place in the main hall at midday.",
             value: 4,
           },
           {
@@ -229,7 +232,7 @@ You must follow the map to send your products.
             value: 1,
           },
           {
-            key: "Inside, you will find a schedule of events and the information of the key speaker",
+            key: "Inside, you will find a schedule of events and the information of the key speaker.",
             value: 3,
           },
         ],
@@ -311,22 +314,22 @@ Paragraph 7 - However, the tulip’s rise to fame came with a sudden twist. In 1
           "Different types of tulip",
           "Tulips across Europe",
           "Coming into fashion",
-          "F. The economy during the Golden Age",
-          "G. An object of trade",
-          "H. The scientific study of tulip varieties",
+          "The economy during the Golden Age",
+          "An object of trade",
+          "The scientific study of tulip varieties",
         ],
         correctAnswer: [
           {
             left: "Paragraph 1",
-            right: "F. The economy during the Golden Age",
+            right: "The economy during the Golden Age",
           },
           {
-            left: "Pragraph 2",
+            left: "Paragraph 2",
             right: "Coming into fashion",
           },
           {
             left: "Paragraph 3",
-            right: "G. An object of trade",
+            right: "An object of trade",
           },
           {
             left: "Paragraph 4",
@@ -386,14 +389,12 @@ Paragraph 7 - However, the tulip’s rise to fame came with a sudden twist. In 1
       "Parts",
       { Content: "Part 1: Choose one word from the list for each gap." },
       {
-        Content: `Part 2A: The sentences below are from instructions. Put the sentences in the right order.
-            The first sentence is done for you.
-            \nFollow the steps below if you join a talk by Professor James Smith.
+        Content: `Part 2A: The sentences below are from instructions. Put the sentences in the right order. The first sentence is done for you.
+            Follow the steps below if you join a talk by Professor James Smith.
             `,
       },
       {
-        content: `Part 2B: The sentences below are from instructions. Put the sentences in the right order.
-        The first sentence is done for you.
+        content: `Part 2B: The sentences below are from instructions. Put the sentences in the right order. The first sentence is done for you.
         Most of drivers must follow the schedule of company.
             `,
       },

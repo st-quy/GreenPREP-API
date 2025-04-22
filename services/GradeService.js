@@ -50,10 +50,12 @@ async function getParticipantExamBySession(req) {
         {
           model: Part,
           required: true,
+          order: [["Sequence", "ASC"]],
           include: [
             {
               model: Question,
               required: true,
+              order: [["Sequence", "ASC"]],
               include: [
                 {
                   model: Skill,
