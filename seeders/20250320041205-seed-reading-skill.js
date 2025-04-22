@@ -61,8 +61,7 @@ module.exports = {
       },
       {
         ID: partId2a,
-        Content: `The sentences below are from instructions. Put the sentences in the right order.
-            The first sentence is done for you.
+        Content: `The sentences below are from instructions. Put the sentences in the right order. The first sentence is done for you.
             Follow the steps below if you join a talk by Professor James Smith.
             `,
         SubContent: "",
@@ -72,8 +71,7 @@ module.exports = {
       },
       {
         ID: partId2b,
-        Content: `The sentences below are from instructions. Put the sentences in the right order. 
-        The first sentence is done for you.
+        Content: `The sentences below are from instructions. Put the sentences in the right order. The first sentence is done for you.
         Most of drivers must follow the schedule of company.
             `,
         SubContent: "",
