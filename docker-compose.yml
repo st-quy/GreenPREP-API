@@ -22,10 +22,7 @@ services:
     depends_on:
       - postgres_db
   web_teacher:
-    build:
-      context: ../GreenPREP-UI/Admin-GreenPrep
-      args:
-        - VITE_BASE_URL=http://server:3010/api
+    build: ../GreenPREP-UI/Admin-GreenPrep
     container_name: gp_teacher_local
     ports:
       - 3000:3000
@@ -35,10 +32,7 @@ services:
     depends_on:
       - server
   web_student_b:
-    build:
-      context: ../GreenPREP-UI/GreenPREP
-      args:
-        - VITE_BASE_URL=http://server:3010/api
+    build: ../GreenPREP-UI/GreenPREP
     container_name: gp_student_b
     ports:
       - 3001:3001
@@ -48,10 +42,7 @@ services:
     depends_on:
       - server
   web_student_a:
-    build:
-      context: ../GreenPREP-UI/team-b/greenPREP
-      args:
-        - VITE_BASE_URL=http://server:3010/api
+    build: ../GreenPREP-UI/team-b/greenPREP
     container_name: gp_student_a
     ports:
       - 3002:3002
