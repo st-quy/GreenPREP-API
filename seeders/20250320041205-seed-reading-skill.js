@@ -62,10 +62,8 @@ module.exports = {
       },
       {
         ID: partId2a,
-        Content: `The sentences below are from instructions. Put the sentences in the right order. The first sentence is done for you.
-            Follow the steps below if you join a talk by Professor James Smith.
-            `,
-        SubContent: "",
+        Content: `The sentences below are from instructions. Put the sentences in the right order. The first sentence is done for you.`,
+        SubContent: "Follow the steps below if you join a talk by Professor James Smith.",
         TopicID: topicId, // Gán vào "Practice Test 2"
         Sequence: 2,
         createdAt: new Date(),
@@ -73,10 +71,8 @@ module.exports = {
       },
       {
         ID: partId2b,
-        Content: `The sentences below are from instructions. Put the sentences in the right order. The first sentence is done for you.
-        Most of drivers must follow the schedule of company.
-            `,
-        SubContent: "",
+        Content: `The sentences below are from instructions. Put the sentences in the right order. The first sentence is done for you.`,
+        SubContent: "Most of drivers must follow the schedule of company.",
         TopicID: topicId, // Gán vào "Practice Test 2"
         Sequence: 3,
         createdAt: new Date(),
