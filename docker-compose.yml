@@ -1,7 +1,9 @@
+version: "1.0.0"
+
 services:
-  postgres_db_greenprep:
+  postgres_db:
     image: postgres:17-alpine
-    container_name: greenprep_db_local
+    container_name: gp_db_local
     restart: always
     env_file:
       - .env
@@ -9,16 +11,55 @@ services:
       - 5432:5432
     volumes:
       - postgres_data:/var/lib/postgresql/data
-  app:
+  server:
     build: .
-    container_name: greenprep_app_local
+    container_name: gp_app_local
     ports:
       - 3010:3010
     restart: always
     env_file:
       - .env
     depends_on:
-      - postgres_db_greenprep
+      - postgres_db
+  web_teacher:
+    build:
+      context: ../GreenPREP-UI/Admin-GreenPrep
+      args:
+        - VITE_BASE_URL=http://server:3010/api
+    container_name: gp_teacher_local
+    ports:
+      - 3000:3000
+    restart: always
+    env_file:
+      - .env
+    depends_on:
+      - server
+  web_student_b:
+    build:
+      context: ../GreenPREP-UI/GreenPREP
+      args:
+        - VITE_BASE_URL=http://server:3010/api
+    container_name: gp_student_b
+    ports:
+      - 3001:3001
+    restart: always
+    env_file:
+      - .env
+    depends_on:
+      - server
+  web_student_a:
+    build:
+      context: ../GreenPREP-UI/team-b/greenPREP
+      args:
+        - VITE_BASE_URL=http://server:3010/api
+    container_name: gp_student_a
+    ports:
+      - 3002:3002
+    restart: always
+    env_file:
+      - .env
+    depends_on:
+      - server
 
 volumes:
   postgres_data: {}

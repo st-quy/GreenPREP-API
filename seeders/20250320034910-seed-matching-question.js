@@ -111,7 +111,7 @@ module.exports = {
       {
         ID: uuidv4(),
         Type: "matching",
-        Content: "Complete each definition using a word from the list.",
+        Content: "Select a word from the list that has the most similar meaning to the following words.",
         AnswerContent: JSON.stringify({
           leftItems: [
             "To place in the ground, cover up or hide is to",
