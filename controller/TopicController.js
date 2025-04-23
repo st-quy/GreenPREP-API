@@ -22,7 +22,6 @@ const getTopicWithRelations = async (req, res) => {
       include: [
         {
           model: Part,
-          separate: true,
           order: [["Sequence", "ASC"]],
           include: [
             {
@@ -41,6 +40,10 @@ const getTopicWithRelations = async (req, res) => {
             },
           ],
         },
+      ],
+      order: [
+        [Part, Question, "Sequence", "ASC"],
+        [Part, "Sequence", "ASC"],
       ],
     });
 
