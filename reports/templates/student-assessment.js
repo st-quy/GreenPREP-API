@@ -221,7 +221,7 @@ const html = `<!DOCTYPE html>
                      style="width: 200px; height: auto; display: block;" />
               </td>
               <td style="text-align: right;" width="200">
-                <img src="https://res.cloudinary.com/nguyentranson/image/upload/v1744856386/image_zgfxh0.png"
+                <img src="https://res.cloudinary.com/nguyentranson/image/upload/v1745375283/logo_removebg_ktqobl.png"
                      alt="University of Greenwich Logo"
                      style="width: 200px; height: auto; display: block; margin-left: auto;" />
               </td>
