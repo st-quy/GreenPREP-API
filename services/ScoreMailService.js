@@ -175,7 +175,7 @@ const generateReportAndSendMail = async (userId, sessionId) => {
       classInformation,
       sessionInformation,
       sessionParticipant,
-      result
+      result,
     );
 
     await sendMailWithAttachment({

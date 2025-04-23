@@ -163,7 +163,7 @@ const publishScoresBySessionId = async (req) => {
 
   try {
     await generateStudentReportAndSendMail({ req, userIds });
-    await Session.update({ isPublished: true }, { where: { ID: sessionId } });
+    await Session.update({ isPublished: true, status: "COMPLETE" }, { where: { ID: sessionId } });
   } catch (err) {
     console.error("Error generating student report:", err.message);
     return {

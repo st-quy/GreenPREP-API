@@ -12,8 +12,6 @@
     "create-migration": "npx sequelize-cli migration:generate --name",
     "run-migration": "npx sequelize-cli db:migrate",
     "run-migration-only": "npx sequelize-cli db:migrate --name"
-    
-
   },
   "keywords": [],
   "author": "",
