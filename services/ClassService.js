@@ -1,9 +1,27 @@
 const { Class, sequelize, User, Role } = require("../models");
+const sequelizePaginate = require("sequelize-paginate");
+const { Op, Sequelize } = require("sequelize");
 
-async function findAll(teacherId = null) {
+async function findAll(req) {
+  sequelizePaginate.paginate(Class);
+  const { page = 1, limit = 10, teacherId, searchName } = req.query;
+  const parsedPage = parseInt(page, 10);
+  const parsedLimit = parseInt(limit, 10);
   try {
-    const classes = await Class.findAll({
-      where: teacherId ? { UserID: teacherId } : undefined,
+    let whereCondition = {};
+    if (teacherId) {
+      whereCondition.UserID = teacherId;
+    }
+    if (searchName) {
+      whereCondition.className = {
+        [Op.like]: `%${searchName}%`
+      };
+    }
+
+    const options = {
+      page: parsedPage,
+      paginate: parsedLimit,
+      where: whereCondition,
       include: [
         {
           association: "Sessions",
@@ -19,12 +37,23 @@ async function findAll(teacherId = null) {
           ],
         ],
       },
-      order: [["createdAt", "DESC"]], // Add sorting by createdAt in descending order
-    });
+      order: [["createdAt", "DESC"]]
+    };
+
+    const result = await Class.paginate(options);
+    const totalCount = await Class.count({ where: whereCondition });
+
     return {
       status: 200,
       message: "Classes fetched successfully",
-      data: classes,
+      data: result.docs,
+      pagination: {
+        currentPage: parseInt(req.query.page) || 1,
+        pageSize: parseInt(req.query.limit) || 10,
+        itemsOnPage: result.docs.length,
+        totalPages: result.pages,
+        totalItems: totalCount,
+      }
     };
   } catch (error) {
     throw new Error(`Error fetching classes: ${error.message}`);

@@ -2,9 +2,8 @@ const e = require("express");
 const ClassService = require("../services/ClassService");
 
 const getAllClasses = async (req, res) => {
-  const { teacherId } = req.query;
   try {
-    const classData = await ClassService.findAll(teacherId);
+    const classData = await ClassService.findAll(req);
 
     if (!classData) {
       return res.status(404).json({ message: "Class not found" });
