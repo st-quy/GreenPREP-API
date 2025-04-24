@@ -62,10 +62,8 @@ module.exports = {
       },
       {
         ID: partId2a,
-        Content: `The sentences below are from instructions. Put the sentences in the right order. The first sentence is done for you.
-            Follow the steps below if you join a talk by Professor James Smith.
-            `,
-        SubContent: "",
+        Content: `The sentences below are from instructions. Put the sentences in the right order. The first sentence is done for you.`,
+        SubContent: "Example: Follow the steps below if you join a talk by Professor James Smith.",
         TopicID: topicId, // Gán vào "Practice Test 2"
         Sequence: 2,
         createdAt: new Date(),
@@ -73,10 +71,8 @@ module.exports = {
       },
       {
         ID: partId2b,
-        Content: `The sentences below are from instructions. Put the sentences in the right order. The first sentence is done for you.
-        Most of drivers must follow the schedule of company.
-            `,
-        SubContent: "",
+        Content: `The sentences below are from instructions. Put the sentences in the right order. The first sentence is done for you. `,
+        SubContent: "Example: Most of drivers must follow the schedule of company.",
         TopicID: topicId, // Gán vào "Practice Test 2"
         Sequence: 3,
         createdAt: new Date(),
@@ -387,22 +383,18 @@ Paragraph 7 - However, the tulip’s rise to fame came with a sudden twist. In 1
     });
     await queryInterface.bulkDelete(
       "Parts",
-      { Content: "Part 1: Choose one word from the list for each gap." },
+      { Content: "Choose one word from the list for each gap." },
       {
-        Content: `Part 2A: The sentences below are from instructions. Put the sentences in the right order. The first sentence is done for you.
-            Follow the steps below if you join a talk by Professor James Smith.
-            `,
+        Content: `The sentences below are from instructions. Put the sentences in the right order. The first sentence is done for you.`,
       },
       {
-        content: `Part 2B: The sentences below are from instructions. Put the sentences in the right order. The first sentence is done for you.
-        Most of drivers must follow the schedule of company.
-            `,
+        content: `The sentences below are from instructions. Put the sentences in the right order. The first sentence is done for you. `,
       },
       {
-        Content: `Part 3: Four people respond in the comments section of an online magazine article about technology. Read the texts and then answer the questions below.`,
+        Content: `Four people respond in the comments section of an online magazine article about technology. Read the texts and then answer the questions below.`,
       },
       {
-        Content: `Part 4: Read the following passage quickly. Choose a heading for each numbered paragraph (1-7). There is one more heading than you need.`,
+        Content: `Read the following passage quickly. Choose a heading for each numbered paragraph (1-7). There is one more heading than you need.`,
       }
     );
     await queryInterface.bulkDelete("Topics", { Name: "Practice Test 2" });

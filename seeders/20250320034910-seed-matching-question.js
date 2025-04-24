@@ -76,7 +76,7 @@ module.exports = {
       {
         ID: uuidv4(),
         Type: "matching",
-        Content: "Match the words with their synonyms.",
+        Content: "Select a word from the list that has the most similar meaning to the following words.",
         AnswerContent: JSON.stringify({
           title:
             "Select a word from the list that has the most similar meaning to the following words.",
