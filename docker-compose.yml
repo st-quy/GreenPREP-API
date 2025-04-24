@@ -3,7 +3,7 @@ version: "1.0.0"
 services:
   postgres_db:
     image: postgres:17-alpine
-    container_name: gp_db_local
+    container_name: greenprep_database
     restart: always
     env_file:
       - .env
@@ -13,7 +13,7 @@ services:
       - postgres_data:/var/lib/postgresql/data
   server:
     build: .
-    container_name: gp_app_local
+    container_name: greenprep_api
     ports:
       - 3010:3010
     restart: always
@@ -23,7 +23,7 @@ services:
       - postgres_db
   web_teacher:
     build: ../GreenPREP-UI/Admin-GreenPrep
-    container_name: gp_teacher_local
+    container_name: web_teacher
     ports:
       - 3000:3000
     restart: always
@@ -31,19 +31,9 @@ services:
       - .env
     depends_on:
       - server
-  web_student_b:
-    build: ../GreenPREP-UI/GreenPREP
-    container_name: gp_student_b
-    ports:
-      - 3001:3001
-    restart: always
-    env_file:
-      - .env
-    depends_on:
-      - server
   web_student_a:
     build: ../GreenPREP-UI/team-b/greenPREP
-    container_name: gp_student_a
+    container_name: web_student
     ports:
       - 3002:3002
     restart: always
