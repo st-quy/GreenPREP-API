@@ -97,7 +97,6 @@ async function getSessionRequestByStudentId(req) {
 async function createSessionRequest(req) {
   try {
     const { UserID, sessionKey } = req.body;
-
     const session = await Session.findOne({ where: { sessionKey } });
     if (!session) {
       return {
@@ -106,10 +105,10 @@ async function createSessionRequest(req) {
       };
     }
 
-    if (session.status === "COMPLETE") {
+    if (["COMPLETE", "NOT_STARTED"].includes(session.status)) {
       return {
         status: 400,
-        message: "Session is completed",
+        message: `Session is ${session.status === "COMPLETE" ? "complete" : "not started"}`,
       };
     }
 

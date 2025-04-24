@@ -1,9 +1,11 @@
 const e = require("express");
 const ClassService = require("../services/ClassService");
+const SessionService = require("../services/SessionService");
 
 const getAllClasses = async (req, res) => {
   try {
     const classData = await ClassService.findAll(req);
+    await SessionService.cronStatusAllSessions();
 
     if (!classData) {
       return res.status(404).json({ message: "Class not found" });
@@ -19,6 +21,7 @@ const getAllClasses = async (req, res) => {
 const createClass = async (req, res) => {
   try {
     const newClass = await ClassService.createClass(req);
+    await SessionService.cronStatusAllSessions();
 
     if (!newClass) {
       return res.status(400).json({ message: "Failed to create class" });
@@ -33,6 +36,7 @@ const createClass = async (req, res) => {
 const updateClass = async (req, res) => {
   try {
     const updatedClass = await ClassService.updateClass(req);
+    await SessionService.cronStatusAllSessions();
 
     if (!updatedClass) {
       return res.status(404).json({ message: "Class not found" });
@@ -48,6 +52,7 @@ const updateClass = async (req, res) => {
 const getClassById = async (req, res) => {
   try {
     const classDetail = await ClassService.getClassDetailById(req);
+    await SessionService.cronStatusAllSessions();
 
     if (!classDetail) {
       return res.status(404).json({ message: "Class not found" });
@@ -63,6 +68,7 @@ const getClassById = async (req, res) => {
 const deleteClass = async (req, res) => {
   try {
     const deletedClass = await ClassService.remove(req);
+    await SessionService.cronStatusAllSessions();
 
     if (!deletedClass) {
       return res.status(404).json({ message: "Class not found" });

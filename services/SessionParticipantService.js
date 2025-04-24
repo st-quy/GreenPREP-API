@@ -120,20 +120,29 @@ async function getAllParticipantsGroupedByUser(req) {
   }
 }
 
-const getParticipantsByUserId = async (userId) => {
+const getParticipantsByUserId = async (userId, req) => {
+  const { searchKeyword } = req.query;
+  const whereClause = { UserID: userId, IsPublished: true };
+  const includeClause = [
+    {
+      model: Session,
+      as: "Session",
+      where: searchKeyword ? {
+        [Op.or]: [
+          { sessionName: { [Op.like]: `%${searchKeyword}%` } },
+        ]
+      } : undefined
+    },
+    {
+      model: User,
+      as: "User",
+      attributes: { exclude: ["password"] },
+    },
+  ];
+
   const participants = await SessionParticipant.findAll({
-    where: { UserID: userId, IsPublished: true },
-    include: [
-      {
-        model: Session,
-        as: "Session",
-      },
-      {
-        model: User,
-        as: "User",
-        attributes: { exclude: ["password"] },
-      },
-    ],
+    where: whereClause,
+    include: includeClause
   });
 
   if (!participants.length) {
