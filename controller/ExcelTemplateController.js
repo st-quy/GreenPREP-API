@@ -1,8 +1,10 @@
-const { generateExcelTemplate } = require("../services/GenerateExcelTemplate");
+const {
+  generateTemplateFile,
+} = require("../services/GenerateExcelTemplateService");
 
-const generateExcelTemplate = async (req, res) => {
+const handleExportTemplate = async (req, res) => {
   try {
-    const filePath = await generateExcelTemplate();
+    const filePath = await generateTemplateFile();
     res.download(filePath, "template.xlsx");
   } catch (err) {
     res
@@ -11,4 +13,4 @@ const generateExcelTemplate = async (req, res) => {
   }
 };
 
-module.exports = { generateExcelTemplate };
+module.exports = { handleExportTemplate };

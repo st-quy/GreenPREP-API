@@ -1,6 +1,6 @@
 const express = require("express");
 const {
-  generateExcelTemplate,
+  handleExportTemplate,
 } = require("../controller/ExcelTemplateController");
 
 const router = express.Router();
@@ -30,6 +30,6 @@ const router = express.Router();
  *                   type: string
  *                   description: "Error message"
  */
-router.get("/export-template", generateExcelTemplate);
+router.get("/export-template", handleExportTemplate);
 
 module.exports = router;
