@@ -15,7 +15,6 @@ const pLimit = require("p-limit").default;
 const generateStudentReportAndSendMail = async ({ req, userIds }) => {
   try {
     const { sessionId } = req.body;
-    const origin = req.headers.host;
 
     if (!userIds || userIds.length === 0) {
       throw new Error("No students to generate reports for.");
@@ -24,7 +23,7 @@ const generateStudentReportAndSendMail = async ({ req, userIds }) => {
     const limit = pLimit(5);
 
     const tasks = userIds.map((userId) =>
-      limit(() => generateReportAndSendMail(userId, sessionId, origin))
+      limit(() => generateReportAndSendMail(userId, sessionId))
     );
 
     await Promise.all(tasks);
@@ -33,7 +32,7 @@ const generateStudentReportAndSendMail = async ({ req, userIds }) => {
   }
 };
 
-const generateReportAndSendMail = async (userId, sessionId, origin) => {
+const generateReportAndSendMail = async (userId, sessionId) => {
   try {
     const sessionParticipant = await SessionParticipant.findOne({
       where: {
@@ -176,7 +175,7 @@ const generateReportAndSendMail = async (userId, sessionId, origin) => {
       classInformation,
       sessionInformation,
       sessionParticipant,
-      result,
+      result
     );
 
     await sendMailWithAttachment({

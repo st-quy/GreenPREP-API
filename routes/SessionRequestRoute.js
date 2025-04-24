@@ -6,6 +6,8 @@ const {
   createSessionRequest,
   approveSessionRequest,
   rejectSessionRequest,
+  approveAllSessionRequest,
+  rejectAllSessionRequest
 } = require("../controller/SessionRequestController");
 
 /**
@@ -249,5 +251,9 @@ router.patch("/:sessionId/approve", approveSessionRequest);
  *         description: Server error
  */
 router.patch("/:sessionId/reject", rejectSessionRequest);
+
+router.patch("/:sessionId/approveAll", approveAllSessionRequest);
+
+router.patch("/:sessionId/rejectAll", rejectAllSessionRequest);
 
 module.exports = router;

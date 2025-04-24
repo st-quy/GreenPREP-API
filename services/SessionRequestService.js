@@ -192,6 +192,40 @@ async function approveSessionRequest(req) {
   }
 }
 
+async function approveAllSessionRequest(req) {
+  try {
+    const { sessionId } = req.params;
+
+    const sessionRequests = await SessionRequest.findAll({
+      where: { 
+        SessionID: sessionId,
+        status: SESSION_REQUEST_STATUS.PENDING 
+      }
+    });
+
+    if (!sessionRequests.length) {
+      throw new Error("No pending session requests found");
+    }
+
+    const approvalPromises = sessionRequests.map(async (request) => {
+      request.status = SESSION_REQUEST_STATUS.APPROVED;
+      await request.save();
+      await addParticipant(sessionId, request.UserID);
+      return request;
+    });
+
+    const approvedRequests = await Promise.all(approvalPromises);
+
+    return {
+      status: 200,
+      message: "All session requests approved successfully",
+      data: approvedRequests,
+    };
+  } catch (error) {
+    throw new Error(`Error approving session requests: ${error.message}`);
+  }
+}
+
 /**
  *
  * @param {import('express').Request} req
@@ -225,10 +259,45 @@ async function rejectSessionRequest(req) {
   }
 }
 
+async function rejectAllSessionRequest(req) {
+  try {
+    const { sessionId } = req.params;
+
+    const sessionRequests = await SessionRequest.findAll({
+      where: { 
+        SessionID: sessionId,
+        status: SESSION_REQUEST_STATUS.PENDING 
+      }
+    });
+
+    if (!sessionRequests.length) {
+      throw new Error("No pending session requests found");
+    }
+
+    const rejectPromises = sessionRequests.map(async (request) => {
+      request.status = SESSION_REQUEST_STATUS.REJECTED;
+      await request.save();
+      return request;
+    });
+
+    const rejectRequests = await Promise.all(rejectPromises);
+
+    return {
+      status: 200,
+      message: "All session requests rejected successfully",
+      data: rejectRequests,
+    };
+  } catch (error) {
+    throw new Error(`Error approving session requests: ${error.message}`);
+  }
+}
+
 module.exports = {
   getAllSessionRequests,
   getSessionRequestByStudentId,
   createSessionRequest,
   approveSessionRequest,
   rejectSessionRequest,
+  approveAllSessionRequest,
+  rejectAllSessionRequest
 };
