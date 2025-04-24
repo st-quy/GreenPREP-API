@@ -68,9 +68,83 @@ const generateExcelTemplate = async () => {
       }
     });
   };
-
-  const createAllQuestionsSheet = () => {
+  const createAllQuestionsNoFormulaSheet = () => {
     const sheet = workbook.addWorksheet("All Questions");
+
+    const headerAllQuestions = [
+      "Skill",
+      "Part",
+      "Sub Part",
+      "Question Type",
+      "Sequence",
+      "Audio link",
+      "Image link",
+      "Question",
+      "Question Content",
+      "Correct Answer",
+      "Sub Question",
+      "Group Question",
+      "Title",
+      "Sub Title",
+    ];
+
+    applyHeaderStyle(sheet.addRow(headerAllQuestions));
+
+    const dropdowns = [
+      {
+        col: "A",
+        values: [
+          "Grammar & Vocabulary",
+          "Writing",
+          "Speaking",
+          "Reading",
+          "Listening",
+        ],
+      },
+      { col: "B", values: ["Part 1", "Part 2", "Part 3", "Part 4", "Part 5"] },
+      {
+        col: "D",
+        values: [
+          "ordering",
+          "multiple-choice",
+          "dropdown-list",
+          "matching",
+          "listening-questions-group",
+          "writing",
+          "speaking",
+        ],
+      },
+    ];
+
+    for (let row = 2; row <= 2000; row++) {
+      dropdowns.forEach(({ col, values }) => {
+        const cell = sheet.getCell(`${col}${row}`);
+        cell.value = "";
+        cell.dataValidation = {
+          type: "list",
+          allowBlank: true,
+          formulae: [`"${values.join(",")}"`],
+          showErrorMessage: true,
+          errorTitle: "Invalid Selection",
+          error: `Please select a valid option for ${col}.`,
+        };
+
+        cell.alignment = {
+          vertical: "middle",
+          horizontal: "left",
+          wrapText: true,
+        };
+      });
+    }
+
+    autoFitColumns(sheet);
+    applyContentStyle(sheet);
+    setSelectiveColumnWidth(sheet, 60, ["A", "B", "D", "E", "F", "G"]);
+    return sheet;
+  };
+  createAllQuestionsNoFormulaSheet();
+  const createAllQuestionsSheet = () => {
+    const sheet = workbook.addWorksheet("Suggested questions");
 
     const headers = [
       "Skill",
@@ -116,8 +190,29 @@ const generateExcelTemplate = async () => {
         ],
       },
     ];
+    const questionTypes = [
+      "multiple-choice",
+      "multiple-choice",
+      "dropdown-list",
+      "dropdown-list",
+      "ordering",
+      "matching",
+      "listening-questions-group",
+      "writing",
+      "speaking",
+    ];
 
-    for (let row = 2; row <= 2000; row++) {
+    const audioLink = [
+      "https://example.com/audio1.mp3",
+      "https://example.com/audio2.mp3",
+    ];
+
+    let audioIndex = 0;
+    let usedTypes = {};
+
+    for (let row = 2; row <= 10; row++) {
+      const questionType = questionTypes[row - 2];
+
       const dCell = `D${row}`;
       const fCell = `F${row}`;
       const gCell = `G${row}`;
@@ -129,9 +224,23 @@ const generateExcelTemplate = async () => {
       const mCell = `M${row}`;
       const nCell = `N${row}`;
 
-      sheet.getCell(fCell).value = {
-        formula: `IF(${dCell}="listening-questions-group", DataTemplate!H8, "")`,
+      sheet.getCell(dCell).value = questionType;
+
+      sheet.getCell(`A${row}`).value = {
+        formula: `IF(${dCell}="speaking", "Speaking", IF(${dCell}="writing", "Writing", ""))`,
       };
+
+      if (
+        ["multiple-choice", "dropdown-list"].includes(questionType) &&
+        !usedTypes[questionType]
+      ) {
+        sheet.getCell(fCell).value = audioLink[audioIndex++];
+        usedTypes[questionType] = true;
+      } else if (questionType === "listening-questions-group") {
+        sheet.getCell(fCell).value = { formula: `DataTemplate!H8` };
+      } else {
+        sheet.getCell(fCell).value = "";
+      }
 
       sheet.getCell(gCell).value = {
         formula: `IF(${dCell}="speaking", IF(${fCell}<>"", "", DataTemplate!I10), "")`,
@@ -207,7 +316,6 @@ const generateExcelTemplate = async () => {
     }
 
     autoFitColumns(sheet);
-    applyHeaderStyle(sheet.addRow(headers));
     applyContentStyle(sheet);
     setSelectiveColumnWidth(sheet, 60, ["A", "B", "D", "E", "F", "G"]);
     return sheet;
