@@ -7,7 +7,6 @@ const {
 } = require("./utils/helpers");
 
 const template = require("./templates/student-assessment.js");
-const templateB = require("./templates/student-assessment-b.js");
 
 function formatDate(dateObj) {
   const date = new Date(dateObj);
@@ -58,7 +57,7 @@ exports.generatePDF = async (
       speakingSection: speakingHTML,
     };
 
-    const rawHtml = origin === process.env.FRONTEND_URL ? templateB(data) : template(data);
+    const rawHtml = template(data);
     const inlinedHtml = juice(rawHtml);
     return inlinedHtml;
   } catch (error) {

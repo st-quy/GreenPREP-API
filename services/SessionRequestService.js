@@ -1,3 +1,4 @@
+const { where } = require("sequelize");
 const { SESSION_REQUEST_STATUS } = require("../helpers/constants");
 const { Session, SessionRequest, SessionParticipant } = require("../models");
 const { addParticipant } = require("./SessionParticipantService");
@@ -112,40 +113,60 @@ async function createSessionRequest(req) {
       };
     }
 
-    const checks = await Promise.all(
-      [SESSION_REQUEST_STATUS.APPROVED, SESSION_REQUEST_STATUS.PENDING].map(
-        (status) =>
-          SessionRequest.findOne({
-            where: { UserID: UserID, SessionID: session.ID, status },
-          })
-      )
-    );
+    const pendingRequest = await SessionRequest.findOne({
+      where: {
+        UserID,
+        SessionID: session.ID,
+        status: SESSION_REQUEST_STATUS.PENDING,
+      },
+    });
 
-    if (checks.filter(Boolean).length > 0) {
-      const existingRequest = checks.filter(Boolean);
+    if (pendingRequest) {
       return {
         status: 400,
         message: "Session request already exists",
-        data: existingRequest,
+        data: [pendingRequest],
       };
     }
 
     const allSessionRequest = await SessionRequest.findAll({
       where: {
-        UserID: UserID,
+        UserID,
         SessionID: session.ID,
-        status: SESSION_REQUEST_STATUS.REJECTED,
       },
     });
 
-    if (allSessionRequest.length >= 3) {
+    const rejectedSessionRequests = allSessionRequest.filter(
+      (request) => request.status === SESSION_REQUEST_STATUS.REJECTED
+    );
+
+    if (rejectedSessionRequests.length >= 3) {
       throw new Error("Session request limit reached");
     }
 
-    const sessionRequest = await SessionRequest.create({
-      UserID: UserID,
-      SessionID: session.ID,
-    });
+    let sessionRequest;
+    const hasApprovedSessionRequest = allSessionRequest.some(
+      (request) => request.status === SESSION_REQUEST_STATUS.APPROVED
+    );
+
+    if (!hasApprovedSessionRequest) {
+      sessionRequest = await SessionRequest.create({
+        UserID,
+        SessionID: session.ID,
+      });
+    } else {
+      const approvedSessionRequest = await SessionRequest.findOne({
+        where: {
+          UserID,
+          SessionID: session.ID,
+          status: SESSION_REQUEST_STATUS.APPROVED,
+        },
+      });
+
+      approvedSessionRequest.status = SESSION_REQUEST_STATUS.PENDING;
+      await approvedSessionRequest.save();
+      sessionRequest = approvedSessionRequest;
+    }
 
     return {
       status: 201,
@@ -153,7 +174,9 @@ async function createSessionRequest(req) {
       data: sessionRequest,
     };
   } catch (error) {
-    throw new Error(`Error creating session request: ${error.message}`);
+    const errorMsg = `Error creating session request: ${error.message}`;
+    console.error(errorMsg);
+    throw new Error(errorMsg);
   }
 }
 
@@ -177,10 +200,21 @@ async function approveSessionRequest(req) {
       throw new Error("Session request not found");
     }
 
-    sessionRequest.status = SESSION_REQUEST_STATUS.APPROVED;
-    await sessionRequest.save();
+    if (sessionRequest.status === SESSION_REQUEST_STATUS.PENDING) {
+      sessionRequest.status = SESSION_REQUEST_STATUS.APPROVED;
+      await sessionRequest.save();
 
-    await addParticipant(sessionId, sessionRequest.UserID);
+      const existedParticipant = await SessionParticipant.findOne({
+        where: {
+          UserID: sessionRequest.UserID,
+          SessionID: sessionId,
+        },
+      });
+
+      if (!existedParticipant) {
+        await addParticipant(sessionId, sessionRequest.UserID);
+      }
+    }
 
     return {
       status: 200,
@@ -189,6 +223,40 @@ async function approveSessionRequest(req) {
     };
   } catch (error) {
     throw new Error(`Error approving session request: ${error.message}`);
+  }
+}
+
+async function approveAllSessionRequest(req) {
+  try {
+    const { sessionId } = req.params;
+
+    const sessionRequests = await SessionRequest.findAll({
+      where: {
+        SessionID: sessionId,
+        status: SESSION_REQUEST_STATUS.PENDING,
+      },
+    });
+
+    if (!sessionRequests.length) {
+      throw new Error("No pending session requests found");
+    }
+
+    const approvalPromises = sessionRequests.map(async (request) => {
+      request.status = SESSION_REQUEST_STATUS.APPROVED;
+      await request.save();
+      await addParticipant(sessionId, request.UserID);
+      return request;
+    });
+
+    const approvedRequests = await Promise.all(approvalPromises);
+
+    return {
+      status: 200,
+      message: "All session requests approved successfully",
+      data: approvedRequests,
+    };
+  } catch (error) {
+    throw new Error(`Error approving session requests: ${error.message}`);
   }
 }
 
@@ -225,10 +293,45 @@ async function rejectSessionRequest(req) {
   }
 }
 
+async function rejectAllSessionRequest(req) {
+  try {
+    const { sessionId } = req.params;
+
+    const sessionRequests = await SessionRequest.findAll({
+      where: {
+        SessionID: sessionId,
+        status: SESSION_REQUEST_STATUS.PENDING,
+      },
+    });
+
+    if (!sessionRequests.length) {
+      throw new Error("No pending session requests found");
+    }
+
+    const rejectPromises = sessionRequests.map(async (request) => {
+      request.status = SESSION_REQUEST_STATUS.REJECTED;
+      await request.save();
+      return request;
+    });
+
+    const rejectRequests = await Promise.all(rejectPromises);
+
+    return {
+      status: 200,
+      message: "All session requests rejected successfully",
+      data: rejectRequests,
+    };
+  } catch (error) {
+    throw new Error(`Error approving session requests: ${error.message}`);
+  }
+}
+
 module.exports = {
   getAllSessionRequests,
   getSessionRequestByStudentId,
   createSessionRequest,
   approveSessionRequest,
   rejectSessionRequest,
+  approveAllSessionRequest,
+  rejectAllSessionRequest,
 };
