@@ -330,10 +330,10 @@ module.exports = {
           audioKey: "",
         },
         leftItems: [
-          "Speaker mainly _____.",
-          "Speaker usually _____.",
-          "Speaker usually _____.",
-          "Speaker primarily _____.",
+          "Speaker A mainly _____.",
+          "Speaker B usually _____.",
+          "Speaker C usually _____.",
+          "Speaker D primarily _____.",
         ],
         rightItems: [
           "travels by car",
@@ -345,19 +345,19 @@ module.exports = {
         ],
         correctAnswer: [
           {
-            key: "Speaker mainly _____.",
+            key: "Speaker A mainly _____.",
             value: "travels by bus",
           },
           {
-            key: "Speaker usually _____.",
+            key: "Speaker B usually _____.",
             value: "travels by car",
           },
           {
-            key: "Speaker usually _____.",
+            key: "Speaker C usually _____.",
             value: "walks alone",
           },
           {
-            key: "Speaker primarily _____.",
+            key: "Speaker D primarily _____.",
             value: "walks with a friend",
           },
         ],
