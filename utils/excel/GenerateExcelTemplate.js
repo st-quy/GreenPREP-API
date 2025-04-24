@@ -2,7 +2,7 @@ const ExcelJS = require("exceljs");
 const path = require("path");
 const fs = require("fs");
 
-const generateTestTemplate = async () => {
+const generateExcelTemplate = async () => {
   const workbook = new ExcelJS.Workbook();
 
   const applyHeaderStyle = (row) => {
@@ -348,4 +348,4 @@ const generateTestTemplate = async () => {
   return filePath;
 };
 
-module.exports = { generateTestTemplate };
+module.exports = { generateExcelTemplate };
