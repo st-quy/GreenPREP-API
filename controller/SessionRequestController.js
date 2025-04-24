@@ -44,10 +44,34 @@ async function approveSessionRequest(req, res) {
   }
 }
 
+async function approveAllSessionRequest(req, res) {
+  try {
+    const approvedSessionRequest =
+      await SessionRequestService.approveAllSessionRequest(req);
+    return res
+      .status(approvedSessionRequest.status)
+      .json(approvedSessionRequest);
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+}
+
 async function rejectSessionRequest(req, res) {
   try {
     const rejectedSessionRequest =
       await SessionRequestService.rejectSessionRequest(req);
+    return res
+      .status(rejectedSessionRequest.status)
+      .json(rejectedSessionRequest);
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+}
+
+async function rejectAllSessionRequest(req, res) {
+  try {
+    const rejectedSessionRequest =
+      await SessionRequestService.rejectAllSessionRequest(req);
     return res
       .status(rejectedSessionRequest.status)
       .json(rejectedSessionRequest);
@@ -62,4 +86,6 @@ module.exports = {
   createSessionRequest,
   approveSessionRequest,
   rejectSessionRequest,
+  approveAllSessionRequest,
+  rejectAllSessionRequest
 };

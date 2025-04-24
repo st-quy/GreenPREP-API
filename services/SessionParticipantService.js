@@ -2,7 +2,7 @@ const { SessionParticipant, Session, User } = require("../models");
 const { CEFR_LEVELS } = require("../constants/levels");
 const sequelizePaginate = require("sequelize-paginate");
 const { generateStudentReportAndSendMail } = require("./ScoreMailService");
-const { Op } = require("sequelize");
+const { Op, Sequelize } = require("sequelize");
 
 async function addParticipant(sessionId, userId) {
   try {
@@ -30,13 +30,46 @@ async function getAllParticipants(req) {
   try {
     sequelizePaginate.paginate(SessionParticipant);
     const { sessionId } = req.params;
+    const { searchKeyword } = req.query;
+
+    const where = { SessionID: sessionId };
+    const include = [{
+      model: User,
+      as: 'User',
+      where: searchKeyword ? {
+      [Op.or]: [
+      { firstName: { [Op.like]: `%${searchKeyword.toLowerCase()}%` } },
+      { lastName: { [Op.like]: `%${searchKeyword.toLowerCase()}%` } },
+      Sequelize.where(
+      Sequelize.fn('LOWER', 
+        Sequelize.fn('CONCAT',
+        Sequelize.col('User.firstName'),
+        ' ',
+        Sequelize.col('User.lastName')
+        )
+      ),
+      { [Op.like]: `%${searchKeyword.toLowerCase()}%` }
+      )
+      ]
+      } : undefined
+    }];
+
+    // Get total count first
+    const totalCount = await SessionParticipant.count({
+      where,
+      include,
+      distinct: true
+    });
+
     const options = {
       page: req.query.page || 1,
       paginate: req.query.limit || 10,
-      where: { SessionID: sessionId },
-      include: ["User"],
+      where,
+      include
     };
+
     const result = await SessionParticipant.paginate(options);
+    
     return {
       status: 200,
       message: "Participants retrieved successfully",
@@ -46,7 +79,7 @@ async function getAllParticipants(req) {
         pageSize: parseInt(req.query.limit) || 10,
         itemsOnPage: result.docs.length,
         totalPages: result.pages,
-        totalItems: result.total,
+        totalItems: totalCount, 
       },
     };
   } catch (error) {
@@ -163,7 +196,7 @@ const publishScoresBySessionId = async (req) => {
 
   try {
     await generateStudentReportAndSendMail({ req, userIds });
-    await Session.update({ isPublished: true }, { where: { ID: sessionId } });
+    await Session.update({ isPublished: true, status: "COMPLETE" }, { where: { ID: sessionId } });
   } catch (err) {
     console.error("Error generating student report:", err.message);
     return {

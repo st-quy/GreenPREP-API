@@ -12,8 +12,6 @@
     "create-migration": "npx sequelize-cli migration:generate --name",
     "run-migration": "npx sequelize-cli db:migrate",
     "run-migration-only": "npx sequelize-cli db:migrate --name"
-    
-
   },
   "keywords": [],
   "author": "",
@@ -27,6 +25,7 @@
     "cors": "^2.8.5",
     "crypto": "^1.0.1",
     "dotenv": "^16.4.5",
+    "exceljs": "^4.4.0",
     "express": "^4.21.1",
     "handlebars": "^4.7.8",
     "jsonwebtoken": "^9.0.2",

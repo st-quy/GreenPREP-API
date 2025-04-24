@@ -217,12 +217,12 @@ const html = `<!DOCTYPE html>
             <tr>
               <td width="200" style="vertical-align: top;">
                 <img src="https://res.cloudinary.com/nguyentranson/image/upload/v1744856378/image_720_nqjlda.png"
-                     alt="University of Greenwich Logo"
+                     alt="GreenPREP Logo"
                      style="width: 200px; height: auto; display: block;" />
               </td>
               <td style="text-align: right;" width="200">
-                <img src="https://res.cloudinary.com/dki5tuvt0/image/upload/v1745397493/c61gagqwkrnm7fy1i0cv.png"
-                     alt="GreenPREP Logo"
+                <img src="https://res.cloudinary.com/nguyentranson/image/upload/v1744856386/image_zgfxh0.png"
+                     alt="University of Greenwich Logo"
                      style="width: 200px; height: auto; display: block; margin-left: auto;" />
               </td>
             </tr>
