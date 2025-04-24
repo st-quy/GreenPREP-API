@@ -221,11 +221,11 @@ You must follow the map to send your products.
           },
           {
             key: "When you complete delivers, return to the company office.",
-            value: 4,
+            value: 1,
           },
           {
             key: "You should arrive the office by 6 am and have your truck keys.",
-            value: 1,
+            value: 4,
           },
           {
             key: "You must follow the map to send your products.",

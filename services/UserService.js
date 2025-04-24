@@ -193,7 +193,7 @@ async function sendResetPasswordEmail(email, host) {
       throw new Error("User with this email does not exist");
     }
 
-    const resetToken = jwt.sign({ userId: user.ID }, process.env.JWT_SECRET, {
+    const resetToken = await jwt.sign({ userId: user.ID }, process.env.JWT_SECRET, {
       expiresIn: "15m",
     });
 
