@@ -134,7 +134,7 @@ module.exports = {
           audioKey: "",
         },
         options: ["In the mornings", "In the afternoons", "In the evenings"],
-        correctAnswer: "In the mornings",
+        correctAnswer: "In the afternoons",
         partID: partIds["Information recognition (13 questions)"],
         type: "multiple-choice",
         audioKeys:
@@ -149,7 +149,7 @@ module.exports = {
           audioKey: "",
         },
         options: ["Blue", "Purple", "Red"],
-        correctAnswer: "Blue",
+        correctAnswer: "Red",
         partID: partIds["Information recognition (13 questions)"],
         type: "multiple-choice",
         audioKeys:
@@ -197,7 +197,7 @@ module.exports = {
           "On Friday morning",
           "On Saturday morning",
         ],
-        correctAnswer: "On Friday morning",
+        correctAnswer: "On Saturday morning",
         partID: partIds["Information recognition (13 questions)"],
         type: "multiple-choice",
         audioKeys:
@@ -217,7 +217,7 @@ module.exports = {
           "They both had blue eyes",
           "They both had long hair",
         ],
-        correctAnswer: "They both had blue eyes",
+        correctAnswer: "They both had long hair",
         partID: partIds["Information recognition (13 questions)"],
         type: "multiple-choice",
         audioKeys:
@@ -232,7 +232,7 @@ module.exports = {
           audioKey: "",
         },
         options: ["8,000", "9,000", "10,000"],
-        correctAnswer: "9,000",
+        correctAnswer: "10,000",
         partID: partIds["Information recognition (13 questions)"],
         type: "multiple-choice",
         audioKeys:
@@ -262,7 +262,7 @@ module.exports = {
           audioKey: "",
         },
         options: ["11 p.m", "1 p.m", "6 p.m"],
-        correctAnswer: "1 p.m",
+        correctAnswer: "6 p.m",
         partID: partIds["Information recognition (13 questions)"],
         type: "multiple-choice",
         audioKeys:
@@ -332,7 +332,7 @@ module.exports = {
         leftItems: [
           "Speaker mainly _____.",
           "Speaker usually _____.",
-          "Speaker usually_____.",
+          "Speaker usually _____.",
           "Speaker primarily _____.",
         ],
         rightItems: [
@@ -395,7 +395,7 @@ module.exports = {
             value: "Man",
           },
           {
-            key: "Technology has changed how community forms..",
+            key: "Technology has changed how community forms.",
             value: "Both",
           },
         ],

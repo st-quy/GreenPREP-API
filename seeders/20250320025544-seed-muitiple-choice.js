@@ -94,7 +94,7 @@ module.exports = {
       {
         content: "I ____ go to the party if I finish my work on time.",
         options: ["shall", "could", "should"],
-        correctAnswer: "should",
+        correctAnswer: "shall",
       },
       {
         content: "I ____ play basketball when I was younger.",
@@ -131,7 +131,7 @@ module.exports = {
       {
         content: "I ____ to finish my homework before I watch TV.",
         options: ["should", "must", "have"],
-        correctAnswer: "must",
+        correctAnswer: "have",
       },
       {
         content: "I ____ my laundry right now.",
