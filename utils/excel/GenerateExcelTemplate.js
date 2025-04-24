@@ -231,10 +231,10 @@ const generateExcelTemplate = async () => {
       sheet.getCell(`A${row}`).value = {
         formula: `IF(${dCell}="speaking", "Speaking", 
     IF(${dCell}="writing", "Writing", 
-    IF(${dCell}="dropdown-list", IF(${fCell}<>"", "Listening", "Reading"), 
-    IF(${dCell}="multiple-choice", IF(${fCell}<>"", "Listening", "Grammar&vocabulary"), 
-    IF(${dCell}="ordering", "Reading", 
-    IF(${dCell}="matching", "Grammar&vocabulary or Reading", 
+    IF(${dCell}="dropdown-list", IF(${fCell}<>"", "Listening", "Grammar&vocabulary - Reading"), 
+    IF(${dCell}="multiple-choice", IF(${fCell}<>"", "Listening", "Grammar&vocabulary - Reading"), 
+    IF(${dCell}="ordering", " Grammar&vocabulary - Reading", 
+    IF(${dCell}="matching", "Grammar&vocabulary - Reading", 
     IF(${dCell}="listening-questions-group", "Listening", "")))))))`,
       };
 
