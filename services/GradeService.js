@@ -334,9 +334,13 @@ async function calculatePoints(req) {
         const studentAnswers = JSON.parse(answer.AnswerText);
         const correctAnswers = correctContent.correctAnswer;
 
-        correctAnswers.forEach((correct) => {
-          const student = studentAnswers.find((s) => s.key === correct.key);
-          if (student && student.value === correct.value) {
+        correctAnswers.forEach((correct, index) => {
+          const student = studentAnswers[index];
+          if (
+            student &&
+            student.value === correct.value &&
+            student.key === correct.key
+          ) {
             totalPoints += pointPerQuestion;
           }
         });
