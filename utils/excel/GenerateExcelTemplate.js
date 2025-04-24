@@ -166,16 +166,6 @@ const generateExcelTemplate = async () => {
     applyHeaderStyle(sheet.addRow(headers));
 
     const dropdowns = [
-      {
-        col: "A",
-        values: [
-          "Grammar & Vocabulary",
-          "Writing",
-          "Speaking",
-          "Reading",
-          "Listening",
-        ],
-      },
       { col: "B", values: ["Part 1", "Part 2", "Part 3", "Part 4", "Part 5"] },
       {
         col: "D",
@@ -226,10 +216,6 @@ const generateExcelTemplate = async () => {
 
       sheet.getCell(dCell).value = questionType;
 
-      sheet.getCell(`A${row}`).value = {
-        formula: `IF(${dCell}="speaking", "Speaking", IF(${dCell}="writing", "Writing", ""))`,
-      };
-
       if (
         ["multiple-choice", "dropdown-list"].includes(questionType) &&
         !usedTypes[questionType]
@@ -241,6 +227,16 @@ const generateExcelTemplate = async () => {
       } else {
         sheet.getCell(fCell).value = "";
       }
+
+      sheet.getCell(`A${row}`).value = {
+        formula: `IF(${dCell}="speaking", "Speaking", 
+    IF(${dCell}="writing", "Writing", 
+    IF(${dCell}="dropdown-list", IF(${fCell}<>"", "Listening", "Reading"), 
+    IF(${dCell}="multiple-choice", IF(${fCell}<>"", "Listening", "Grammar&vocabulary"), 
+    IF(${dCell}="ordering", "Reading", 
+    IF(${dCell}="matching", "Grammar&vocabulary or Reading", 
+    IF(${dCell}="listening-questions-group", "Listening", "")))))))`,
+      };
 
       sheet.getCell(gCell).value = {
         formula: `IF(${dCell}="speaking", IF(${fCell}<>"", "", DataTemplate!I10), "")`,
