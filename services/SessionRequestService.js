@@ -113,11 +113,10 @@ async function createSessionRequest(req) {
     }
 
     const checks = await Promise.all(
-      [SESSION_REQUEST_STATUS.APPROVED, SESSION_REQUEST_STATUS.PENDING].map(
-        (status) =>
-          SessionRequest.findOne({
-            where: { UserID: UserID, SessionID: session.ID, status },
-          })
+      [SESSION_REQUEST_STATUS.PENDING].map((status) =>
+        SessionRequest.findOne({
+          where: { UserID: UserID, SessionID: session.ID, status },
+        })
       )
     );
 
@@ -177,10 +176,12 @@ async function approveSessionRequest(req) {
       throw new Error("Session request not found");
     }
 
-    sessionRequest.status = SESSION_REQUEST_STATUS.APPROVED;
-    await sessionRequest.save();
+    if (sessionRequest.status === SESSION_REQUEST_STATUS.PENDING) {
+      sessionRequest.status = SESSION_REQUEST_STATUS.APPROVED;
+      await sessionRequest.save();
 
-    await addParticipant(sessionId, sessionRequest.UserID);
+      await addParticipant(sessionId, sessionRequest.UserID);
+    }
 
     return {
       status: 200,
@@ -197,10 +198,10 @@ async function approveAllSessionRequest(req) {
     const { sessionId } = req.params;
 
     const sessionRequests = await SessionRequest.findAll({
-      where: { 
+      where: {
         SessionID: sessionId,
-        status: SESSION_REQUEST_STATUS.PENDING 
-      }
+        status: SESSION_REQUEST_STATUS.PENDING,
+      },
     });
 
     if (!sessionRequests.length) {
@@ -264,10 +265,10 @@ async function rejectAllSessionRequest(req) {
     const { sessionId } = req.params;
 
     const sessionRequests = await SessionRequest.findAll({
-      where: { 
+      where: {
         SessionID: sessionId,
-        status: SESSION_REQUEST_STATUS.PENDING 
-      }
+        status: SESSION_REQUEST_STATUS.PENDING,
+      },
     });
 
     if (!sessionRequests.length) {
@@ -299,5 +300,5 @@ module.exports = {
   approveSessionRequest,
   rejectSessionRequest,
   approveAllSessionRequest,
-  rejectAllSessionRequest
+  rejectAllSessionRequest,
 };
