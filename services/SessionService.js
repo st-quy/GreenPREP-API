@@ -236,6 +236,52 @@ async function removeSession(req) {
   }
 }
 
+async function cronStatusAllSessions() {
+  try {
+    const now = new Date();
+    const sessions = await Session.findAll();
+    
+    for (const session of sessions) {
+      let newStatus;
+      
+      if (new Date(session.startTime) > now) {
+        newStatus = "NOT_STARTED";
+      } else if (new Date(session.endTime) > now) {
+        newStatus = "ON_GOING";
+      } else {
+        newStatus = "COMPLETE";
+      }
+
+      if (session.status !== newStatus) {
+        await Session.update(
+          { status: newStatus },
+          { where: { ID: session.ID } }
+        );
+      }
+    }
+
+    const updatedSessions = await Session.findAll({
+      include: [
+        {
+          model: Class,
+          as: "Classes",
+        },
+        {
+          model: Topic,
+          as: "Topic",
+        },
+      ],
+    });
+
+    return {
+      status: 200,
+      data: updatedSessions,
+    };
+  } catch (error) {
+    throw new Error(`Error updating session statuses: ${error.message}`);
+  }
+}
+
 module.exports = {
   getAllSessions,
   getSessionByClass,
@@ -243,4 +289,5 @@ module.exports = {
   updateSession,
   getSessionDetailById,
   removeSession,
+  cronStatusAllSessions
 };
