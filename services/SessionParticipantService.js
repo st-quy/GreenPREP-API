@@ -33,43 +33,51 @@ async function getAllParticipants(req) {
     const { searchKeyword } = req.query;
 
     const where = { SessionID: sessionId };
-    const include = [{
-      model: User,
-      as: 'User',
-      where: searchKeyword ? {
-      [Op.or]: [
-      { firstName: { [Op.like]: `%${searchKeyword.toLowerCase()}%` } },
-      { lastName: { [Op.like]: `%${searchKeyword.toLowerCase()}%` } },
-      Sequelize.where(
-      Sequelize.fn('LOWER', 
-        Sequelize.fn('CONCAT',
-        Sequelize.col('User.firstName'),
-        ' ',
-        Sequelize.col('User.lastName')
-        )
-      ),
-      { [Op.like]: `%${searchKeyword.toLowerCase()}%` }
-      )
-      ]
-      } : undefined
-    }];
+    const include = [
+      {
+        model: User,
+        as: "User",
+        where: searchKeyword
+          ? {
+              [Op.or]: [
+                {
+                  firstName: { [Op.like]: `%${searchKeyword.toLowerCase()}%` },
+                },
+                { lastName: { [Op.like]: `%${searchKeyword.toLowerCase()}%` } },
+                Sequelize.where(
+                  Sequelize.fn(
+                    "LOWER",
+                    Sequelize.fn(
+                      "CONCAT",
+                      Sequelize.col("User.firstName"),
+                      " ",
+                      Sequelize.col("User.lastName")
+                    )
+                  ),
+                  { [Op.like]: `%${searchKeyword.toLowerCase()}%` }
+                ),
+              ],
+            }
+          : undefined,
+      },
+    ];
 
     // Get total count first
     const totalCount = await SessionParticipant.count({
       where,
       include,
-      distinct: true
+      distinct: true,
     });
 
     const options = {
       page: req.query.page || 1,
       paginate: req.query.limit || 10,
       where,
-      include
+      include,
     };
 
     const result = await SessionParticipant.paginate(options);
-    
+
     return {
       status: 200,
       message: "Participants retrieved successfully",
@@ -79,7 +87,7 @@ async function getAllParticipants(req) {
         pageSize: parseInt(req.query.limit) || 10,
         itemsOnPage: result.docs.length,
         totalPages: result.pages,
-        totalItems: totalCount, 
+        totalItems: totalCount,
       },
     };
   } catch (error) {
@@ -127,11 +135,11 @@ const getParticipantsByUserId = async (userId, req) => {
     {
       model: Session,
       as: "Session",
-      where: searchKeyword ? {
-        [Op.or]: [
-          { sessionName: { [Op.like]: `%${searchKeyword}%` } },
-        ]
-      } : undefined
+      where: searchKeyword
+        ? {
+            [Op.or]: [{ sessionName: { [Op.like]: `%${searchKeyword}%` } }],
+          }
+        : undefined,
     },
     {
       model: User,
@@ -142,7 +150,7 @@ const getParticipantsByUserId = async (userId, req) => {
 
   const participants = await SessionParticipant.findAll({
     where: whereClause,
-    include: includeClause
+    include: includeClause,
   });
 
   if (!participants.length) {
@@ -161,6 +169,26 @@ const publishScoresBySessionId = async (req) => {
 
   if (!sessionId) {
     throw new Error("sessionId is required");
+  }
+
+  // First check for incomplete participants
+  const incompleteParticipants = await SessionParticipant.findAll({
+    where: {
+      SessionID: sessionId,
+      [Op.or]: [
+        { WritingLevel: null },
+        { SpeakingLevel: null },
+        { Level: null },
+      ],
+    },
+  });
+
+  if (incompleteParticipants.length > 0) {
+    return {
+      status: 400,
+      message:
+        "Some participants are missing required levels (Writing Level, Speaking Level, or Overall Level).",
+    };
   }
 
   const completeStudents = await SessionParticipant.findAll({
@@ -205,7 +233,10 @@ const publishScoresBySessionId = async (req) => {
 
   try {
     await generateStudentReportAndSendMail({ req, userIds });
-    await Session.update({ isPublished: true, status: "COMPLETE" }, { where: { ID: sessionId } });
+    await Session.update(
+      { isPublished: true, status: "COMPLETE" },
+      { where: { ID: sessionId } }
+    );
   } catch (err) {
     console.error("Error generating student report:", err.message);
     return {
