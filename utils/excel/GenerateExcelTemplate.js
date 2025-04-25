@@ -73,7 +73,7 @@ const generateExcelTemplate = async () => {
 
     const headerAllQuestions = [
       "Skill",
-      "Part",
+      "Part (You can further edit the title.)",
       "Sub Part",
       "Question Type",
       "Sequence",
@@ -84,8 +84,6 @@ const generateExcelTemplate = async () => {
       "Correct Answer",
       "Sub Question",
       "Group Question",
-      "Title",
-      "Sub Title",
     ];
 
     applyHeaderStyle(sheet.addRow(headerAllQuestions));
@@ -101,7 +99,16 @@ const generateExcelTemplate = async () => {
           "Listening",
         ],
       },
-      { col: "B", values: ["Part 1", "Part 2", "Part 3", "Part 4", "Part 5"] },
+      {
+        col: "B",
+        values: [
+          "Part 1: ...",
+          "Part 2: ...",
+          "Part 3: ...",
+          "Part 4: ...",
+          "Part 5: ...",
+        ],
+      },
       {
         col: "D",
         values: [
@@ -128,12 +135,6 @@ const generateExcelTemplate = async () => {
           errorTitle: "Invalid Selection",
           error: `Please select a valid option for ${col}.`,
         };
-
-        cell.alignment = {
-          vertical: "middle",
-          horizontal: "left",
-          wrapText: true,
-        };
       });
     }
 
@@ -148,7 +149,7 @@ const generateExcelTemplate = async () => {
 
     const headers = [
       "Skill",
-      "Part",
+      "Part (You can further edit the title.)",
       "Sub Part",
       "Question Type",
       "Sequence",
@@ -159,14 +160,21 @@ const generateExcelTemplate = async () => {
       "Correct Answer",
       "Sub Question",
       "Group Question",
-      "Title",
-      "Sub Title",
     ];
 
     applyHeaderStyle(sheet.addRow(headers));
 
     const dropdowns = [
-      { col: "B", values: ["Part 1", "Part 2", "Part 3", "Part 4", "Part 5"] },
+      {
+        col: "B",
+        values: [
+          "Part 1: ...",
+          "Part 2: ...",
+          "Part 3: ...",
+          "Part 4: ...",
+          "Part 5: ...",
+        ],
+      },
       {
         col: "D",
         values: [
@@ -211,8 +219,6 @@ const generateExcelTemplate = async () => {
       const jCell = `J${row}`;
       const kCell = `K${row}`;
       const lCell = `L${row}`;
-      const mCell = `M${row}`;
-      const nCell = `N${row}`;
 
       sheet.getCell(dCell).value = questionType;
 
@@ -223,7 +229,7 @@ const generateExcelTemplate = async () => {
         sheet.getCell(fCell).value = audioLink[audioIndex++];
         usedTypes[questionType] = true;
       } else if (questionType === "listening-questions-group") {
-        sheet.getCell(fCell).value = { formula: `DataTemplate!H8` };
+        sheet.getCell(fCell).value = { formula: `DataTemplate!F8` };
       } else {
         sheet.getCell(fCell).value = "";
       }
@@ -239,7 +245,7 @@ const generateExcelTemplate = async () => {
       };
 
       sheet.getCell(gCell).value = {
-        formula: `IF(${dCell}="speaking", IF(${fCell}<>"", "", DataTemplate!I10), "")`,
+        formula: `IF(${dCell}="speaking", IF(${fCell}<>"", "", DataTemplate!G10), "")`,
       };
 
       sheet.getCell(hCell).value = {
@@ -255,24 +261,24 @@ const generateExcelTemplate = async () => {
 
       sheet.getCell(iCell).value = {
         formula:
-          `IF(${dCell}="multiple-choice", IF(${fCell}<>"", DataTemplate!F3, DataTemplate!F2), ` +
-          `IF(${dCell}="dropdown-list", IF(${fCell}<>"", DataTemplate!F5, DataTemplate!F4), ` +
-          `IF(${dCell}="ordering", IF(${fCell}<>"", "", DataTemplate!F7), ` +
-          `IF(${dCell}="matching", IF(${fCell}<>"", "", DataTemplate!F6), ` +
-          `IF(${dCell}="listening-questions-group", IF(${fCell}<>"", DataTemplate!F8, ""), "")))))`,
+          `IF(${dCell}="multiple-choice", IF(${fCell}<>"", DataTemplate!D3, DataTemplate!D2), ` +
+          `IF(${dCell}="dropdown-list", IF(${fCell}<>"", DataTemplate!D5, DataTemplate!D4), ` +
+          `IF(${dCell}="ordering", IF(${fCell}<>"", "", DataTemplate!D7), ` +
+          `IF(${dCell}="matching", IF(${fCell}<>"", "", DataTemplate!D6), ` +
+          `IF(${dCell}="listening-questions-group", IF(${fCell}<>"", DataTemplate!D8, ""), "")))))`,
       };
 
       sheet.getCell(jCell).value = {
         formula:
-          `IF(${dCell}="multiple-choice", IF(${fCell}<>"", DataTemplate!G3, DataTemplate!G2), ` +
-          `IF(${dCell}="dropdown-list", IF(${fCell}<>"", DataTemplate!G5, DataTemplate!G4), ` +
-          `IF(${dCell}="matching", IF(${fCell}<>"", "", DataTemplate!G6), ` +
-          `IF(${dCell}="ordering", IF(${fCell}<>"", "", DataTemplate!G7), ` +
-          `IF(${dCell}="listening-questions-group", IF(${fCell}<>"", DataTemplate!G8, ""), "")))))`,
+          `IF(${dCell}="multiple-choice", IF(${fCell}<>"", DataTemplate!E3, DataTemplate!E2), ` +
+          `IF(${dCell}="dropdown-list", IF(${fCell}<>"", DataTemplate!E5, DataTemplate!E4), ` +
+          `IF(${dCell}="matching", IF(${fCell}<>"", "", DataTemplate!E6), ` +
+          `IF(${dCell}="ordering", IF(${fCell}<>"", "", DataTemplate!E7), ` +
+          `IF(${dCell}="listening-questions-group", IF(${fCell}<>"", DataTemplate!E8, ""), "")))))`,
       };
 
       sheet.getCell(kCell).value = {
-        formula: `IF(${dCell}="writing", IF(${fCell}<>"", "", DataTemplate!B9), "")`,
+        formula: `IF(${dCell}="writing", IF(${fCell}<>"", "", DataTemplate!B9), IF(${dCell}="matching", DataTemplate!B6, ""))`,
       };
 
       sheet.getCell(lCell).value = {
@@ -281,14 +287,6 @@ const generateExcelTemplate = async () => {
           `IF(${dCell}="dropdown-list", IF(${fCell}<>"", DataTemplate!C5, DataTemplate!C4), ` +
           `IF(${dCell}="ordering", IF(${fCell}<>"", "", DataTemplate!C7), ` +
           `IF(${dCell}="listening-questions-group", IF(${fCell}<>"", DataTemplate!C8, ""), ""))))`,
-      };
-
-      sheet.getCell(mCell).value = {
-        formula: `IF(${dCell}="matching", IF(${fCell}<>"", "", DataTemplate!D6), "")`,
-      };
-
-      sheet.getCell(nCell).value = {
-        formula: `IF(${dCell}="matching", IF(${fCell}<>"", "", DataTemplate!E6), "")`,
       };
 
       dropdowns.forEach(({ col, values }) => {
@@ -335,8 +333,6 @@ const generateExcelTemplate = async () => {
       "Question",
       "SubQuestion",
       "GroupQuestion",
-      "Title",
-      "Sub Title",
       "Question Content",
       "Correct Answer",
       "Audio Link",
