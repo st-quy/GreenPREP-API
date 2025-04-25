@@ -1,6 +1,9 @@
 const {
   generateTemplateFile,
+  parseExcelBuffer,
 } = require("../services/GenerateExcelTemplateService");
+const multer = require("multer");
+const upload = multer();
 
 const handleExportTemplate = async (req, res) => {
   try {
@@ -13,4 +16,19 @@ const handleExportTemplate = async (req, res) => {
   }
 };
 
-module.exports = { handleExportTemplate };
+const handleImportExcel = async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ message: "No file uploaded" });
+    }
+
+    const groupedData = await parseExcelBuffer(req.file.buffer);
+    res.json({ success: true, data: groupedData });
+  } catch (err) {
+    res
+      .status(500)
+      .json({ message: "Failed to import Excel data", error: err.message });
+  }
+};
+
+module.exports = { handleExportTemplate, upload, handleImportExcel };

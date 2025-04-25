@@ -1,6 +1,8 @@
 const express = require("express");
 const {
   handleExportTemplate,
+  upload,
+  handleImportExcel,
 } = require("../controller/ExcelTemplateController");
 
 const router = express.Router();
@@ -31,5 +33,7 @@ const router = express.Router();
  *                   description: "Error message"
  */
 router.get("/export-template", handleExportTemplate);
+
+router.post("/import-excel", upload.single("file"), handleImportExcel);
 
 module.exports = router;
