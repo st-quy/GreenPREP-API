@@ -64,7 +64,14 @@ async function createSession(req) {
   try {
     const { sessionName, sessionKey, startTime, endTime, examSet, ClassID } =
       req.body;
-    if (!sessionName || !sessionKey || !startTime || !endTime || !examSet || !ClassID) {
+    if (
+      !sessionName ||
+      !sessionKey ||
+      !startTime ||
+      !endTime ||
+      !examSet ||
+      !ClassID
+    ) {
       return {
         status: 400,
         message:
@@ -114,7 +121,7 @@ async function createSession(req) {
         ClassID,
       },
     });
-    
+
     if (checkExistSessionName) {
       return {
         status: 400,
@@ -240,15 +247,20 @@ async function cronStatusAllSessions() {
   try {
     const now = new Date();
     const sessions = await Session.findAll();
-    
+
     for (const session of sessions) {
       let newStatus;
-      
-      if (new Date(session.startTime) > now) {
-        newStatus = "NOT_STARTED";
-      } else if (new Date(session.endTime) > now) {
-        newStatus = "ON_GOING";
-      } else {
+
+      const startTime = new Date(session.startTime);
+      const endTime = new Date(session.endTime);
+
+      newStatus = startTime > now 
+        ? "NOT_STARTED"
+        : endTime > now 
+          ? "ON_GOING" 
+          : "COMPLETE";
+
+      if (session.isPublished) {
         newStatus = "COMPLETE";
       }
 
@@ -289,5 +301,5 @@ module.exports = {
   updateSession,
   getSessionDetailById,
   removeSession,
-  cronStatusAllSessions
+  cronStatusAllSessions,
 };

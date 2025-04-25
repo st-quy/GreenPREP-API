@@ -72,27 +72,26 @@ const generateExcelTemplate = async () => {
     const sheet = workbook.addWorksheet("All Questions");
 
     const headerAllQuestions = [
+      "Topic Name",
       "Skill",
-      "Part",
+      "Part (You can further edit the title.)",
       "Sub Part",
       "Question Type",
       "Sequence",
-      "Audio link",
-      "Image link",
+      "Audio Link",
+      "Image Link",
       "Question",
       "Question Content",
       "Correct Answer",
       "Sub Question",
       "Group Question",
-      "Title",
-      "Sub Title",
     ];
 
     applyHeaderStyle(sheet.addRow(headerAllQuestions));
 
     const dropdowns = [
       {
-        col: "A",
+        col: "B",
         values: [
           "Grammar & Vocabulary",
           "Writing",
@@ -101,9 +100,18 @@ const generateExcelTemplate = async () => {
           "Listening",
         ],
       },
-      { col: "B", values: ["Part 1", "Part 2", "Part 3", "Part 4", "Part 5"] },
       {
-        col: "D",
+        col: "C",
+        values: [
+          "Part 1: ...",
+          "Part 2: ...",
+          "Part 3: ...",
+          "Part 4: ...",
+          "Part 5: ...",
+        ],
+      },
+      {
+        col: "E",
         values: [
           "ordering",
           "multiple-choice",
@@ -128,18 +136,12 @@ const generateExcelTemplate = async () => {
           errorTitle: "Invalid Selection",
           error: `Please select a valid option for ${col}.`,
         };
-
-        cell.alignment = {
-          vertical: "middle",
-          horizontal: "left",
-          wrapText: true,
-        };
       });
     }
 
     autoFitColumns(sheet);
     applyContentStyle(sheet);
-    setSelectiveColumnWidth(sheet, 60, ["A", "B", "D", "E", "F", "G"]);
+    setSelectiveColumnWidth(sheet, 60, ["A", "B", "C", "E", "F", "G", "H"]);
     return sheet;
   };
   createAllQuestionsNoFormulaSheet();
@@ -147,8 +149,9 @@ const generateExcelTemplate = async () => {
     const sheet = workbook.addWorksheet("Suggested questions");
 
     const headers = [
+      "Topic Name",
       "Skill",
-      "Part",
+      "Part (You can further edit the title.)",
       "Sub Part",
       "Question Type",
       "Sequence",
@@ -159,16 +162,23 @@ const generateExcelTemplate = async () => {
       "Correct Answer",
       "Sub Question",
       "Group Question",
-      "Title",
-      "Sub Title",
     ];
 
     applyHeaderStyle(sheet.addRow(headers));
 
     const dropdowns = [
-      { col: "B", values: ["Part 1", "Part 2", "Part 3", "Part 4", "Part 5"] },
       {
-        col: "D",
+        col: "C",
+        values: [
+          "Part 1: ...",
+          "Part 2: ...",
+          "Part 3: ...",
+          "Part 4: ...",
+          "Part 5: ...",
+        ],
+      },
+      {
+        col: "E",
         values: [
           "ordering",
           "multiple-choice",
@@ -202,9 +212,8 @@ const generateExcelTemplate = async () => {
 
     for (let row = 2; row <= 10; row++) {
       const questionType = questionTypes[row - 2];
-
-      const dCell = `D${row}`;
-      const fCell = `F${row}`;
+      const aCell = `A${row}`;
+      const eCell = `E${row}`;
       const gCell = `G${row}`;
       const hCell = `H${row}`;
       const iCell = `I${row}`;
@@ -212,83 +221,75 @@ const generateExcelTemplate = async () => {
       const kCell = `K${row}`;
       const lCell = `L${row}`;
       const mCell = `M${row}`;
-      const nCell = `N${row}`;
 
-      sheet.getCell(dCell).value = questionType;
+      sheet.getCell(eCell).value = questionType;
 
+      sheet.getCell(aCell).value = "Practice Test 1";
       if (
         ["multiple-choice", "dropdown-list"].includes(questionType) &&
         !usedTypes[questionType]
       ) {
-        sheet.getCell(fCell).value = audioLink[audioIndex++];
+        sheet.getCell(gCell).value = audioLink[audioIndex++];
         usedTypes[questionType] = true;
       } else if (questionType === "listening-questions-group") {
-        sheet.getCell(fCell).value = { formula: `DataTemplate!H8` };
+        sheet.getCell(gCell).value = { formula: `DataTemplate!F8` };
       } else {
-        sheet.getCell(fCell).value = "";
+        sheet.getCell(gCell).value = "";
       }
 
-      sheet.getCell(`A${row}`).value = {
-        formula: `IF(${dCell}="speaking", "Speaking", 
-    IF(${dCell}="writing", "Writing", 
-    IF(${dCell}="dropdown-list", IF(${fCell}<>"", "Listening", "Grammar&vocabulary - Reading"), 
-    IF(${dCell}="multiple-choice", IF(${fCell}<>"", "Listening", "Grammar&vocabulary - Reading"), 
-    IF(${dCell}="ordering", " Grammar&vocabulary - Reading", 
-    IF(${dCell}="matching", "Grammar&vocabulary - Reading", 
-    IF(${dCell}="listening-questions-group", "Listening", "")))))))`,
-      };
-
-      sheet.getCell(gCell).value = {
-        formula: `IF(${dCell}="speaking", IF(${fCell}<>"", "", DataTemplate!I10), "")`,
+      sheet.getCell(`B${row}`).value = {
+        formula: `IF(${eCell}="speaking", "Speaking", 
+    IF(${eCell}="writing", "Writing", 
+    IF(${eCell}="dropdown-list", IF(${gCell}<>"", "Listening", "Grammar&vocabulary - Reading"), 
+    IF(${eCell}="multiple-choice", IF(${gCell}<>"", "Listening", "Grammar&vocabulary - Reading"), 
+    IF(${eCell}="ordering", " Grammar&vocabulary - Reading", 
+    IF(${eCell}="matching", "Grammar&vocabulary - Reading", 
+    IF(${eCell}="listening-questions-group", "Listening", "")))))))`,
       };
 
       sheet.getCell(hCell).value = {
-        formula:
-          `IF(${dCell}="multiple-choice", IF(${fCell}<>"", DataTemplate!A3, DataTemplate!A2), ` +
-          `IF(${dCell}="dropdown-list", IF(${fCell}<>"", DataTemplate!A5, DataTemplate!A4), ` +
-          `IF(${dCell}="ordering", IF(${fCell}<>"", "", DataTemplate!A7), ` +
-          `IF(${dCell}="matching", IF(${fCell}<>"", "", DataTemplate!A6), ` +
-          `IF(${dCell}="writing", IF(${fCell}<>"", "", DataTemplate!A9), ` +
-          `IF(${dCell}="speaking", IF(${fCell}<>"", "", DataTemplate!A10), ` +
-          `IF(${dCell}="listening-questions-group", IF(${fCell}<>"", DataTemplate!A8, ""), "")))))))`,
+        formula: `IF(${eCell}="speaking", IF(${gCell}<>"", "", DataTemplate!G10), "")`,
       };
 
       sheet.getCell(iCell).value = {
         formula:
-          `IF(${dCell}="multiple-choice", IF(${fCell}<>"", DataTemplate!F3, DataTemplate!F2), ` +
-          `IF(${dCell}="dropdown-list", IF(${fCell}<>"", DataTemplate!F5, DataTemplate!F4), ` +
-          `IF(${dCell}="ordering", IF(${fCell}<>"", "", DataTemplate!F7), ` +
-          `IF(${dCell}="matching", IF(${fCell}<>"", "", DataTemplate!F6), ` +
-          `IF(${dCell}="listening-questions-group", IF(${fCell}<>"", DataTemplate!F8, ""), "")))))`,
+          `IF(${eCell}="multiple-choice", IF(${gCell}<>"", DataTemplate!A3, DataTemplate!A2), ` +
+          `IF(${eCell}="dropdown-list", IF(${gCell}<>"", DataTemplate!A5, DataTemplate!A4), ` +
+          `IF(${eCell}="ordering", IF(${gCell}<>"", "", DataTemplate!A7), ` +
+          `IF(${eCell}="matching", IF(${gCell}<>"", "", DataTemplate!A6), ` +
+          `IF(${eCell}="writing", IF(${gCell}<>"", "", DataTemplate!A9), ` +
+          `IF(${eCell}="speaking", IF(${gCell}<>"", "", DataTemplate!A10), ` +
+          `IF(${eCell}="listening-questions-group", IF(${gCell}<>"", DataTemplate!A8, ""), "")))))))`,
       };
 
       sheet.getCell(jCell).value = {
         formula:
-          `IF(${dCell}="multiple-choice", IF(${fCell}<>"", DataTemplate!G3, DataTemplate!G2), ` +
-          `IF(${dCell}="dropdown-list", IF(${fCell}<>"", DataTemplate!G5, DataTemplate!G4), ` +
-          `IF(${dCell}="matching", IF(${fCell}<>"", "", DataTemplate!G6), ` +
-          `IF(${dCell}="ordering", IF(${fCell}<>"", "", DataTemplate!G7), ` +
-          `IF(${dCell}="listening-questions-group", IF(${fCell}<>"", DataTemplate!G8, ""), "")))))`,
+          `IF(${eCell}="multiple-choice", IF(${gCell}<>"", DataTemplate!D3, DataTemplate!D2), ` +
+          `IF(${eCell}="dropdown-list", IF(${gCell}<>"", DataTemplate!D5, DataTemplate!D4), ` +
+          `IF(${eCell}="ordering", IF(${gCell}<>"", "", DataTemplate!D7), ` +
+          `IF(${eCell}="matching", IF(${gCell}<>"", "", DataTemplate!D6), ` +
+          `IF(${eCell}="listening-questions-group", IF(${gCell}<>"", DataTemplate!D8, ""), "")))))`,
       };
 
       sheet.getCell(kCell).value = {
-        formula: `IF(${dCell}="writing", IF(${fCell}<>"", "", DataTemplate!B9), "")`,
+        formula:
+          `IF(${eCell}="multiple-choice", IF(${gCell}<>"", DataTemplate!E3, DataTemplate!E2), ` +
+          `IF(${eCell}="dropdown-list", IF(${gCell}<>"", DataTemplate!E5, DataTemplate!E4), ` +
+          `IF(${eCell}="matching", IF(${gCell}<>"", "", DataTemplate!E6), ` +
+          `IF(${eCell}="ordering", IF(${gCell}<>"", "", DataTemplate!E7), ` +
+          `IF(${eCell}="listening-questions-group", IF(${gCell}<>"", DataTemplate!E8, ""), "")))))`,
       };
 
       sheet.getCell(lCell).value = {
-        formula:
-          `IF(${dCell}="multiple-choice", IF(${fCell}<>"", DataTemplate!C3, DataTemplate!C2), ` +
-          `IF(${dCell}="dropdown-list", IF(${fCell}<>"", DataTemplate!C5, DataTemplate!C4), ` +
-          `IF(${dCell}="ordering", IF(${fCell}<>"", "", DataTemplate!C7), ` +
-          `IF(${dCell}="listening-questions-group", IF(${fCell}<>"", DataTemplate!C8, ""), ""))))`,
+        formula: `IF(${eCell}="writing", IF(${gCell}<>"", "", DataTemplate!B9), IF(${eCell}="matching", DataTemplate!B6, ""))`,
       };
 
       sheet.getCell(mCell).value = {
-        formula: `IF(${dCell}="matching", IF(${fCell}<>"", "", DataTemplate!D6), "")`,
-      };
-
-      sheet.getCell(nCell).value = {
-        formula: `IF(${dCell}="matching", IF(${fCell}<>"", "", DataTemplate!E6), "")`,
+        formula:
+          `IF(${eCell}="multiple-choice", IF(${gCell}<>"", DataTemplate!C3, DataTemplate!C2), ` +
+          `IF(${eCell}="dropdown-list", IF(${gCell}<>"", DataTemplate!C5, DataTemplate!C4), ` +
+          `IF(${eCell}="ordering", IF(${gCell}<>"", "", DataTemplate!C7), ` +
+          `IF(${eCell}="listening-questions-group", IF(${gCell}<>"", DataTemplate!C8, ""), ""))))`,
       };
 
       dropdowns.forEach(({ col, values }) => {
@@ -335,8 +336,6 @@ const generateExcelTemplate = async () => {
       "Question",
       "SubQuestion",
       "GroupQuestion",
-      "Title",
-      "Sub Title",
       "Question Content",
       "Correct Answer",
       "Audio Link",
