@@ -108,7 +108,9 @@ async function createSessionRequest(req) {
     if (["COMPLETE", "NOT_STARTED"].includes(session.status)) {
       return {
         status: 400,
-        message: `Session is ${session.status === "COMPLETE" ? "complete" : "not started"}`,
+        message: `Session is ${
+          session.status === "COMPLETE" ? "complete" : "not started"
+        }`,
       };
     }
 
@@ -122,8 +124,8 @@ async function createSessionRequest(req) {
 
     if (pendingRequest) {
       return {
-        status: 400,
-        message: "Session request already exists",
+        status: 201,
+        message: "Session request created successfully",
         data: [pendingRequest],
       };
     }
