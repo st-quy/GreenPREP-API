@@ -73,7 +73,7 @@ const generateExcelTemplate = async () => {
 
     const headerAllQuestions = [
       "Skill",
-      "Part",
+      "Part (You can further edit the title.)",
       "Sub Part",
       "Question Type",
       "Sequence",
@@ -101,7 +101,16 @@ const generateExcelTemplate = async () => {
           "Listening",
         ],
       },
-      { col: "B", values: ["Part 1", "Part 2", "Part 3", "Part 4", "Part 5"] },
+      {
+        col: "B",
+        values: [
+          "Part 1: ...",
+          "Part 2: ...",
+          "Part 3: ...",
+          "Part 4: ...",
+          "Part 5: ...",
+        ],
+      },
       {
         col: "D",
         values: [
@@ -128,12 +137,6 @@ const generateExcelTemplate = async () => {
           errorTitle: "Invalid Selection",
           error: `Please select a valid option for ${col}.`,
         };
-
-        cell.alignment = {
-          vertical: "middle",
-          horizontal: "left",
-          wrapText: true,
-        };
       });
     }
 
@@ -148,7 +151,7 @@ const generateExcelTemplate = async () => {
 
     const headers = [
       "Skill",
-      "Part",
+      "Part (You can further edit the title.)",
       "Sub Part",
       "Question Type",
       "Sequence",
@@ -166,7 +169,16 @@ const generateExcelTemplate = async () => {
     applyHeaderStyle(sheet.addRow(headers));
 
     const dropdowns = [
-      { col: "B", values: ["Part 1", "Part 2", "Part 3", "Part 4", "Part 5"] },
+      {
+        col: "B",
+        values: [
+          "Part 1: ...",
+          "Part 2: ...",
+          "Part 3: ...",
+          "Part 4: ...",
+          "Part 5: ...",
+        ],
+      },
       {
         col: "D",
         values: [

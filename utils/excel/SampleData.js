@@ -55,7 +55,7 @@ const DataOrdering = [
   "",
   "",
   "(A). Sentence one\n(B). Sentence two\n(C). Sentence three\n(D). Sentence four\n(E). Sentence five",
-  "(A) | 3\n(B) | 1\n(C) | 5\n(D) | 2\n(E) | 4",
+  "(A) | (3)\n(B) | (1)\n(C) | (5)\n(D) | (2)\n(E) | (4)",
   "",
   "",
 ];
@@ -98,11 +98,11 @@ const DataSpeaking = [
 const DataListeningGroup = [
   "Write a short instruction or context for the audio.",
   "",
-  "Options 1: \nQuestion: Write question here ... \n (1) ...\n(2) ... \n(3) ... \n  \nOption 2:  \nQuestion: Write question here ... \n(1) ...\n(2) ... \n(3) ...",
+  "Option 1: \nQuestion: Write question here ... \n (1) ...\n(2) ... \n(3) ... \n  \nOption 2:  \nQuestion: Write question here ... \n(1) ...\n(2) ... \n(3) ...",
   "",
   "",
-  "Options 1: \nQuestion: Write question here ... \n(1) ...\n(2) ... \n(3) ... \n  \nOption 2:  \nQuestion: Write question here ... \n(1) ...\n(2) ... \n(3) ...",
-  "Option 1: (1)\nOption 2: (2)",
+  "",
+  "Option 1:\nQuestion | (1)\nOption 2: \nQuestion | (2)",
   "https://your-audio-link-here.com/audio.mp3",
   "",
 ];
