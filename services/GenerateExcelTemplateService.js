@@ -19,16 +19,13 @@ function formatQuestionContent(questionContent) {
 
   const leftItems = [];
   const rightItems = [];
-
   let firstOptions = null;
   let allOptionsSame = true;
 
   lines.forEach((line) => {
     const [left, right] = line.split("|").map((part) => part.trim());
 
-    if (left) {
-      leftItems.push(left);
-    }
+    if (left) leftItems.push(left);
 
     if (right) {
       const options = right
@@ -111,6 +108,63 @@ const formatCorrectAnswer = (correctAnswerStr, questionContentStr) => {
     return { key: matchingOption.answer, value: answer.value };
   });
 };
+function formatMatchingContent(questionContent) {
+  const lines = (questionContent || "")
+    .split("\n")
+    .map((line) => line.trim())
+    .filter(Boolean);
+
+  const leftItems = [];
+  const rightItems = [];
+  let parsingContents = false;
+  let parsingOptions = false;
+
+  lines.forEach((line) => {
+    if (line.toLowerCase().startsWith("contents:")) {
+      parsingContents = true;
+      parsingOptions = false;
+      return;
+    }
+    if (line.toLowerCase().startsWith("options:")) {
+      parsingOptions = true;
+      parsingContents = false;
+      return;
+    }
+
+    if (parsingContents) {
+      const content = line.replace(/^\d+\.\s*/, "").trim();
+      if (content) leftItems.push(content);
+    } else if (parsingOptions) {
+      const optionMatch = line.match(/^[A-Z]\.\s*(.*)$/i);
+      if (optionMatch) rightItems.push(optionMatch[1].trim());
+    }
+  });
+
+  return { leftItems, rightItems };
+}
+
+function formatMultipleChoice(questionContent, correctAnswer) {
+  const lines = (questionContent || "")
+    .split("\n")
+    .map((line) => line.trim())
+    .filter(Boolean);
+
+  const options = lines
+    .map((line) => {
+      const match = line.match(/^([A-Z])[.)]\s*(.+)$/i);
+      if (!match) return null;
+      return { key: match[1].toUpperCase(), value: match[2].trim() };
+    })
+    .filter(Boolean);
+
+  const correct = correctAnswer.trim().toUpperCase();
+  const correctOption = options.find((opt) => opt.key === correct);
+
+  return {
+    options,
+    correctAnswer: correctOption ? correctOption.value : null,
+  };
+}
 
 const parseAnswers = (correctStr, contentStr) =>
   correctStr
@@ -131,6 +185,25 @@ const parseAnswers = (correctStr, contentStr) =>
       return { key, value: options[answer] || "" };
     });
 
+function parseMatchingAnswers(correctStr, rightItems) {
+  return correctStr
+    .trim()
+    .split("\n")
+    .map((line) => {
+      const [leftNum, optionLetter] = line.split("|").map((s) => s.trim());
+      if (!leftNum || !optionLetter) return null;
+
+      const index = optionLetter.charCodeAt(0) - "A".charCodeAt(0);
+      const right = rightItems[index] || "";
+
+      return {
+        left: leftNum,
+        right,
+      };
+    })
+    .filter(Boolean);
+}
+
 const parseQuestionContent = (contentStr) =>
   contentStr
     .trim()
@@ -145,44 +218,45 @@ const parseQuestionContent = (contentStr) =>
     });
 
 const parseExcelBuffer = async (buffer) => {
-  const workbook = new ExcelJS.Workbook();
-  await workbook.xlsx.load(buffer);
-  const sheet = workbook.worksheets[0];
+  try {
+    const workbook = new ExcelJS.Workbook();
+    await workbook.xlsx.load(buffer);
+    const sheet = workbook.worksheets[0];
 
-  const partsData = [];
-  const topicSet = new Set();
+    const partsData = [];
+    const topicSet = new Set();
 
-  sheet.eachRow((row, rowIndex) => {
-    if (rowIndex === 1) return;
-    const topic = row.getCell("A").value;
-    const skill = row.getCell("B").value;
-    const part = row.getCell("C").value;
-    const subPart = row.getCell("D").value;
+    sheet.eachRow((row, rowIndex) => {
+      if (rowIndex === 1) return;
+      const topic = row.getCell("A").value;
+      const skill = row.getCell("B").value;
+      const part = row.getCell("C").value;
+      const subPart = row.getCell("D").value;
 
-    if (part && skill) {
-      partsData.push({
-        topic: topic?.toString().trim(),
-        skill: skill?.toString().trim(),
-        part: isNaN(part) ? part.toString().trim() : `Part${part}`,
-        subPart,
-      });
-      topicSet.add(topic?.toString().trim());
+      if (part && skill) {
+        partsData.push({
+          topic: topic?.toString().trim(),
+          skill: skill?.toString().trim(),
+          part: isNaN(part) ? part.toString().trim() : `Part${part}`,
+          subPart,
+        });
+        topicSet.add(topic?.toString().trim());
+      }
+    });
+
+    if (topicSet.size === 0) {
+      return { status: 400, message: "No topic found in file" };
     }
-  });
 
-  if (topicSet.size === 0) {
-    return { status: 400, message: "No topic found in file" };
-  }
+    const topicName = [...topicSet][0];
+    const existingTopic = await Topic.findOne({ where: { Name: topicName } });
 
-  const topicName = [...topicSet][0];
-  const existingTopic = await Topic.findOne({ where: { Name: topicName } });
+    if (existingTopic) {
+      return { status: 400, message: "Topic already exists" };
+    }
 
-  if (existingTopic) {
-    return { status: 400, message: "Topic already exists" };
-  }
-
-  const createdTopic = await Topic.create({ Name: topicName });
-  const topicId = createdTopic.ID;
+    const createdTopic = await Topic.create({ Name: topicName });
+    const topicId = createdTopic.ID;
 
   const createdParts = await Promise.all(
     partsData.map(async ({ part, subPart }) => {
@@ -365,6 +439,43 @@ const parseExcelBuffer = async (buffer) => {
               : {}),
           },
         });
+      } else if (type === "multiple-choice") {
+        try {
+          const { options, correctAnswer: correctValue } = formatMultipleChoice(
+            questionContent,
+            correctAnswer
+          );
+
+          if (!correctValue) {
+            console.error(
+              "Correct answer not found in options for multiple-choice:",
+              { correctAnswer, options }
+            );
+            throw new Error("Correct answer not found in options");
+          }
+
+          await Question.create({
+            Type: type,
+            AudioKeys: audioLink ? audioLink.text : null,
+            ImageKeys: imageLink,
+            SkillID: skillID,
+            PartID: partID,
+            Sequence: sequence,
+            Content: question,
+            SubContent: subQuestion,
+            GroupContent: groupQuestion,
+            AnswerContent: {
+              title: question,
+              options,
+              correctAnswer: correctValue,
+            },
+          });
+        } catch (error) {
+          console.error("Failed to create multiple-choice question:", error);
+          throw new Error(
+            `Failed to create Multiple Choice Question: ${error.message}`
+          );
+        }
       }
       if (type == "ordering") {
         await Question.create({
@@ -427,7 +538,11 @@ const parseExcelBuffer = async (buffer) => {
     console.error("Error processing sheet rows:", error);
   }
 
-  return { status: 200, message: "Parse Successfully" };
+    return { status: 200, message: "Parse Successfully" };
+  } catch (error) {
+    console.error("Error parsing Excel Buffer:", error);
+    return { status: 500, message: `Error parsing file: ${error.message}` };
+  }
 };
 
 module.exports = { generateTemplateFile, parseExcelBuffer };
