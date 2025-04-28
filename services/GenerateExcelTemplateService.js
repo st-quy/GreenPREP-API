@@ -11,6 +11,44 @@ const generateTemplateFile = async () => {
   return await generateExcelTemplate();
 };
 
+function formatQuestionContent(questionContent) {
+  const lines = (questionContent || "")
+    .split("\n")
+    .map((line) => line.trim())
+    .filter(Boolean);
+
+  const leftItems = [];
+  const rightItems = [];
+
+  let firstOptions = null;
+  let allOptionsSame = true;
+
+  lines.forEach((line) => {
+    const [left, right] = line.split("|").map((part) => part.trim());
+
+    if (left) {
+      leftItems.push(left);
+    }
+
+    if (right) {
+      const options = right
+        .split("/")
+        .map((option) => option.split(".")[1]?.trim());
+      if (firstOptions === null) {
+        firstOptions = options;
+      } else if (JSON.stringify(firstOptions) !== JSON.stringify(options)) {
+        allOptionsSame = false;
+      }
+    }
+  });
+
+  if (allOptionsSame && firstOptions) {
+    rightItems.push(firstOptions);
+  }
+
+  return { leftItems, rightItems };
+}
+
 const parseAnswers = (correctStr, contentStr) =>
   correctStr
     .trim()
@@ -165,10 +203,7 @@ const parseExcelBuffer = async (buffer) => {
           skillName.toLowerCase().replace(/\s+/g, "")
       )?.ID || null;
 
-    if (
-      type == "dropdown-list" ||
-      (audioLink && audioLink.toString().trim() == "")
-    ) {
+    if (type == "dropdown-list") {
       const lines = (questionContent || "")
         .split("\n")
         .map((line) => line.trim())
@@ -197,6 +232,35 @@ const parseExcelBuffer = async (buffer) => {
             correctAnswer: parseAnswers(correctAnswer, questionContent),
             partID: partID,
             type: questionType,
+            type: type,
+            ...(audioLink && audioLink.trim() !== ""
+              ? { audioKeys: audioLink }
+              : {}),
+          },
+        });
+      } else {
+        const { leftItems, rightItems } =
+          formatQuestionContent(questionContent);
+        await Question.create({
+          Type: type,
+          AudioKeys: audioLink,
+          ImageKeys: imageLink,
+          SkillID: skillID,
+          PartID: partID,
+          Sequence: sequence,
+          Content: question,
+          SubContent: subQuestion,
+          GroupContent: groupQuestion,
+          AnswerContent: {
+            content: question,
+            leftItems: leftItems,
+            rightItems: rightItems,
+            correctAnswer: parseAnswers(correctAnswer, questionContent),
+            partID: partID,
+            type: type,
+            ...(audioLink && audioLink.trim() !== ""
+              ? { audioKeys: audioLink }
+              : {}),
           },
         });
       }
