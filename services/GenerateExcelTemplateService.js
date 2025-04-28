@@ -252,9 +252,6 @@ const parseExcelBuffer = async (buffer) => {
         groupQuestion,
       ] = cells;
 
-      console.log("====================================");
-      console.log(imageLink);
-      console.log("====================================");
       const partID =
         createdParts.find(
           (s) =>
