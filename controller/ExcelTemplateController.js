@@ -22,8 +22,12 @@ const handleImportExcel = async (req, res) => {
       return res.status(400).json({ message: "No file uploaded" });
     }
 
-    const groupedData = await parseExcelBuffer(req.file.buffer);
-    res.json({ success: true, data: groupedData });
+    try {
+      const groupedData = await parseExcelBuffer(req.file.buffer);
+      res.json({ data: groupedData });
+    } catch (error) {
+      res.status(error.status).json({ message: error.message });
+    }
   } catch (err) {
     res
       .status(500)
