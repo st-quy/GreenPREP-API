@@ -19,16 +19,13 @@ function formatQuestionContent(questionContent) {
 
   const leftItems = [];
   const rightItems = [];
-
   let firstOptions = null;
   let allOptionsSame = true;
 
   lines.forEach((line) => {
     const [left, right] = line.split("|").map((part) => part.trim());
 
-    if (left) {
-      leftItems.push(left);
-    }
+    if (left) leftItems.push(left);
 
     if (right) {
       const options = right
@@ -47,6 +44,64 @@ function formatQuestionContent(questionContent) {
   }
 
   return { leftItems, rightItems };
+}
+
+function formatMatchingContent(questionContent) {
+  const lines = (questionContent || "")
+    .split("\n")
+    .map((line) => line.trim())
+    .filter(Boolean);
+
+  const leftItems = [];
+  const rightItems = [];
+  let parsingContents = false;
+  let parsingOptions = false;
+
+  lines.forEach((line) => {
+    if (line.toLowerCase().startsWith("contents:")) {
+      parsingContents = true;
+      parsingOptions = false;
+      return;
+    }
+    if (line.toLowerCase().startsWith("options:")) {
+      parsingOptions = true;
+      parsingContents = false;
+      return;
+    }
+
+    if (parsingContents) {
+      const content = line.replace(/^\d+\.\s*/, "").trim();
+      if (content) leftItems.push(content);
+    } else if (parsingOptions) {
+      const optionMatch = line.match(/^[A-Z]\.\s*(.*)$/i);
+      if (optionMatch) rightItems.push(optionMatch[1].trim());
+    }
+  });
+
+  return { leftItems, rightItems };
+}
+
+function formatMultipleChoice(questionContent, correctAnswer) {
+  const lines = (questionContent || "")
+    .split("\n")
+    .map((line) => line.trim())
+    .filter(Boolean);
+
+  const options = lines
+    .map((line) => {
+      const match = line.match(/^([A-Z])[.)]\s*(.+)$/i);
+      if (!match) return null;
+      return { key: match[1].toUpperCase(), value: match[2].trim() };
+    })
+    .filter(Boolean);
+
+  const correct = correctAnswer.trim().toUpperCase();
+  const correctOption = options.find((opt) => opt.key === correct);
+
+  return {
+    options,
+    correctAnswer: correctOption ? correctOption.value : null,
+  };
 }
 
 const parseAnswers = (correctStr, contentStr) =>
@@ -68,6 +123,25 @@ const parseAnswers = (correctStr, contentStr) =>
       return { key, value: options[answer] || "" };
     });
 
+function parseMatchingAnswers(correctStr, rightItems) {
+  return correctStr
+    .trim()
+    .split("\n")
+    .map((line) => {
+      const [leftNum, optionLetter] = line.split("|").map((s) => s.trim());
+      if (!leftNum || !optionLetter) return null;
+
+      const index = optionLetter.charCodeAt(0) - "A".charCodeAt(0);
+      const right = rightItems[index] || "";
+
+      return {
+        left: leftNum,
+        right,
+      };
+    })
+    .filter(Boolean);
+}
+
 const parseQuestionContent = (contentStr) =>
   contentStr
     .trim()
@@ -82,168 +156,202 @@ const parseQuestionContent = (contentStr) =>
     });
 
 const parseExcelBuffer = async (buffer) => {
-  const workbook = new ExcelJS.Workbook();
-  await workbook.xlsx.load(buffer);
-  const sheet = workbook.worksheets[0];
+  try {
+    const workbook = new ExcelJS.Workbook();
+    await workbook.xlsx.load(buffer);
+    const sheet = workbook.worksheets[0];
 
-  const partsData = [];
-  const topicSet = new Set();
+    const partsData = [];
+    const topicSet = new Set();
 
-  sheet.eachRow((row, rowIndex) => {
-    if (rowIndex === 1) return;
-    const topic = row.getCell("A").value;
-    const skill = row.getCell("B").value;
-    const part = row.getCell("C").value;
-    const subPart = row.getCell("D").value;
+    sheet.eachRow((row, rowIndex) => {
+      if (rowIndex === 1) return;
+      const topic = row.getCell("A").value;
+      const skill = row.getCell("B").value;
+      const part = row.getCell("C").value;
+      const subPart = row.getCell("D").value;
 
-    if (part && skill) {
-      partsData.push({
-        topic: topic?.toString().trim(),
-        skill: skill?.toString().trim(),
-        part: isNaN(part) ? part.toString().trim() : `Part${part}`,
-        subPart,
-      });
-      topicSet.add(topic?.toString().trim());
+      if (part && skill) {
+        partsData.push({
+          topic: topic?.toString().trim(),
+          skill: skill?.toString().trim(),
+          part: isNaN(part) ? part.toString().trim() : `Part${part}`,
+          subPart,
+        });
+        topicSet.add(topic?.toString().trim());
+      }
+    });
+
+    if (topicSet.size === 0) {
+      return { status: 400, message: "No topic found in file" };
     }
-  });
 
-  if (topicSet.size === 0) {
-    return { status: 400, message: "No topic found in file" };
-  }
+    const topicName = [...topicSet][0];
+    const existingTopic = await Topic.findOne({ where: { Name: topicName } });
 
-  const topicName = [...topicSet][0];
-  const existingTopic = await Topic.findOne({ where: { Name: topicName } });
+    if (existingTopic) {
+      return { status: 400, message: "Topic already exists" };
+    }
 
-  if (existingTopic) {
-    return { status: 400, message: "Topic already exists" };
-  }
+    const createdTopic = await Topic.create({ Name: topicName });
+    const topicId = createdTopic.ID;
 
-  const createdTopic = await Topic.create({ Name: topicName });
-  const topicId = createdTopic.ID;
-
-  const createdParts = await Promise.all(
-    partsData.map(async ({ part, subPart }) => {
-      const match = part.match(/\d+/);
-      const sequence = match ? parseInt(match[0], 10) : null;
-      const newPart = await Part.create({
-        Content: part,
-        SubContent: subPart,
-        Sequence: sequence,
-        TopicID: topicId,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      });
-      return { id: newPart.ID, content: newPart.Content };
-    })
-  );
-
-  const skills = await Skill.findAll({ attributes: ["ID", "Name"] });
-
-  const skillMap = skills.reduce((map, skill) => {
-    map[normalizeString(skill.Name)] = skill.ID;
-    return map;
-  }, {});
-
-  const partMap = createdParts.reduce((map, part) => {
-    map[normalizeString(part.content)] = part.id;
-    return map;
-  }, {});
-
-  for (const row of sheet.getRows(2, sheet.rowCount - 1) || []) {
-    const questionType = row
-      .getCell("E")
-      .value?.toString()
-      .toLowerCase()
-      .trim();
-
-    const cells = [
-      "A",
-      "B",
-      "C",
-      "D",
-      "E",
-      "F",
-      "G",
-      "H",
-      "I",
-      "J",
-      "K",
-      "L",
-      "M",
-    ].map((col) => row.getCell(col).value);
-    if (cells.every((v) => v === null || v === "")) break;
-
-    const [
-      topic,
-      skillName,
-      partContent,
-      subPart,
-      type,
-      sequence,
-      audioLink,
-      imageLink,
-      question,
-      questionContent,
-      correctAnswer,
-      subQuestion,
-      groupQuestion,
-    ] = cells;
-
-    const partID =
-      createdParts.find(
-        (s) =>
-          s.content.toLowerCase().replace(/\s+/g, "") ===
-          (partContent || "").toLowerCase().replace(/\s+/g, "")
-      )?.id || null;
-
-    const skillID =
-      skills.find(
-        (s) =>
-          s.Name.toLowerCase().replace(/\s+/g, "") ===
-          skillName.toLowerCase().replace(/\s+/g, "")
-      )?.ID || null;
-
-    if (type == "dropdown-list") {
-      const lines = (questionContent || "")
-        .split("\n")
-        .map((line) => line.trim())
-        .filter(Boolean);
-      const optionsAfterPipe = lines.map(
-        (line) => line.split("|")[1]?.trim().toLowerCase() || ""
-      );
-      const allSame = optionsAfterPipe.every(
-        (opt) => opt === optionsAfterPipe[0]
-      );
-
-      if (!allSame) {
-        await Question.create({
-          Type: type,
-          AudioKeys: audioLink,
-          ImageKeys: imageLink,
-          SkillID: skillID,
-          PartID: partID,
+    const createdParts = await Promise.all(
+      partsData.map(async ({ part, subPart }) => {
+        const match = part.match(/\d+/);
+        const sequence = match ? parseInt(match[0], 10) : null;
+        const newPart = await Part.create({
+          Content: part,
+          SubContent: subPart,
           Sequence: sequence,
-          Content: question,
-          SubContent: subQuestion,
-          GroupContent: groupQuestion,
-          AnswerContent: {
-            content: question,
-            options: parseQuestionContent(questionContent),
-            correctAnswer: parseAnswers(correctAnswer, questionContent),
-            partID: partID,
-            type: questionType,
-            type: type,
-            ...(audioLink && audioLink.trim() !== ""
-              ? { audioKeys: audioLink }
-              : {}),
-          },
+          TopicID: topicId,
+          createdAt: new Date(),
+          updatedAt: new Date(),
         });
-      } else {
+        return { id: newPart.ID, content: newPart.Content };
+      })
+    );
+
+    const skills = await Skill.findAll({ attributes: ["ID", "Name"] });
+
+    const skillMap = skills.reduce((map, skill) => {
+      map[normalizeString(skill.Name)] = skill.ID;
+      return map;
+    }, {});
+
+    const partMap = createdParts.reduce((map, part) => {
+      map[normalizeString(part.content)] = part.id;
+      return map;
+    }, {});
+
+    for (const row of sheet.getRows(2, sheet.rowCount - 1) || []) {
+      const questionType = row
+        .getCell("E")
+        .value?.toString()
+        .toLowerCase()
+        .trim();
+
+      const cells = [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H",
+        "I",
+        "J",
+        "K",
+        "L",
+        "M",
+      ].map((col) => row.getCell(col).value);
+
+      if (cells.every((v) => v === null || v === "")) break;
+
+      let [
+        topic,
+        skillName,
+        partContent,
+        subPart,
+        type,
+        sequence,
+        audioLink,
+        imageLink,
+        question,
+        questionContent,
+        correctAnswer,
+        subQuestion,
+        groupQuestion,
+      ] = cells;
+
+      skillName =
+        skillName === "Grammar & Vocabulary"
+          ? "GRAMMAR AND VOCABULARY"
+          : skillName;
+
+      const partID =
+        createdParts.find(
+          (s) =>
+            normalizeString(s.content) === normalizeString(partContent || "")
+        )?.id || null;
+
+      const skillID =
+        skills.find(
+          (s) => normalizeString(s.Name) === normalizeString(skillName)
+        )?.ID || null;
+
+      if (type === "dropdown-list") {
+        const lines = (questionContent || "")
+          .split("\n")
+          .map((line) => line.trim())
+          .filter(Boolean);
+        const optionsAfterPipe = lines.map(
+          (line) => line.split("|")[1]?.trim().toLowerCase() || ""
+        );
+        const allSame = optionsAfterPipe.every(
+          (opt) => opt === optionsAfterPipe[0]
+        );
+
+        if (!allSame) {
+          await Question.create({
+            Type: type,
+            AudioKeys: audioLink,
+            ImageKeys: imageLink,
+            SkillID: skillID,
+            PartID: partID,
+            Sequence: sequence,
+            Content: question,
+            SubContent: subQuestion,
+            GroupContent: groupQuestion,
+            AnswerContent: {
+              content: question,
+              options: parseQuestionContent(questionContent),
+              correctAnswer: parseAnswers(correctAnswer, questionContent),
+              partID: partID,
+              type: questionType,
+              ...(audioLink && audioLink.trim() !== ""
+                ? { audioKeys: audioLink }
+                : {}),
+            },
+          });
+        } else {
+          const { leftItems, rightItems } =
+            formatQuestionContent(questionContent);
+          await Question.create({
+            Type: type,
+            AudioKeys: audioLink,
+            ImageKeys: imageLink,
+            SkillID: skillID,
+            PartID: partID,
+            Sequence: sequence,
+            Content: question,
+            SubContent: subQuestion,
+            GroupContent: groupQuestion,
+            AnswerContent: {
+              content: question,
+              leftItems: leftItems,
+              rightItems: rightItems,
+              correctAnswer: parseAnswers(correctAnswer, questionContent),
+              partID: partID,
+              type: type,
+              ...(audioLink && audioLink.trim() !== ""
+                ? { audioKeys: audioLink }
+                : {}),
+            },
+          });
+        }
+      } else if (type === "matching") {
         const { leftItems, rightItems } =
-          formatQuestionContent(questionContent);
+          formatMatchingContent(questionContent);
+        const correctAnswerParsed = parseMatchingAnswers(
+          correctAnswer,
+          rightItems
+        );
+
         await Question.create({
           Type: type,
-          AudioKeys: audioLink,
+          AudioKeys: audioLink ? audioLink.text : null,
           ImageKeys: imageLink,
           SkillID: skillID,
           PartID: partID,
@@ -252,22 +360,56 @@ const parseExcelBuffer = async (buffer) => {
           SubContent: subQuestion,
           GroupContent: groupQuestion,
           AnswerContent: {
-            content: question,
-            leftItems: leftItems,
-            rightItems: rightItems,
-            correctAnswer: parseAnswers(correctAnswer, questionContent),
-            partID: partID,
-            type: type,
-            ...(audioLink && audioLink.trim() !== ""
-              ? { audioKeys: audioLink }
-              : {}),
+            leftItems,
+            rightItems,
+            correctAnswer: correctAnswerParsed,
           },
         });
+      } else if (type === "multiple-choice") {
+        try {
+          const { options, correctAnswer: correctValue } = formatMultipleChoice(
+            questionContent,
+            correctAnswer
+          );
+
+          if (!correctValue) {
+            console.error(
+              "Correct answer not found in options for multiple-choice:",
+              { correctAnswer, options }
+            );
+            throw new Error("Correct answer not found in options");
+          }
+
+          await Question.create({
+            Type: type,
+            AudioKeys: audioLink ? audioLink.text : null,
+            ImageKeys: imageLink,
+            SkillID: skillID,
+            PartID: partID,
+            Sequence: sequence,
+            Content: question,
+            SubContent: subQuestion,
+            GroupContent: groupQuestion,
+            AnswerContent: {
+              title: question,
+              options,
+              correctAnswer: correctValue,
+            },
+          });
+        } catch (error) {
+          console.error("Failed to create multiple-choice question:", error);
+          throw new Error(
+            `Failed to create Multiple Choice Question: ${error.message}`
+          );
+        }
       }
     }
-  }
 
-  return { status: 200, message: "Parse Successfully" };
+    return { status: 200, message: "Parse Successfully" };
+  } catch (error) {
+    console.error("Error parsing Excel Buffer:", error);
+    return { status: 500, message: `Error parsing file: ${error.message}` };
+  }
 };
 
 module.exports = { generateTemplateFile, parseExcelBuffer };
