@@ -72,17 +72,14 @@ const parseExcelBuffer = async (buffer) => {
     });
 
     if (topicSet.size === 0) {
-      await transaction.rollback();
       return { status: 400, message: "No topic found in file" };
     }
 
     const topicName = [...topicSet][0];
     const existingTopic = await Topic.findOne({
       where: { Name: topicName },
-      transaction,
     });
     if (existingTopic) {
-      await transaction.rollback();
       return { status: 400, message: "Topic already exists" };
     }
 
@@ -115,7 +112,6 @@ const parseExcelBuffer = async (buffer) => {
 
     const skills = await Skill.findAll({
       attributes: ["ID", "Name"],
-      transaction,
     });
 
     const questionsToCreate = [];
@@ -181,183 +177,175 @@ const parseExcelBuffer = async (buffer) => {
         )?.ID || null;
 
       let answerContent = {};
+      switch (type) {
+        case "dropdown-list": {
+          const lines = (questionContent || "")
+            .split("\n")
+            .map((line) => line.trim())
+            .filter(Boolean);
+          const optionsAfterPipe = lines.map(
+            (line) => line.split("|")[1]?.trim().toLowerCase() || ""
+          );
+          const allSame = optionsAfterPipe.every(
+            (opt) => opt === optionsAfterPipe[0]
+          );
 
-      try {
-        switch (type) {
-          case "dropdown-list": {
-            const lines = (questionContent || "")
-              .split("\n")
-              .map((line) => line.trim())
-              .filter(Boolean);
-            const optionsAfterPipe = lines.map(
-              (line) => line.split("|")[1]?.trim().toLowerCase() || ""
-            );
-            const allSame = optionsAfterPipe.every(
-              (opt) => opt === optionsAfterPipe[0]
-            );
-
-            if (allSame) {
-              const { leftItems, rightItems } =
-                formatQuestionContent(questionContent);
-              if (audioLink) {
-                groupQuestion = formatTitleWithAudio(question, audioLink);
-              }
-              answerContent = {
-                content: question,
-                ...(groupQuestion ? { groupContent: groupQuestion } : {}),
-                leftItems,
-                rightItems,
-                correctAnswer: parseAnswers(correctAnswer, questionContent),
-                partID,
-                type,
-                ...(audioLink ? { audioKeys: audioLink } : {}),
-              };
-            } else {
-              if (audioLink) {
-                groupQuestion = formatTitleWithAudio(question, audioLink);
-              }
-              answerContent = {
-                content: question,
-                ...(groupQuestion ? { groupContent: groupQuestion } : {}),
-                options: parseQuestionContent(questionContent),
-                correctAnswer: parseAnswers(correctAnswer, questionContent),
-                partID,
-                type,
-                ...(audioLink ? { audioKeys: audioLink } : {}),
-              };
-            }
-            break;
-          }
-
-          case "matching": {
+          if (allSame) {
             const { leftItems, rightItems } =
-              formatMatchingContent(questionContent);
+              formatQuestionContent(questionContent);
             if (audioLink) {
               groupQuestion = formatTitleWithAudio(question, audioLink);
             }
             answerContent = {
+              content: question,
               ...(groupQuestion ? { groupContent: groupQuestion } : {}),
               leftItems,
               rightItems,
-              correctAnswer: parseMatchingAnswers(correctAnswer, rightItems),
-              ...(audioLink ? { audioKeys: audioLink } : {}),
-            };
-            break;
-          }
-
-          case "listening-questions-group": {
-            const groupContent = formatQuestionToJson(
-              question,
-              questionContent,
-              correctAnswer,
-              partID,
-              type
-            );
-            groupQuestion = groupContent;
-            answerContent = {
-              content: question,
-              ...(groupQuestion ? { groupContent: groupQuestion } : {}),
-              groupContent,
+              correctAnswer: parseAnswers(correctAnswer, questionContent),
               partID,
               type,
               ...(audioLink ? { audioKeys: audioLink } : {}),
             };
-            break;
-          }
-
-          case "multiple-choice": {
-            if (audioLink) {
-              groupQuestion = formatTitleWithAudio(question);
-            }
-            const { options, correctAnswer: correctValue } =
-              formatMultipleChoice(questionContent, correctAnswer);
-            if (!correctValue) {
-              console.error("Correct answer not found for multiple-choice:", {
-                correctAnswer,
-                options,
-              });
-              throw new Error("Correct answer not found in options");
-            }
-            answerContent = {
-              content: question,
-              ...(groupQuestion ? { groupContent: groupQuestion } : {}),
-              options,
-              correctAnswer: correctValue,
-              ...(audioLink ? { audioKeys: audioLink.text } : {}),
-            };
-            break;
-          }
-
-          case "ordering": {
+          } else {
             if (audioLink) {
               groupQuestion = formatTitleWithAudio(question, audioLink);
             }
             answerContent = {
               content: question,
               ...(groupQuestion ? { groupContent: groupQuestion } : {}),
-              options: formatAnswers(questionContent),
-              correctAnswer: formatCorrectAnswer(
-                correctAnswer,
-                questionContent
-              ),
+              options: parseQuestionContent(questionContent),
+              correctAnswer: parseAnswers(correctAnswer, questionContent),
               partID,
               type,
               ...(audioLink ? { audioKeys: audioLink } : {}),
             };
-            break;
           }
-
-          case "speaking": {
-            if (audioLink) {
-              groupQuestion = formatTitleWithAudio(question, audioLink);
-            }
-            answerContent = {
-              content: question,
-              ...(groupQuestion ? { groupContent: groupQuestion } : {}),
-              groupContent: groupQuestion,
-              options: questionContent,
-              correctAnswer,
-              partID,
-              type,
-              ImageKeys: `[${imageLink}]`,
-              ...(audioLink ? { audioKeys: audioLink } : {}),
-            };
-            break;
-          }
-
-          case "writing": {
-            if (audioLink) {
-              groupQuestion = formatTitleWithAudio(question, audioLink);
-            }
-            answerContent = correctAnswer;
-            break;
-          }
-
-          default:
-            console.warn(`Unknown type: ${type}`);
-            continue;
+          break;
         }
 
-        questionsToCreate.push({
-          Type: type,
-          AudioKeys:
-            audioLink?.text ||
-            (typeof audioLink === "string" ? audioLink : null),
-          ImageKeys: imageLink ? [imageLink] : null,
-          SkillID: skillID,
-          PartID: partID,
-          Sequence: sequence,
-          Content: question,
-          SubContent: subQuestion,
-          GroupContent: groupQuestion,
-          AnswerContent: answerContent,
-        });
-      } catch (error) {
-        console.error(`Failed to create question (type: ${type}):`, error);
-        await transaction.rollback();
-        return { status: 500, message: "Failed during question parsing." };
+        case "matching": {
+          const { leftItems, rightItems } =
+            formatMatchingContent(questionContent);
+          if (audioLink) {
+            groupQuestion = formatTitleWithAudio(question, audioLink);
+          }
+          answerContent = {
+            ...(groupQuestion ? { groupContent: groupQuestion } : {}),
+            leftItems,
+            rightItems,
+            correctAnswer: parseMatchingAnswers(correctAnswer, rightItems),
+            ...(audioLink ? { audioKeys: audioLink } : {}),
+          };
+          break;
+        }
+
+        case "listening-questions-group": {
+          const groupContent = formatQuestionToJson(
+            question,
+            questionContent,
+            correctAnswer,
+            partID,
+            type
+          );
+          groupQuestion = groupContent;
+          answerContent = {
+            content: question,
+            ...(groupQuestion ? { groupContent: groupQuestion } : {}),
+            groupContent,
+            partID,
+            type,
+            ...(audioLink ? { audioKeys: audioLink } : {}),
+          };
+          break;
+        }
+
+        case "multiple-choice": {
+          if (audioLink) {
+            groupQuestion = formatTitleWithAudio(question);
+          }
+          const { options, correctAnswer: correctValue } = formatMultipleChoice(
+            questionContent,
+            correctAnswer
+          );
+          if (!correctValue) {
+            console.error("Correct answer not found for multiple-choice:", {
+              correctAnswer,
+              options,
+            });
+            throw new Error("Correct answer not found in options");
+          }
+          answerContent = {
+            content: question,
+            ...(groupQuestion ? { groupContent: groupQuestion } : {}),
+            options,
+            correctAnswer: correctValue,
+            ...(audioLink ? { audioKeys: audioLink.text } : {}),
+          };
+          break;
+        }
+
+        case "ordering": {
+          if (audioLink) {
+            groupQuestion = formatTitleWithAudio(question, audioLink);
+          }
+          answerContent = {
+            content: question,
+            ...(groupQuestion ? { groupContent: groupQuestion } : {}),
+            options: formatAnswers(questionContent),
+            correctAnswer: formatCorrectAnswer(correctAnswer, questionContent),
+            partID,
+            type,
+            ...(audioLink ? { audioKeys: audioLink } : {}),
+          };
+          break;
+        }
+
+        case "speaking": {
+          if (audioLink) {
+            groupQuestion = formatTitleWithAudio(question, audioLink);
+          }
+          answerContent = {
+            content: question,
+            ...(groupQuestion ? { groupContent: groupQuestion } : {}),
+            groupContent: groupQuestion,
+            options: questionContent,
+            correctAnswer,
+            partID,
+            type,
+            ImageKeys: `[${imageLink}]`,
+            ...(audioLink ? { audioKeys: audioLink } : {}),
+          };
+          break;
+        }
+
+        case "writing": {
+          if (audioLink) {
+            groupQuestion = formatTitleWithAudio(question, audioLink);
+          }
+          answerContent = correctAnswer;
+          break;
+        }
+
+        default:
+          console.warn(`Unknown type: ${type}`);
+          continue;
       }
+
+      questionsToCreate.push({
+        Type: type,
+        AudioKeys:
+          audioLink?.text || (typeof audioLink === "string" ? audioLink : null),
+        ImageKeys: imageLink ? [imageLink] : null,
+        SkillID: skillID,
+        PartID: partID,
+        Sequence: sequence,
+        Content: question,
+        SubContent: subQuestion,
+        GroupContent: groupQuestion,
+        AnswerContent: answerContent,
+      });
     }
+
     try {
       await Question.bulkCreate(questionsToCreate, { transaction });
     } catch (error) {
