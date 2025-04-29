@@ -3,6 +3,7 @@ const {
 } = require("../utils/excel/GenerateExcelTemplate");
 const ExcelJS = require("exceljs");
 const { Topic, Part, Question, Skill } = require("../models");
+const { sequelize } = require("../models");
 
 const {
   formatAnswers,
@@ -43,6 +44,7 @@ const generateTemplateFile = async () => {
 };
 
 const parseExcelBuffer = async (buffer) => {
+  const transaction = await sequelize.transaction();
   try {
     const workbook = new ExcelJS.Workbook();
     await workbook.xlsx.load(buffer);
@@ -70,36 +72,51 @@ const parseExcelBuffer = async (buffer) => {
     });
 
     if (topicSet.size === 0) {
+      await transaction.rollback();
       return { status: 400, message: "No topic found in file" };
     }
 
     const topicName = [...topicSet][0];
-    const existingTopic = await Topic.findOne({ where: { Name: topicName } });
-
+    const existingTopic = await Topic.findOne({
+      where: { Name: topicName },
+      transaction,
+    });
     if (existingTopic) {
+      await transaction.rollback();
       return { status: 400, message: "Topic already exists" };
     }
 
-    const createdTopic = await Topic.create({ Name: topicName });
+    const createdTopic = await Topic.create(
+      { Name: topicName },
+      { transaction }
+    );
     const topicId = createdTopic.ID;
 
     const createdParts = await Promise.all(
       partsData.map(async ({ part, subPart }) => {
         const match = part.match(/\d+/);
         const sequence = match ? parseInt(match[0], 10) : null;
-        const newPart = await Part.create({
-          Content: part,
-          SubContent: subPart,
-          Sequence: sequence,
-          TopicID: topicId,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        });
+        const newPart = await Part.create(
+          {
+            Content: part,
+            SubContent: subPart,
+            Sequence: sequence,
+            TopicID: topicId,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          },
+          {
+            transaction,
+          }
+        );
         return { id: newPart.ID, content: newPart.Content };
       })
     );
 
-    const skills = await Skill.findAll({ attributes: ["ID", "Name"] });
+    const skills = await Skill.findAll({
+      attributes: ["ID", "Name"],
+      transaction,
+    });
 
     const questionsToCreate = [];
 
@@ -337,20 +354,23 @@ const parseExcelBuffer = async (buffer) => {
         });
       } catch (error) {
         console.error(`Failed to create question (type: ${type}):`, error);
-        throw error;
+        await transaction.rollback();
+        return { status: 500, message: "Failed during question parsing." };
       }
     }
     try {
-      await Question.bulkCreate(questionsToCreate);
+      await Question.bulkCreate(questionsToCreate, { transaction });
     } catch (error) {
+      await transaction.rollback();
       return {
-        status: error.status,
+        status: 500,
         message: `Bulk insert failed: ${error.message}`,
       };
     }
-
+    await transaction.commit();
     return { status: 200, message: "Parse Successfully" };
   } catch (error) {
+    await transaction.rollback();
     return { status: 500, message: `Error parsing file: ${error.message}` };
   }
 };
