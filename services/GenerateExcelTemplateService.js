@@ -4,216 +4,43 @@ const {
 const ExcelJS = require("exceljs");
 const { Topic, Part, Question, Skill } = require("../models");
 
+const {
+  formatAnswers,
+  formatCorrectAnswer,
+} = require("../utils/formatters/GenericFormatter");
+
+const {
+  formatQuestionContent,
+  formatQuestionToJson,
+  formatTitleWithAudio,
+} = require("../utils/formatters/GroupQuestionFormatter");
+
+const {
+  formatMatchingContent,
+} = require("../utils/formatters/MatchingFormatter");
+
+const {
+  formatMultipleChoice,
+} = require("../utils/formatters/MultipleChoiceFormatter");
+
+const { parseAnswers } = require("../utils/parsers/AnswerParser");
+
+const {
+  parseMatchingAnswers,
+} = require("../utils/parsers/MatchingAnswerParser");
+
+const {
+  parseQuestionContent,
+} = require("../utils/parsers/QuestionContentParser");
+
 const generateTemplateFile = async () => {
-  return await generateExcelTemplate();
-};
-
-function formatQuestionContent(questionContent) {
-  const lines = (questionContent || "")
-    .split("\n")
-    .map((line) => line.trim())
-    .filter(Boolean);
-
-  const leftItems = [];
-  const rightItems = [];
-  let firstOptions = null;
-  let allOptionsSame = true;
-
-  lines.forEach((line) => {
-    const [left, right] = line.split("|").map((part) => part.trim());
-
-    if (left) leftItems.push(left);
-
-    if (right) {
-      const options = right
-        .split("/")
-        .map((option) => option.split(".")[1]?.trim());
-      if (firstOptions === null) {
-        firstOptions = options;
-      } else if (JSON.stringify(firstOptions) !== JSON.stringify(options)) {
-        allOptionsSame = false;
-      }
-    }
-  });
-
-  if (allOptionsSame && firstOptions) {
-    rightItems.push(firstOptions);
+  try {
+    const file = await generateExcelTemplate();
+    return file;
+  } catch (error) {
+    throw new Error("Error generating Excel template: " + error.message);
   }
-
-  return { leftItems, rightItems };
-}
-
-const formatQuestionToJson = (
-  question,
-  questionContent,
-  correctAnswer,
-  partID
-) => {
-  return {
-    title: question,
-    audioKey: "",
-    listContent: questionContent
-      .split("Options")
-      .slice(1)
-      .map((content, index) => {
-        const lines = content.split("\n").filter((line) => line.trim() !== "");
-        const questionText = lines[1].replace(/^\d+: /, "").trim();
-        const options = lines
-          .slice(2)
-          .map((opt) => opt.replace(/^[A-C]\)/, "").trim());
-
-        const correctOption = correctAnswer.match(
-          new RegExp(`Options ${index + 1}: (\\d+) \\| ([A-C])`)
-        );
-        const correctAnswerText = correctOption
-          ? options[parseInt(correctOption[1]) - 1]
-          : "";
-
-        return {
-          ID: index + 1,
-          content: questionText,
-          options: options,
-          correctAnswer: correctAnswerText,
-          type: "multiple-choice",
-          partID: partID,
-        };
-      }),
-  };
 };
-
-const formatAnswers = (answersStr) => {
-  return answersStr.split("\n").map((line) => {
-    const parts = line.split(".");
-    return parts.slice(1).join(".").trim();
-  });
-};
-
-const formatCorrectAnswer = (correctAnswerStr, questionContentStr) => {
-  const correctAnswers = correctAnswerStr.split("\n").map((line) => {
-    const [key, value] = line.split("|").map((s) => s.trim());
-    return { key, value: parseInt(value, 10) };
-  });
-
-  const options = questionContentStr.split("\n").map((line) => {
-    const [key, ...rest] = line.split(".");
-    const answer = rest.join(".").trim();
-    return { key: key.trim(), answer };
-  });
-
-  return correctAnswers.map((answer) => {
-    const matchingOption = options.find((option) => option.key === answer.key);
-    return { key: matchingOption.answer, value: answer.value };
-  });
-};
-
-function formatMatchingContent(questionContent) {
-  const lines = (questionContent || "")
-    .split("\n")
-    .map((line) => line.trim())
-    .filter(Boolean);
-
-  const leftItems = [];
-  const rightItems = [];
-  let parsingContents = false;
-  let parsingOptions = false;
-
-  lines.forEach((line) => {
-    if (line.toLowerCase().startsWith("contents:")) {
-      parsingContents = true;
-      parsingOptions = false;
-      return;
-    }
-    if (line.toLowerCase().startsWith("options:")) {
-      parsingOptions = true;
-      parsingContents = false;
-      return;
-    }
-
-    if (parsingContents) {
-      const content = line.replace(/^\d+\.\s*/, "").trim();
-      if (content) leftItems.push(content);
-    } else if (parsingOptions) {
-      const optionMatch = line.match(/^[A-Z]\.\s*(.*)$/i);
-      if (optionMatch) rightItems.push(optionMatch[1].trim());
-    }
-  });
-
-  return { leftItems, rightItems };
-}
-
-function formatMultipleChoice(questionContent, correctAnswer) {
-  const lines = (questionContent || "")
-    .split("\n")
-    .map((line) => line.trim())
-    .filter(Boolean);
-
-  const options = lines
-    .map((line) => {
-      const match = line.match(/^([A-Z])[.)]\s*(.+)$/i);
-      if (!match) return null;
-      return { key: match[1].toUpperCase(), value: match[2].trim() };
-    })
-    .filter(Boolean);
-
-  const correct = correctAnswer.trim().toUpperCase();
-  const correctOption = options.find((opt) => opt.key === correct);
-
-  return {
-    options,
-    correctAnswer: correctOption ? correctOption.value : null,
-  };
-}
-
-const parseAnswers = (correctStr, contentStr) =>
-  correctStr
-    .trim()
-    .split("\n")
-    .map((line, i) => {
-      const [keyPart, ansLetter] = line.split("|").map((s) => s.trim());
-      const key = keyPart.trim();
-      const answer = ansLetter?.toUpperCase();
-      const optionsLine =
-        contentStr.split("\n")[i]?.split("|")[1]?.trim() || "";
-      const options = Object.fromEntries(
-        optionsLine.split("/").map((opt) => {
-          const [k, ...v] = opt.split(".");
-          return [k.trim(), v.join(".").trim()];
-        })
-      );
-      return { key, value: options[answer] || "" };
-    });
-
-function parseMatchingAnswers(correctStr, rightItems) {
-  return correctStr
-    .trim()
-    .split("\n")
-    .map((line) => {
-      const [leftNum, optionLetter] = line.split("|").map((s) => s.trim());
-      if (!leftNum || !optionLetter) return null;
-
-      const index = optionLetter.charCodeAt(0) - "A".charCodeAt(0);
-      const right = rightItems[index] || "";
-
-      return {
-        left: leftNum,
-        right,
-      };
-    })
-    .filter(Boolean);
-}
-
-const parseQuestionContent = (contentStr) =>
-  contentStr
-    .trim()
-    .split("\n")
-    .map((line) => {
-      const [keyPart, opts] = line.split("|").map((s) => s.trim());
-      const key = keyPart.match(/\d+/)?.[0];
-      const value = opts
-        .split("/")
-        .map((opt) => opt.split(".").slice(1).join(".").trim());
-      return { key, value };
-    });
 
 const parseExcelBuffer = async (buffer) => {
   try {
@@ -273,6 +100,8 @@ const parseExcelBuffer = async (buffer) => {
     );
 
     const skills = await Skill.findAll({ attributes: ["ID", "Name"] });
+
+    const questionsToCreate = [];
 
     for (const row of sheet.getRows(2, sheet.rowCount - 1) || []) {
       const questionType = row
@@ -353,21 +182,31 @@ const parseExcelBuffer = async (buffer) => {
             if (allSame) {
               const { leftItems, rightItems } =
                 formatQuestionContent(questionContent);
+              if (audioLink) {
+                groupQuestion = formatTitleWithAudio(question, audioLink);
+              }
               answerContent = {
                 content: question,
+                ...(groupQuestion ? { groupContent: groupQuestion } : {}),
                 leftItems,
                 rightItems,
                 correctAnswer: parseAnswers(correctAnswer, questionContent),
                 partID,
                 type,
+                ...(audioLink ? { audioKeys: audioLink } : {}),
               };
             } else {
+              if (audioLink) {
+                groupQuestion = formatTitleWithAudio(question, audioLink);
+              }
               answerContent = {
                 content: question,
+                ...(groupQuestion ? { groupContent: groupQuestion } : {}),
                 options: parseQuestionContent(questionContent),
                 correctAnswer: parseAnswers(correctAnswer, questionContent),
                 partID,
                 type,
+                ...(audioLink ? { audioKeys: audioLink } : {}),
               };
             }
             break;
@@ -376,10 +215,15 @@ const parseExcelBuffer = async (buffer) => {
           case "matching": {
             const { leftItems, rightItems } =
               formatMatchingContent(questionContent);
+            if (audioLink) {
+              groupQuestion = formatTitleWithAudio(question, audioLink);
+            }
             answerContent = {
+              ...(groupQuestion ? { groupContent: groupQuestion } : {}),
               leftItems,
               rightItems,
               correctAnswer: parseMatchingAnswers(correctAnswer, rightItems),
+              ...(audioLink ? { audioKeys: audioLink } : {}),
             };
             break;
           }
@@ -389,18 +233,25 @@ const parseExcelBuffer = async (buffer) => {
               question,
               questionContent,
               correctAnswer,
-              partID
+              partID,
+              type
             );
+            groupQuestion = groupContent;
             answerContent = {
               content: question,
+              ...(groupQuestion ? { groupContent: groupQuestion } : {}),
               groupContent,
               partID,
               type,
+              ...(audioLink ? { audioKeys: audioLink } : {}),
             };
             break;
           }
 
           case "multiple-choice": {
+            if (audioLink) {
+              groupQuestion = formatTitleWithAudio(question);
+            }
             const { options, correctAnswer: correctValue } =
               formatMultipleChoice(questionContent, correctAnswer);
             if (!correctValue) {
@@ -411,16 +262,22 @@ const parseExcelBuffer = async (buffer) => {
               throw new Error("Correct answer not found in options");
             }
             answerContent = {
-              title: question,
+              content: question,
+              ...(groupQuestion ? { groupContent: groupQuestion } : {}),
               options,
               correctAnswer: correctValue,
+              ...(audioLink ? { audioKeys: audioLink.text } : {}),
             };
             break;
           }
 
           case "ordering": {
+            if (audioLink) {
+              groupQuestion = formatTitleWithAudio(question, audioLink);
+            }
             answerContent = {
               content: question,
+              ...(groupQuestion ? { groupContent: groupQuestion } : {}),
               options: formatAnswers(questionContent),
               correctAnswer: formatCorrectAnswer(
                 correctAnswer,
@@ -428,24 +285,33 @@ const parseExcelBuffer = async (buffer) => {
               ),
               partID,
               type,
+              ...(audioLink ? { audioKeys: audioLink } : {}),
             };
             break;
           }
 
           case "speaking": {
+            if (audioLink) {
+              groupQuestion = formatTitleWithAudio(question, audioLink);
+            }
             answerContent = {
               content: question,
+              ...(groupQuestion ? { groupContent: groupQuestion } : {}),
               groupContent: groupQuestion,
               options: questionContent,
               correctAnswer,
               partID,
               type,
               ImageKeys: `[${imageLink}]`,
+              ...(audioLink ? { audioKeys: audioLink } : {}),
             };
             break;
           }
 
           case "writing": {
+            if (audioLink) {
+              groupQuestion = formatTitleWithAudio(question, audioLink);
+            }
             answerContent = correctAnswer;
             break;
           }
@@ -455,7 +321,7 @@ const parseExcelBuffer = async (buffer) => {
             continue;
         }
 
-        await Question.create({
+        questionsToCreate.push({
           Type: type,
           AudioKeys:
             audioLink?.text ||
@@ -474,10 +340,17 @@ const parseExcelBuffer = async (buffer) => {
         throw error;
       }
     }
+    try {
+      await Question.bulkCreate(questionsToCreate);
+    } catch (error) {
+      return {
+        status: error.status,
+        message: `Bulk insert failed: ${error.message}`,
+      };
+    }
 
     return { status: 200, message: "Parse Successfully" };
   } catch (error) {
-    console.error("Error parsing Excel Buffer:", error);
     return { status: 500, message: `Error parsing file: ${error.message}` };
   }
 };
