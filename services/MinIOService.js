@@ -42,7 +42,7 @@ const initializeBucket = async () => {
 const uploadAudioToMinIO = async (filename) => {
   try {
     const url = await minioClient.presignedPutObject(BUCKET, filename);
-    const fileUrl = `${MINIO_HOST}:${MINIO_PORT}/${BUCKET}/${filename}`;
+    const fileUrl = `http://${MINIO_HOST}:${MINIO_PORT}/${BUCKET}/${filename}`;
     return { status: 200, data: { uploadUrl: url, fileUrl } };
   } catch (err) {
     throw new Error("Failed to get presigned URL");

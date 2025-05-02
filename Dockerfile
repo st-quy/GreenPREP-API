@@ -4,7 +4,7 @@ FROM node:20.19-alpine AS build
 WORKDIR /app
 
 COPY package*.json ./
-RUN npm ci --omit=dev
+RUN npm ci
 
 COPY . .
 
@@ -13,8 +13,8 @@ RUN rm -rf \
     *.md \
     .git \
     .env \
-    etc \
-    seeders \
+    # etc \
+    # seeders \
     migrations
 # Stage 2: Production image
 FROM node:20.19-alpine
