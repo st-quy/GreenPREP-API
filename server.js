@@ -22,8 +22,8 @@ app.use("/api", require("./routes"));
 })();
 
 db.sequelize
-  .sync({force: true})
-  // .authenticate()
+  // .sync({force: true})
+  .authenticate()
   .then(async () => {
     console.log("Database synchronized and models updated successfully.");
     app.listen(PORT, () => {

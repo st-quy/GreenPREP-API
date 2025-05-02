@@ -13,8 +13,8 @@ RUN rm -rf \
     *.md \
     .git \
     .env \
-    # etc \
-    # seeders \
+    etc \
+    seeders \
     migrations
 # Stage 2: Production image
 FROM node:20.19-alpine
