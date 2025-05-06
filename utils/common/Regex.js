@@ -11,19 +11,14 @@ const QUESTION_BLOCK_SPLIT_REGEX = /\n(?=\d+\s*:\s)/;
 // Match a question line like "1: What is...?"
 const QUESTION_LINE_REGEX = /^\d+\s*:\s?.+$/gm;
 
-// Regular expression to match the prefix of multiple-choice options,
-// e.g., "A) ", ... , "Z) ", etc.
-// ([A-Z]) captures a single uppercase letter at the start of the line.
-// Followed by either ')' or '.', and optional whitespace.
+// Regex to match option prefixes like "A)", "B.", etc.
 const OPTION_PREFIX_REGEX = /^([A-Z])[).]\s*/;
 
-// Regular expression to split the text into questions based on numbering,
-// e.g., "1. ", "2: ", "10. ", etc.
-// (?=...) is a positive lookahead that keeps the matched number in the result.
-// \d+ matches one or more digits (question number).
-// [.:] matches a dot or a colon following the number.
-// 'g' flag ensures it finds all matches in the string.
+// Regex to split blocks by question numbers like "1.", "2:", etc.
 const QUESTION_SPLIT_REGEX = /(?=\d+[.:])/g;
+
+// Regex to parse answer line like "Option 5: 5 | A"
+const ANSWER_LINE_REGEX = /Option\s*\d+:\s*(\d+)\s*\|\s*([A-Z])/;
 
 const CORRECT_ANSWER_REGEX = (index) =>
   new RegExp(`Option ${index}: (\\d+) \\| ([A-C])`);
@@ -36,5 +31,6 @@ module.exports = {
   QUESTION_BLOCK_SPLIT_REGEX,
   QUESTION_LINE_REGEX,
   QUESTION_SPLIT_REGEX,
+  ANSWER_LINE_REGEX,
   CORRECT_ANSWER_REGEX,
 };

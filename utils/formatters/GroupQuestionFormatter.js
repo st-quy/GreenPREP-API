@@ -4,6 +4,7 @@ const {
   OPTION_REGEX,
   CORRECT_ANSWER_REGEX,
   QUESTION_SPLIT_REGEX,
+  ANSWER_LINE_REGEX,
 } = require("../common/Regex");
 
 const { splitAndTrimLines } = require("../common/StringUtils");
@@ -53,7 +54,7 @@ const formatQuestionToJson = (
 
     return lines
       .map((line) => {
-        const match = line.match(/Option\s*\d+:\s*(\d+)\s*\|\s*([A-Z])/);
+        const match = line.match(ANSWER_LINE_REGEX);
         if (match) {
           const id = parseInt(match[1], 10);
           const answer = match[2];
