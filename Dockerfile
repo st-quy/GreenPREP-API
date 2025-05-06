@@ -4,7 +4,7 @@ FROM node:20.19-alpine AS build
 WORKDIR /app
 
 COPY package*.json ./
-RUN npm ci --omit=dev
+RUN npm ci
 
 COPY . .
 
@@ -23,8 +23,6 @@ WORKDIR /app
 
 COPY --from=build /app ./
 
-RUN chmod +x entrypoint.sh
-
 EXPOSE 3010
 
-ENTRYPOINT ["./entrypoint.sh"]
+CMD [ "npm", "start" ]

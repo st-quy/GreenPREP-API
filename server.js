@@ -6,6 +6,7 @@ const db = require("./models");
 const cookieParser = require("cookie-parser");
 const app = express();
 const { swaggerUi, swaggerSpec } = require("./swagger");
+const { initializeBucket } = require("./services/MinIOService");
 
 const PORT = process.env.PORT || 3000;
 
@@ -16,8 +17,12 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.use("/api", require("./routes"));
 
+(async () => {
+  await initializeBucket(); //Just for the first time
+})();
+
 db.sequelize
-   //.sync({force: true})
+  // .sync({force: true})
   .authenticate()
   .then(async () => {
     console.log("Database synchronized and models updated successfully.");
