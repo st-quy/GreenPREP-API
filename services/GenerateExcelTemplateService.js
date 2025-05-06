@@ -22,6 +22,7 @@ const {
 
 const {
   formatMultipleChoice,
+  formatMultipleChoiceWithAudio,
 } = require("../utils/formatters/MultipleChoiceFormatter");
 
 const { parseAnswers } = require("../utils/parsers/AnswerParser");
@@ -230,6 +231,7 @@ const parseExcelBuffer = async (buffer) => {
             groupQuestion = formatTitleWithAudio(question, audioLink);
           }
           answerContent = {
+            content: question,
             ...(groupQuestion ? { groupContent: groupQuestion } : {}),
             leftItems,
             rightItems,
@@ -254,19 +256,28 @@ const parseExcelBuffer = async (buffer) => {
             groupContent,
             partID,
             type,
-            ...(audioLink ? { audioKeys: audioLink } : {}),
+            ...(audioLink ? { audioKeys: audioLink.text } : {}),
           };
           break;
         }
 
         case "multiple-choice": {
+          let options = [];
+          let correctValue = "";
+
           if (audioLink) {
             groupQuestion = formatTitleWithAudio(question);
+            const result = formatMultipleChoiceWithAudio(
+              questionContent,
+              correctAnswer
+            );
+            options = result.options;
+            correctValue = result.correctAnswer;
+          } else {
+            const result = formatMultipleChoice(questionContent, correctAnswer);
+            options = result.options;
+            correctValue = result.correctAnswer;
           }
-          const { options, correctAnswer: correctValue } = formatMultipleChoice(
-            questionContent,
-            correctAnswer
-          );
           if (!correctValue) {
             console.error("Correct answer not found for multiple-choice:", {
               correctAnswer,
@@ -275,10 +286,12 @@ const parseExcelBuffer = async (buffer) => {
             throw new Error("Correct answer not found in options");
           }
           answerContent = {
-            content: question,
+            ...(audioLink ? { content: question } : { title: question }),
             ...(groupQuestion ? { groupContent: groupQuestion } : {}),
             options,
             correctAnswer: correctValue,
+            ...(audioLink ? { partID } : {}),
+            ...(audioLink ? { type } : {}),
             ...(audioLink ? { audioKeys: audioLink.text } : {}),
           };
           break;
@@ -295,7 +308,7 @@ const parseExcelBuffer = async (buffer) => {
             correctAnswer: formatCorrectAnswer(correctAnswer, questionContent),
             partID,
             type,
-            ...(audioLink ? { audioKeys: audioLink } : {}),
+            ...(audioLink ? { audioKeys: audioLink.text } : {}),
           };
           break;
         }
@@ -312,7 +325,7 @@ const parseExcelBuffer = async (buffer) => {
             correctAnswer,
             partID,
             type,
-            ImageKeys: `[${imageLink}]`,
+            ImageKeys: imageLink ? [imageLink.text] : null,
             ...(audioLink ? { audioKeys: audioLink } : {}),
           };
           break;
@@ -335,7 +348,7 @@ const parseExcelBuffer = async (buffer) => {
         Type: type,
         AudioKeys:
           audioLink?.text || (typeof audioLink === "string" ? audioLink : null),
-        ImageKeys: imageLink ? [imageLink] : null,
+        ImageKeys: imageLink ? [imageLink.text] : null,
         SkillID: skillID,
         PartID: partID,
         Sequence: sequence,

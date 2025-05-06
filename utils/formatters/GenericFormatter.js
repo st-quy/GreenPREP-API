@@ -9,7 +9,7 @@ const formatAnswers = (answersStr) => {
 
 const formatCorrectAnswer = (correctAnswerStr, questionContentStr) => {
   const correctAnswers = splitAndTrimLines(correctAnswerStr).map((line) => {
-    const [key, value] = line.split("|").map((s) => s.trim());
+    const [value, key] = line.split("|").map((s) => s.trim());
     return { key, value: parseInt(value, 10) };
   });
 
@@ -21,7 +21,10 @@ const formatCorrectAnswer = (correctAnswerStr, questionContentStr) => {
 
   return correctAnswers.map((answer) => {
     const matchingOption = options.find((option) => option.key === answer.key);
-    return { key: matchingOption.answer, value: answer.value };
+    return {
+      key: matchingOption ? matchingOption.answer : "",
+      value: answer.value,
+    };
   });
 };
 

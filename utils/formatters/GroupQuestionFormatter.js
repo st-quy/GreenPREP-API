@@ -1,8 +1,9 @@
 const {
-  OPTION_REGEX,
-  LEADING_NUMBER_REGEX,
-  QUESTION_TEXT_REGEX,
+  QUESTION_BLOCK_SPLIT_REGEX,
   OPTION_PREFIX_REGEX,
+  OPTION_REGEX,
+  CORRECT_ANSWER_REGEX,
+  QUESTION_SPLIT_REGEX,
 } = require("../common/Regex");
 
 const { splitAndTrimLines } = require("../common/StringUtils");
@@ -43,39 +44,87 @@ const formatQuestionContent = (questionContent) => {
 const formatQuestionToJson = (
   question,
   questionContent,
-  correctAnswer,
+  rawAnswerText,
   partID,
   type
 ) => {
+  const parseCorrectAnswers = (rawText) => {
+    const lines = rawText.split("\n").filter(Boolean);
+
+    return lines
+      .map((line) => {
+        const match = line.match(/Option\s*\d+:\s*(\d+)\s*\|\s*([A-Z])/);
+        if (match) {
+          const id = parseInt(match[1], 10);
+          const answer = match[2];
+          return { id, answer };
+        }
+        return null;
+      })
+      .filter(Boolean);
+  };
+
+  const correctAnswers = parseCorrectAnswers(rawAnswerText);
+
+  const cleanedContent = questionContent.replace(/Option\s*\d+:/g, "").trim();
+
+  const blocks = cleanedContent
+    .split(QUESTION_SPLIT_REGEX)
+    .map((block) => block.trim())
+    .filter(Boolean);
+
   return {
     title: question,
     audioKey: "",
-    listContent: questionContent
-      .split("Options")
-      .slice(1)
-      .map((content, index) => {
-        const lines = content.split("\n").filter((line) => line.trim() !== "");
-        const questionText = lines[1].replace(QUESTION_TEXT_REGEX, "").trim();
-        const options = lines
-          .slice(2)
-          .map((opt) => opt.replace(OPTION_PREFIX_REGEX, "").trim());
+    listContent: blocks.map((block, index) => {
+      const lines = block
+        .split("\n")
+        .map((line) => line.trim())
+        .filter(Boolean);
 
-        const correctOption = correctAnswer.match(
-          new RegExp(`Options ${index + 1}: (\\d+) \\| ([A-C])`)
+      const questionLine =
+        lines.find((line) => /^\d+[.:]/.test(line)) || lines[0] || "";
+      const questionText = questionLine.replace(/^\d+[.:]\s*/, "").trim();
+
+      const questionIDMatch = questionLine.match(/^(\d+)[.:]/);
+      const questionID = questionIDMatch
+        ? parseInt(questionIDMatch[1], 10)
+        : index + 1;
+
+      const optionLines = lines.filter((line) => /^[A-Z][).]/.test(line));
+      const options = optionLines.map((line) => {
+        const match = line.match(OPTION_PREFIX_REGEX);
+        return match ? line.replace(OPTION_PREFIX_REGEX, "").trim() : line;
+      });
+
+      const correctEntry = correctAnswers.find(
+        (item) => item.id === questionID
+      );
+      const correctLetter = correctEntry ? correctEntry.answer : "";
+
+      let correctAnswerText = "";
+      if (correctLetter) {
+        const optionLine = optionLines.find(
+          (line) =>
+            line.startsWith(correctLetter + ")") ||
+            line.startsWith(correctLetter + ".")
         );
-        const correctAnswerText = correctOption
-          ? options[parseInt(correctOption[1]) - 1]
-          : "";
+        if (optionLine) {
+          correctAnswerText = optionLine
+            .replace(OPTION_PREFIX_REGEX, "")
+            .trim();
+        }
+      }
 
-        return {
-          ID: index + 1,
-          content: questionText,
-          options: options,
-          correctAnswer: correctAnswerText,
-          type: type,
-          partID: partID,
-        };
-      }),
+      return {
+        ID: questionID,
+        content: questionText,
+        options: options,
+        type: type,
+        correctAnswer: correctAnswerText,
+        partID: partID,
+      };
+    }),
   };
 };
 
