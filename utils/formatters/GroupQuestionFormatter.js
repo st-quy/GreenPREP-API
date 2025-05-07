@@ -15,9 +15,8 @@ const formatQuestionContent = (questionContent) => {
   let firstOptions = null;
   let allOptionsSame = true;
   const leftItems = [];
-  const rightItems = [];
 
-  lines.forEach((line) => {
+  for (const line of lines) {
     const [left, right] = line.split("|").map((part) => part.trim());
 
     if (left) leftItems.push(left);
@@ -27,19 +26,18 @@ const formatQuestionContent = (questionContent) => {
         .split("/")
         .map((option) => option.split(".")[1]?.trim());
 
-      if (firstOptions === null) {
+      if (!firstOptions) {
         firstOptions = options;
       } else if (JSON.stringify(firstOptions) !== JSON.stringify(options)) {
         allOptionsSame = false;
       }
     }
-  });
-
-  if (allOptionsSame && firstOptions) {
-    rightItems.push(firstOptions);
   }
 
-  return { leftItems, rightItems };
+  return {
+    leftItems,
+    rightItems: allOptionsSame && firstOptions ? firstOptions : [],
+  };
 };
 
 const formatQuestionToJson = (
