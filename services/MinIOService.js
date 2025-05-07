@@ -2,6 +2,8 @@ const Minio = require("minio");
 
 const MINIO_PORT = process.env.MINIO_PORT;
 const MINIO_HOST = process.env.MINIO_HOST;
+const BUCKET = process.env.BUCKET;
+const MINIO_URL_BASE = process.env.MINIO_URL_BASE;
 
 const minioClient = new Minio.Client({
   endPoint: MINIO_HOST,
@@ -10,9 +12,6 @@ const minioClient = new Minio.Client({
   accessKey: process.env.MINIO_ACCESS_KEY,
   secretKey: process.env.MINIO_SECRET_KEY,
 });
-
-// Destination bucket
-const BUCKET = "gp-bucket";
 
 //Policy for the bucket to allow public access read-only
 const policy = {
@@ -39,17 +38,40 @@ const initializeBucket = async () => {
   }
 };
 
+// Upload audio file to MinIO
 const uploadAudioToMinIO = async (filename) => {
   try {
     const url = await minioClient.presignedPutObject(BUCKET, filename);
-    const fileUrl = `http://${MINIO_HOST}:${MINIO_PORT}/${BUCKET}/${filename}`;
+    const fileUrl = `${MINIO_URL_BASE}/${filename}`;
     return { status: 200, data: { uploadUrl: url, fileUrl } };
   } catch (err) {
     throw new Error("Failed to get presigned URL");
   }
 };
 
+// Delete audio file from MinIO
+const deleteFileFromMinIO = async (filename) => {
+  try {
+    await minioClient.removeObject(BUCKET, filename);
+    return { status: 200, message: `${filename} file deleted successfully` };
+  } catch (err) {
+    throw new Error("Failed to delete file from MinIO");
+  }
+};
+
+// Delete multiple audio files from MinIO
+const deleteFilesFromMinIO = async (filenames) => {
+  try {
+    await minioClient.removeObjects(BUCKET, filenames);
+    return { status: 200, message: `${filenames} files deleted successfully` };
+  } catch (err) {
+    throw new Error("Failed to delete files from MinIO");
+  }
+};
+
 module.exports = {
   initializeBucket,
   uploadAudioToMinIO,
+  deleteFileFromMinIO,
+  deleteFilesFromMinIO,
 };

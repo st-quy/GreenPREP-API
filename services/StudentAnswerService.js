@@ -1,5 +1,6 @@
 const { StudentAnswer, Session } = require("../models");
 const { calculatePoints } = require("../services/GradeService");
+const { deleteFilesFromMinIO } = require("../services/MinIOService");
 
 /**
  * Validate incoming questions array
@@ -103,4 +104,40 @@ async function storeStudentAnswers(req) {
   }
 }
 
-module.exports = { storeStudentAnswers };
+const getFilenameFromUrl = (url) => {
+  try {
+    const parsedUrl = new URL(url);
+    const pathname = parsedUrl.pathname;
+    return pathname.split("/").pop();
+  } catch (err) {
+    console.error("Invalid URL:", url);
+    return null;
+  }
+};
+
+async function removeMinIOAudio(sessionId) {
+  try {
+    const studentAnswers = await StudentAnswer.findAll({
+      where: { SessionID: sessionId },
+      attributes: ["AnswerAudio"],
+    });
+    const audioFiles = await studentAnswers.map((answer) => {
+      const audioUrl = answer.AnswerAudio;
+      const filename = getFilenameFromUrl(audioUrl);
+      return filename;
+    });
+
+    await deleteFilesFromMinIO(audioFiles);
+
+    await Session.update(
+      { minioAudioRemoved: true },
+      {
+        where: { ID: sessionId },
+      }
+    );
+  } catch (error) {
+    console.error("Failed to update MinioAudioRemoved:", error);
+  }
+}
+
+module.exports = { storeStudentAnswers, removeMinIOAudio };

@@ -35,6 +35,10 @@ async function sendEmail(
           <h3>Test Details:</h3>
           <p>${testDetails}</p>
           ${nextSteps ? `<h3>Next Steps:</h3><p>${nextSteps}</p>` : ""}
+          <div style="background-color: #fff3cd; color: #856404; padding: 15px; border: 1px solid #ffeeba; border-radius: 4px; margin: 15px 0;">
+            <strong>Important Notice:</strong>
+            <p>Your audio content will be automatically deleted after 7 days. Please ensure to backup your content for answer verification purposes.</p>
+          </div>
           <h3>Contact Information:</h3>
           <p>${contactInfo}</p>
           <p>Thank you for your participation!</p>

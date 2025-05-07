@@ -1,5 +1,7 @@
-const { Sequelize } = require("sequelize");
+const { Sequelize, Op } = require("sequelize");
+const cron = require("node-cron");
 const { Session, SessionParticipant, Class, Topic } = require("../models");
+const { removeMinIOAudio } = require("./StudentAnswerService");
 
 async function getAllSessions(req) {
   try {
@@ -254,10 +256,11 @@ async function cronStatusAllSessions() {
       const startTime = new Date(session.startTime);
       const endTime = new Date(session.endTime);
 
-      newStatus = startTime > now 
-        ? "NOT_STARTED"
-        : endTime > now 
-          ? "ON_GOING" 
+      newStatus =
+        startTime > now
+          ? "NOT_STARTED"
+          : endTime > now
+          ? "ON_GOING"
           : "COMPLETE";
 
       if (session.isPublished) {
@@ -294,6 +297,43 @@ async function cronStatusAllSessions() {
   }
 }
 
+async function checkAndRemoveOldAudios() {
+  const now = new Date();
+  const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000); // 7 days ago
+
+  try {
+    const sessions = await Session.findAll({
+      where: {
+        minioAudioRemoved: false,
+        isPublished: true,
+        status: "COMPLETE",
+        updatedAt: {
+          [Op.lte]: sevenDaysAgo,
+        },
+      },
+    });
+
+    if (sessions.length === 0) {
+      console.warn("No sessions to process.");
+      return;
+    }
+
+    for (const session of sessions) {
+      await removeMinIOAudio(session.ID);
+    }
+  } catch (error) {
+    throw new Error(`Error removing old audios, ${error}`);
+  }
+}
+
+cron.schedule("0 0 * * *", async () => {
+  await checkAndRemoveOldAudios();
+});
+
+cron.schedule("*/2 * * * *", async () => {
+  await cronStatusAllSessions();
+});
+
 module.exports = {
   getAllSessions,
   getSessionByClass,
@@ -302,4 +342,5 @@ module.exports = {
   getSessionDetailById,
   removeSession,
   cronStatusAllSessions,
+  checkAndRemoveOldAudios,
 };
