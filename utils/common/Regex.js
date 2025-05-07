@@ -4,12 +4,33 @@ const OPTION_REGEX = /^([A-Z])[.)]\s*(.+)$/i;
 const LEADING_NUMBER_REGEX = /^\d+\.\s*/;
 // Regex to clean up leading number and colon in question text, e.g., "1: Question text"
 const QUESTION_TEXT_REGEX = /^\d+: /;
-// Regex to match options (A), (B), (C) at the start of each option, e.g., "A)", "B)", "C)"
-const OPTION_PREFIX_REGEX = /^[A-C]\)/;
+
+// Split each question block starting with a number + colon (e.g., "1:")
+const QUESTION_BLOCK_SPLIT_REGEX = /\n(?=\d+\s*:\s)/;
+
+// Match a question line like "1: What is...?"
+const QUESTION_LINE_REGEX = /^\d+\s*:\s?.+$/gm;
+
+// Regex to match option prefixes like "A)", "B.", etc.
+const OPTION_PREFIX_REGEX = /^([A-Z])[).]\s*/;
+
+// Regex to split blocks by question numbers like "1.", "2:", etc.
+const QUESTION_SPLIT_REGEX = /(?=\d+[.:])/g;
+
+// Regex to parse answer line like "Option 5: 5 | A"
+const ANSWER_LINE_REGEX = /Option\s*\d+:\s*(\d+)\s*\|\s*([A-Z])/;
+
+const CORRECT_ANSWER_REGEX = (index) =>
+  new RegExp(`Option ${index}: (\\d+) \\| ([A-C])`);
 
 module.exports = {
   OPTION_REGEX,
   LEADING_NUMBER_REGEX,
   QUESTION_TEXT_REGEX,
   OPTION_PREFIX_REGEX,
+  QUESTION_BLOCK_SPLIT_REGEX,
+  QUESTION_LINE_REGEX,
+  QUESTION_SPLIT_REGEX,
+  ANSWER_LINE_REGEX,
+  CORRECT_ANSWER_REGEX,
 };

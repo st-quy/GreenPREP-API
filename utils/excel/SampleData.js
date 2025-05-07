@@ -83,7 +83,7 @@ const DataListeningGroup = [
   "Write a short instruction or context for the audio.",
   "",
   "",
-  "Option 1: \nQuestion: Write question here ... \n (1) ...\n(2) ... \n(3) ... \n  \nOption 2:  \nQuestion: Write question here ... \n(1) ...\n(2) ... \n(3) ...",
+  "Option 1: \n1: Write question here ... \n(A) ...\n(B) ... \n(C) ... \n  \nOption 2:  \n2: Write question here ... \n(A) ...\n(B) ... \n(C) ...",
   "Option 1:\nQuestion | (1)\nOption 2: \nQuestion | (2)",
   "https://your-audio-link-here.com/audio.mp3",
   "",
