@@ -6,4 +6,7 @@ etc/secrets/firebase.json
 package-lock.json
 config/default.json
 .vscode
+Dockerfile.minio-init
+init-minio.sh
+docker-compose.yml
 yarn.lock
