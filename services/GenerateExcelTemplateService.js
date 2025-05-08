@@ -116,6 +116,8 @@ const parseExcelBuffer = async (buffer) => {
     });
 
     const questionsToCreate = [];
+    const foundSkills = new Set();
+    const map = new Map();
 
     for (const row of sheet.getRows(2, sheet.rowCount - 1) || []) {
       const questionType = row
@@ -178,6 +180,7 @@ const parseExcelBuffer = async (buffer) => {
         )?.ID || null;
 
       let answerContent = {};
+      foundSkills.add(skillName.toLowerCase().replace(/\s+/g, ""));
       switch (type) {
         case "dropdown-list": {
           const lines = (questionContent || "")
@@ -357,6 +360,76 @@ const parseExcelBuffer = async (buffer) => {
         GroupContent: groupQuestion,
         AnswerContent: answerContent,
       });
+    }
+
+    const requiredTypes = [
+      "writing",
+      "speaking",
+      "ordering",
+      "multiple-choice",
+      "listening-questions-group",
+      "matching",
+      "dropdown-list",
+    ];
+
+    const requiredSkills = [
+      "speaking",
+      "writing",
+      "reading",
+      "listening",
+      "grammarandvocabulary",
+    ];
+    const isValidSkills = requiredSkills.every((skill) =>
+      foundSkills.has(skill)
+    );
+    if (!isValidSkills) {
+      await transaction.rollback();
+      return {
+        status: 400,
+        message: `Missing skill`,
+      };
+    }
+    const foundTypes = new Set(questionsToCreate.map((item) => item.Type));
+    const isValidTypes = requiredTypes.every((type) => foundTypes.has(type));
+
+    if (!isValidTypes) {
+      await transaction.rollback();
+      return {
+        status: 400,
+        message: `Missing type`,
+      };
+    }
+
+    for (const item of questionsToCreate) {
+      if (!item.PartID) continue;
+
+      if (!map.has(item.PartID)) {
+        map.set(item.PartID, []);
+      }
+
+      map.get(item.PartID).push(item.Content);
+    }
+
+    const result = Array.from(map.entries()).map(([partID, contents]) => ({
+      PartID: partID,
+      Content: contents,
+    }));
+
+    const isValidContentPerPart = result.every(
+      (item) =>
+        Array.isArray(item.Content) &&
+        item.Content.length > 0 &&
+        item.Content.every(
+          (c) => c !== null && c !== undefined && String(c).trim() !== ""
+        )
+    );
+
+    if (!isValidContentPerPart) {
+      await transaction.rollback();
+      return {
+        status: 400,
+        message: `Some PartIDs have invalid or empty content`,
+      };
     }
 
     try {
