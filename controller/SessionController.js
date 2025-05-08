@@ -85,18 +85,6 @@ async function generateSessionKey(req, res) {
   }
 }
 
-async function cronStatusAllSessions(req, res) {
-  try {
-    const newSession = await SessionsService.cronStatusAllSessions(req);
-    return res.status(newSession.status).json(newSession);
-  } catch (error) {
-    return res.status(500).json({ error: error.message });
-  }
-}
-
-
-
-
 module.exports = {
   getAllSessions,
   getAllSessionsByClass,
@@ -105,5 +93,4 @@ module.exports = {
   getSessionDetailById,
   removeSession,
   generateSessionKey,
-  cronStatusAllSessions
 };
