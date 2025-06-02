@@ -76,7 +76,8 @@ module.exports = {
       {
         ID: uuidv4(),
         Type: "matching",
-        Content: "Select a word from the list that has the most similar meaning to the following words.",
+        Content:
+          "Select a word from the list that has the most similar meaning to the following words.",
         AnswerContent: JSON.stringify({
           title:
             "Select a word from the list that has the most similar meaning to the following words.",
@@ -291,6 +292,7 @@ module.exports = {
             Content: question.Content,
             PartID: partId,
             SkillID: skillId,
+            Sequence: question.Sequence, // Add this line
           },
         },
         ["ID"]
