@@ -113,6 +113,8 @@ async function createSessionRequest(req) {
         }`,
       };
     }
+    console.log(UserID);
+    console.log(sessionKey);
 
     const pendingRequest = await SessionRequest.findOne({
       where: {

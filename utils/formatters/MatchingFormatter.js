@@ -1,7 +1,4 @@
-const {
-  OPTION_REGEX,
-  LEADING_NUMBER_REGEX,
-} = require("../common/Regex");
+const { OPTION_REGEX, LEADING_NUMBER_REGEX } = require("../common/Regex");
 
 const { splitAndTrimLines } = require("../common/StringUtils");
 
@@ -26,11 +23,17 @@ const formatMatchingContent = (questionContent) => {
     }
 
     if (parsingContents) {
-      const content = line.replace(LEADING_NUMBER_REGEX, "").trim();
+      const content = line
+        .replace(LEADING_NUMBER_REGEX, "")
+        .replace("=", "")
+        .trim();
       if (content) leftItems.push(content);
     } else if (parsingOptions) {
-      const optionMatch = line.match(OPTION_REGEX);
-      if (optionMatch) rightItems.push(optionMatch[1].trim());
+      const dotIndex = line.indexOf(".");
+      if (dotIndex !== -1) {
+        const optionContent = line.slice(dotIndex + 1).trim();
+        if (optionContent) rightItems.push(optionContent);
+      }
     }
   });
 
