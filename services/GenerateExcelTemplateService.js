@@ -238,7 +238,7 @@ const parseExcelBuffer = async (buffer) => {
             ...(groupQuestion ? { groupContent: groupQuestion } : {}),
             leftItems,
             rightItems,
-            correctAnswer: parseMatchingAnswers(correctAnswer, rightItems),
+            correctAnswer: parseMatchingAnswers(correctAnswer, questionContent),
             ...(audioLink ? { audioKeys: audioLink } : {}),
           };
           break;
